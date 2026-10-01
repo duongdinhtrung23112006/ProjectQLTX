@@ -1,0 +1,99 @@
+{% extends "quanly/khung.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/nhanvien/sua.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+<div class="tieu-de-trang">
+    <div>
+        <h1>Sửa Nhân Viên</h1>
+        <p>Cập nhật thông tin nhân viên tại trạm xăng</p>
+    </div>
+</div>
+
+<div style="display: flex; justify-content: center; height: 100%;">
+    <div class="khung-form">
+
+        <div class="dau-form">
+            <h2>Thông tin nhân viên</h2>
+            <p>Vui lòng cập nhật đầy đủ thông tin bên dưới</p>
+        </div>
+
+        <form method="POST" novalidate>
+
+            {% if errors %}
+                <div class="thong-bao-loi" role="alert">
+                    <strong>Không thể lưu nhân viên</strong>
+                    <span>Vui lòng kiểm tra lại các thông tin được đánh dấu bên dưới.</span>
+                </div>
+            {% endif %}
+
+            <div class="luoi-form">
+
+                <div class="nhom-form {% if errors.ma_nv %}co-loi{% endif %}">
+                    <label>Mã nhân viên</label>
+                    <input type="text" name="ma_nv" value="{{ form_data.ma_nv|default('') }}" placeholder="Ví dụ: NV004" maxlength="20">
+                    {% if errors.ma_nv %}<small class="thong-bao-truong">{{ errors.ma_nv }}</small>{% endif %}
+                </div>
+
+                <div class="nhom-form {% if errors.ho_ten %}co-loi{% endif %}">
+                    <label>Họ và tên</label>
+                    <input type="text" name="ho_ten" value="{{ form_data.ho_ten|default('') }}" placeholder="Ví dụ: Nguyễn Văn Nam">
+                    {% if errors.ho_ten %}<small class="thong-bao-truong">{{ errors.ho_ten }}</small>{% endif %}
+                </div>
+
+                <div class="nhom-form {% if errors.so_dien_thoai %}co-loi{% endif %}">
+                    <label>Số điện thoại</label>
+                    <input type="text" name="so_dien_thoai" value="{{ form_data.so_dien_thoai|default('') }}" placeholder="Ví dụ: 0987654321">
+                    {% if errors.so_dien_thoai %}<small class="thong-bao-truong">{{ errors.so_dien_thoai }}</small>{% endif %}
+                </div>
+
+                <div class="nhom-form {% if errors.dia_chi %}co-loi{% endif %}">
+                    <label>Địa chỉ</label>
+                    <input type="text" name="dia_chi" value="{{ form_data.dia_chi|default('') }}" placeholder="Ví dụ: Thái Nguyên">
+                    {% if errors.dia_chi %}<small class="thong-bao-truong">{{ errors.dia_chi }}</small>{% endif %}
+                </div>
+
+                <div class="nhom-form {% if errors.chuc_vu %}co-loi{% endif %}">
+                    <label>Chức vụ</label>
+                    <select name="chuc_vu">
+                        <option value="">-- Chọn chức vụ --</option>
+                        <option value="Nhân viên ca" {% if form_data.chuc_vu == 'Nhân viên ca' %}selected{% endif %}>Nhân viên ca</option>
+                        <option value="Kế toán" {% if form_data.chuc_vu == 'Kế toán' %}selected{% endif %}>Kế toán</option>
+                        <option value="Quản lý" {% if form_data.chuc_vu == 'Quản lý' %}selected{% endif %}>Quản lý</option>
+                    </select>
+                    {% if errors.chuc_vu %}<small class="thong-bao-truong">{{ errors.chuc_vu }}</small>{% endif %}
+                </div>
+
+                <div class="nhom-form {% if errors.ngay_vao_lam %}co-loi{% endif %}">
+                    <label>Ngày vào làm</label>
+                    <input type="date" name="ngay_vao_lam" value="{{ form_data.ngay_vao_lam|default('') }}">
+                    {% if errors.ngay_vao_lam %}<small class="thong-bao-truong">{{ errors.ngay_vao_lam }}</small>{% endif %}
+                </div>
+
+                <div class="nhom-form {% if errors.trang_thai %}co-loi{% endif %}">
+                    <label>Trạng thái</label>
+                    <select name="trang_thai">
+                        <option value="Đang làm việc" {% if form_data.trang_thai == 'Đang làm việc' %}selected{% endif %}>Đang làm việc</option>
+                        <option value="Ngừng làm việc" {% if form_data.trang_thai == 'Ngừng làm việc' %}selected{% endif %}>Ngừng làm việc</option>
+                    </select>
+                    {% if errors.trang_thai %}<small class="thong-bao-truong">{{ errors.trang_thai }}</small>{% endif %}
+                </div>
+
+            </div>
+
+            <div class="cuoi-form">
+                <a href="{{ url_for('nhan_vien.danh_sach') }}" class="nut-huy">
+                    Hủy
+                </a>
+
+                <button type="submit" class="nut-luu">
+                    Lưu thay đổi
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

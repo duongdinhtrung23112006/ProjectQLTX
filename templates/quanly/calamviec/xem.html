@@ -1,0 +1,109 @@
+{% extends "quanly/khung.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/calamviec/xem.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+
+<div class="tieu-de-noi-dung">
+    <div>
+        <h1>Chi Tiết Ca Làm Việc</h1>
+        <p>Thông tin chi tiết của ca làm việc</p>
+    </div>
+</div>
+
+<div class="chi-tiet-ca">
+
+    <a href="{{ url_for('ca_lam_viec.danh_sach') }}" class="nut-quay-lai">
+        <span>←</span>
+        Quay lại
+    </a>
+
+    <div class="the-chi-tiet" style="margin-top: 25px;">
+
+        <div class="bieu-tuong-ca">
+            ◷
+        </div>
+
+        <div>
+            <span>Ca làm việc</span>
+            <strong>{{ ca.ma_ca }}</strong>
+        </div>
+
+    </div>
+
+    <div class="thong-tin-chi-tiet">
+
+        <div class="dong-thong-tin">
+            <span>Mã ca</span>
+            <strong>{{ ca.ma_ca }}</strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Tên ca</span>
+            <strong>{{ ca.ten_ca }}</strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Ngày làm việc</span>
+            <strong>
+                {{ ca.ngay_lam_viec.strftime('%d/%m/%Y') }}
+            </strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Thời gian bắt đầu</span>
+            <strong>
+                {{ ca.thoi_gian_bat_dau or '—' }}
+            </strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Thời gian kết thúc</span>
+            <strong>
+                {{ ca.thoi_gian_ket_thuc or '—' }}
+            </strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Nhân viên</span>
+            <strong>
+                {{ ca.ho_ten }} ({{ ca.ma_nv }})
+            </strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Số điện thoại</span>
+            <strong>
+                {{ ca.so_dien_thoai or '—' }}
+            </strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Chức vụ</span>
+            <strong>
+                {{ ca.chuc_vu or '—' }}
+            </strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Trạng thái</span>
+            <strong>
+                {% if ca.trang_thai == 'Đang hoạt động' %}
+                    <span class="trang-thai dang-hoat-dong">
+                        {{ ca.trang_thai }}
+                    </span>
+                {% else %}
+                    <span class="trang-thai da-dong">
+                        {{ ca.trang_thai }}
+                    </span>
+                {% endif %}
+            </strong>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

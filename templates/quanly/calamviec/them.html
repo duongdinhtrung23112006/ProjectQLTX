@@ -1,0 +1,152 @@
+{% extends "quanly/khung.html" %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/calamviec/them.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+
+<div class="tieu-de-trang">
+    <div>
+        <h1>Thêm Ca Làm Việc</h1>
+        <p>Nhập thông tin ca làm việc mới tại trạm xăng</p>
+    </div>
+</div>
+
+<div style="display: flex; justify-content: center; height: 100%;">
+    <div class="khung-form">
+
+
+    <div class="dau-form">
+        <h2>Thông tin ca làm việc</h2>
+        <p>Vui lòng nhập đầy đủ thông tin bên dưới</p>
+    </div>
+
+    <form method="POST" novalidate>
+
+        {% if errors %}
+            <div class="thong-bao-loi" role="alert">
+                <strong>Không thể lưu ca làm việc</strong>
+                <span>Vui lòng kiểm tra lại các thông tin được đánh dấu bên dưới.</span>
+            </div>
+        {% endif %}
+
+        <div class="luoi-form">
+
+            <div class="nhom-form {% if errors.ten_ca %}co-loi{% endif %}">
+                <label>Tên ca</label>
+
+                <select name="ten_ca">
+                    <option value="">-- Chọn ca --</option>
+
+                    {% for option in shift_options %}
+                        <option value="{{ option }}"
+                            {% if form_data.ten_ca == option %}selected{% endif %}>
+                            {{ option }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                {% if errors.ten_ca %}
+                    <small class="thong-bao-truong">{{ errors.ten_ca }}</small>
+                {% endif %}
+            </div>
+
+            <div class="nhom-form {% if errors.ma_ca %}co-loi{% endif %}">
+                <label>Mã ca</label>
+
+                <input
+                    type="text"
+                    name="ma_ca"
+                    value="{{ form_data.ma_ca|default('') }}"
+                    readonly
+                    placeholder="Tự động tạo theo ca">
+
+                {% if errors.ma_ca %}
+                    <small class="thong-bao-truong">{{ errors.ma_ca }}</small>
+                {% endif %}
+            </div>
+
+            <div class="nhom-form {% if errors.ngay_lam_viec %}co-loi{% endif %}">
+                <label>Ngày làm việc</label>
+
+                <input
+                    type="date"
+                    name="ngay_lam_viec"
+                    value="{{ form_data.ngay_lam_viec|default('') }}">
+
+                {% if errors.ngay_lam_viec %}
+                    <small class="thong-bao-truong">{{ errors.ngay_lam_viec }}</small>
+                {% endif %}
+            </div>
+
+            <div class="nhom-form">
+                <label>Khung ca tự động</label>
+
+                <input
+                    type="text"
+                    value="Ca Sáng: 06:00 - 12:00 | Ca Chiều: 12:00 - 18:00 | Ca Tối: 18:00 - 23:59"
+                    readonly>
+            </div>
+
+            <div class="nhom-form {% if errors.nhan_vien_id %}co-loi{% endif %}">
+                <label>Nhân viên được phân ca</label>
+
+                <select name="nhan_vien_id">
+                    <option value="">-- Chọn nhân viên --</option>
+
+                    {% for nv in danh_sach_nhan_vien %}
+                        <option
+                            value="{{ nv.id }}"
+                            {% if form_data.nhan_vien_id == nv.id|string %}selected{% endif %}>
+                            {{ nv.ho_ten }} ({{ nv.ma_nv }})
+                        </option>
+                    {% endfor %}
+                </select>
+
+                {% if errors.nhan_vien_id %}
+                    <small class="thong-bao-truong">{{ errors.nhan_vien_id }}</small>
+                {% endif %}
+            </div>
+
+            <div class="nhom-form {% if errors.trang_thai %}co-loi{% endif %}">
+                <label>Trạng thái</label>
+
+                <select name="trang_thai">
+                    <option value="Đang hoạt động"
+                        {% if form_data.trang_thai == 'Đang hoạt động' %}selected{% endif %}>
+                        Đang hoạt động
+                    </option>
+
+                    <option value="Đã đóng"
+                        {% if form_data.trang_thai == 'Đã đóng' %}selected{% endif %}>
+                        Đã đóng
+                    </option>
+                </select>
+
+                {% if errors.trang_thai %}
+                    <small class="thong-bao-truong">{{ errors.trang_thai }}</small>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="cuoi-form">
+            <a href="{{ url_for('ca_lam_viec.danh_sach') }}" class="nut-huy">
+                Hủy
+            </a>
+
+            <button type="submit" class="nut-luu">
+                + Thêm ca
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,200 @@
+{% extends "quanly/khung.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/nhanvien/index.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/nhanvien/xoa.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+
+<div class="tieu-de-noi-dung">
+    <div>
+        <h1>Quản Lý Nhân Viên</h1>
+        <p>Theo dõi thông tin và trạng thái làm việc của nhân viên</p>
+    </div>
+
+    <a href="{{ url_for('nhan_vien.them') }}" class="nut-them">
+        + Thêm nhân viên
+    </a>
+</div>
+
+<div class="thong-ke-nhan-vien">
+
+    <div class="the-thong-ke">
+        <div class="icon-thong-ke">👥</div>
+        <div>
+            <span style="color: rgb(0, 50, 214);">Tổng số nhân viên</span>
+            <strong style="color: rgb(0, 50, 214);">{{ tong_so_nhan_vien }}</strong>
+        </div>
+    </div>
+
+    <div class="the-thong-ke">
+        <div class="icon-thong-ke xanh">✓</div>
+        <div>
+            <span style="color: rgb(5, 190, 14);">Đang làm việc</span>
+            <strong style="color: rgb(5, 190, 14);">{{ dang_lam_viec }}</strong>
+        </div>
+    </div>
+
+    <div class="the-thong-ke">
+        <div class="icon-thong-ke cam">!</div>
+        <div>
+            <span style="color: rgb(255, 17, 0);">Ngừng làm việc</span>
+            <strong style="color: rgb(255, 17, 0);">{{ ngung_lam_viec }}</strong>
+        </div>
+    </div>
+
+</div>
+
+<div class="khung-bang">
+
+    <div class="thanh-tren-nv">
+        <div>
+            <h2>Danh sách nhân viên</h2>
+            <p>Thông tin nhân viên đang được quản lý trong hệ thống</p>
+        </div>
+
+        <span>{{ tong_so_nhan_vien }} nhân viên</span>
+    </div>
+
+    <table class="bang-du-lieu">
+
+        <thead>
+            <tr>
+                <th>Mã NV</th>
+                <th>Họ và tên</th>
+                <th>Số điện thoại</th>
+                <th>Chức vụ</th>
+                <th>Ngày vào làm</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for nhan_vien in danh_sach_nhan_vien %}
+
+            <tr>
+
+                <td>
+                    <strong>{{ nhan_vien.ma_nv }}</strong>
+                </td>
+
+                <td>
+                    {{ nhan_vien.ho_ten }}
+                </td>
+
+                <td>
+                    {{ nhan_vien.so_dien_thoai or "—" }}
+                </td>
+
+                <td>
+                    {{ nhan_vien.chuc_vu }}
+                </td>
+
+                <td>
+                    {% if nhan_vien.ngay_vao_lam %}
+                        {{ nhan_vien.ngay_vao_lam.strftime("%d/%m/%Y") }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if nhan_vien.trang_thai == "Đang làm việc" %}
+                        <span class="trang-thai dang-hoat-dong">
+                            {{ nhan_vien.trang_thai }}
+                        </span>
+                    {% else %}
+                        <span class="trang-thai ngung-hoat-dong">
+                            {{ nhan_vien.trang_thai }}
+                        </span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    <a href="{{ url_for('nhan_vien.xem', id=nhan_vien.id) }}" class="nut-xem">
+                        Xem
+                    </a>
+
+                    <a href="{{ url_for('nhan_vien.sua', id=nhan_vien.id) }}" class="nut-sua">
+                        Sửa
+                    </a>
+
+                    <form method="POST" action="{{ url_for('nhan_vien.xoa', id=nhan_vien.id) }}" style="display: inline;">
+                        <button type="button" class="nut-xoa"
+                            onclick="moHopXacNhan('{{ nhan_vien.id }}', '{{ nhan_vien.ma_nv }}', '{{ nhan_vien.ho_ten }}')">
+                            Xóa
+                        </button>
+                    </form>
+                </td>
+
+            </tr>
+
+            {% else %}
+
+            <tr>
+                <td colspan="7" class="khong-co-du-lieu">
+                    Chưa có nhân viên nào trong hệ thống !
+                </td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<div id="hop-xac-nhan" class="lop-phu">
+
+    <div class="hop-thong-bao">
+
+        <div class="nhan-canh-bao">CẢNH BÁO</div>
+
+        <div class="bieu-tuong-xoa">🗑️</div>
+
+        <h2>XÓA CÁI NÀY?</h2>
+
+        <p class="mo-ta-xoa">
+            Bạn đang thực hiện thao tác xóa
+            <strong id="ten-nv-xoa"></strong>.
+        </p>
+
+        <p class="ghi-chu-xoa">
+            Nếu xóa nhân viên này, tất cả thông tin liên quan (ca làm việc, hợp đồng, v.v.) đến nhân viên sẽ bị xóa vĩnh viễn.
+        </p>
+
+        <div class="nut-xac-nhan">
+
+            <button type="button" class="nut-huy-xoa" onclick="dongHopXacNhan()">
+                Hủy
+            </button>
+
+            <form id="form-xoa" method="POST">
+                <button type="submit" class="nut-dong-y-xoa">
+                    Xóa nhân viên
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    function moHopXacNhan(id, maNv, hoTen) {
+        document.getElementById("ten-nv-xoa").textContent = maNv + " - " + hoTen;
+        document.getElementById("form-xoa").action = "/nhan-vien/xoa/" + id;
+        document.getElementById("hop-xac-nhan").classList.add("hien-thi");
+    }
+
+    function dongHopXacNhan() {
+        document.getElementById("hop-xac-nhan").classList.remove("hien-thi");
+    }
+</script>
+
+{% endblock %}

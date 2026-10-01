@@ -3,7 +3,9 @@ from flask import Flask, render_template
 from routes.quanly.bon_chua import bon_chua_bp
 from routes.quanly.ca_lam_viec import ca_lam_viec_bp
 from routes.quanly.nhan_vien import nhan_vien_bp
-from routes.quanly.trang_chu import trang_chu_bp
+from routes.quanly.trang_chu import quanly_trang_chu_bp
+
+from routes.nhanvien.trang_chu import nhanvien_trang_chu_bp
 
 from services.auth_service import yeu_cau_dang_nhap
 
@@ -18,15 +20,14 @@ app = Flask(__name__)
 # Khóa bí mật dùng cho session và các chức năng bảo mật của Flask
 app.secret_key = "tram_xang_secret_key"
 
+# Đăng kí blueprint cho quản lý
 app.register_blueprint(dang_nhap_bp)
-
-app.register_blueprint(trang_chu_bp)
-
-
+app.register_blueprint(quanly_trang_chu_bp)
 app.register_blueprint(bon_chua_bp)
-
 app.register_blueprint(nhan_vien_bp)
 
+# Đăng ký blueprint cho trang chủ của nhân viên
+app.register_blueprint(nhanvien_trang_chu_bp)
 
 @app.route("/nhien-lieu")
 @yeu_cau_dang_nhap

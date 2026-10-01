@@ -1,0 +1,86 @@
+{% extends "quanly/khung.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/nhanvien/index.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/nhanvien/xem.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+
+<div class="tieu-de-noi-dung">
+    <div>
+        <h1>Chi tiết nhân viên</h1>
+        <p>Thông tin chi tiết của nhân viên trong hệ thống</p>
+    </div>
+
+    <a href="{{ url_for('nhan_vien.danh_sach') }}" class="nut-quay-lai">
+        <span aria-hidden="true">←</span>
+        Quay lại danh sách
+    </a>
+</div>
+
+<div class="chi-tiet-bon">
+
+    <div class="the-chi-tiet">
+        <div class="bieu-tuong-bon">
+            👤
+        </div>
+
+        <div>
+            <span>Mã nhân viên</span>
+            <strong>{{ nhan_vien.ma_nv }}</strong>
+        </div>
+    </div>
+
+    <div class="thong-tin-chi-tiet">
+
+        <div class="dong-thong-tin">
+            <span>Họ và tên</span>
+            <strong>{{ nhan_vien.ho_ten }}</strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Số điện thoại</span>
+            <strong>{{ nhan_vien.so_dien_thoai or '—' }}</strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Chức vụ</span>
+            <strong>{{ nhan_vien.chuc_vu }}</strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Địa chỉ</span>
+            <strong>{{ nhan_vien.dia_chi or '—' }}</strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Ngày vào làm</span>
+            <strong>
+                {% if nhan_vien.ngay_vao_lam %}
+                    {{ nhan_vien.ngay_vao_lam.strftime('%d/%m/%Y') }}
+                {% else %}
+                    —
+                {% endif %}
+            </strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Trạng thái</span>
+
+            {% if nhan_vien.trang_thai == "Đang làm việc" %}
+                <strong style="color: rgb(35, 160, 4);" class="trang-thai dang-hoat-dong">
+                    {{ nhan_vien.trang_thai }}
+                </strong>
+            {% else %}
+                <strong style="color: rgb(177, 27, 0);" class="trang-thai ngung-hoat-dong">
+                    {{ nhan_vien.trang_thai }}
+                </strong>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

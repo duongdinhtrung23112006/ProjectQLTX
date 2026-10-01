@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Đăng nhập - Trạm xăng</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='auth/dang_nhap.css') }}"
+    >
+
+</head>
+
+<body>
+
+    <div class="khung-dang-nhap">
+
+        <!-- TIÊU ĐỀ -->
+
+        <div class="tieu-de">
+
+            <h1>Đăng nhập</h1>
+
+            <p>
+                Hệ thống quản lý trạm xăng
+            </p>
+
+        </div>
+
+
+        <!-- THÔNG BÁO LỖI -->
+
+        {% if loi %}
+
+            <div class="thong-bao-loi">
+                {{ loi }}
+            </div>
+
+        {% endif %}
+
+
+        <!-- FORM ĐĂNG NHẬP -->
+
+        <form method="POST">
+
+            <!-- TÊN ĐĂNG NHẬP -->
+
+            <div class="nhom-form">
+
+                <label>
+                    Tên đăng nhập
+                </label>
+
+                <input
+                    type="text"
+                    name="ten_dang_nhap"
+                    value="{{ ten_dang_nhap }}"
+                    placeholder="Nhập tên đăng nhập"
+                    autocomplete="username"
+                    autofocus
+                >
+
+            </div>
+
+
+            <!-- MẬT KHẨU -->
+
+            <div class="nhom-form">
+
+                <label>
+                    Mật khẩu
+                </label>
+
+                <input
+                    type="password"
+                    name="mat_khau"
+                    placeholder="Nhập mật khẩu"
+                    autocomplete="current-password"
+                >
+
+            </div>
+
+
+            <!-- NÚT ĐĂNG NHẬP -->
+
+            <button
+                type="submit"
+                class="nut-dang-nhap"
+            >
+                Đăng nhập
+            </button>
+
+
+            <!-- THÔNG TIN HỖ TRỢ -->
+
+            <div class="thong-tin-ho-tro">
+
+                <p>
+                    Nếu quên mật khẩu hoặc lỗi xác thực email,
+                    vui lòng liên hệ với Quản Lý hoặc Admin
+                    để được hỗ trợ.
+                </p>
+
+                <span>
+                    V 1.0.0 (UTC+07)
+                </span>
+
+                <span>
+                    Copyright © 2026 by Dương Đình Trung
+                </span>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

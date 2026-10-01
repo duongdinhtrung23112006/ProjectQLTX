@@ -1,0 +1,196 @@
+{% extends "quanly/khung.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/index/index.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+ <!-- KHUNG CHÀO MỪNG -->
+            <div class="khung-chao-mung">
+
+                <div>
+
+                     <p class="loi-chao">
+                        XIN CHÀO, QUẢN LÝ <span style="color: rgb(0, 236, 253);">{{ ho_ten.upper()}}👋</span>
+                    </p>
+
+                    <h1>
+                        Chào mừng đến với
+                        <span>Hệ Thống Quản Lý Trạm Xăng</span>
+                    </h1>
+
+                    <p class="mo-ta">
+                        Hệ thống quản lý và điều hành trạm xăng
+                    </p>
+
+                </div>
+
+                <div class="trang-tri">
+                    ⛽
+                </div>
+
+            </div>
+
+
+            <!-- TIÊU ĐỀ CHỨC NĂNG -->
+            <div class="tieu-de-chuc-nang">
+
+                <h2>Chức Năng Quản Lý</h2>
+
+                <p>
+                    Lựa chọn chức năng bạn muốn sử dụng
+                </p>
+
+            </div>
+
+
+            <!-- CÁC CHỨC NĂNG -->
+            <div class="luoi-chuc-nang">
+
+
+                <a href="{{ url_for('bon_chua.danh_sach') }}" class="the-chuc-nang mau-xanh">
+
+                    <div class="bieu-tuong-chuc-nang">
+                        ▣
+                    </div>
+
+                    <div class="noi-dung-the">
+                        <h3>Bồn chứa</h3>
+                        <p>Quản lý thông tin các bồn chứa</p>
+                    </div>
+
+                    <span class="mui-ten-the">→</span>
+
+                </a>
+
+
+                <a href="{{ url_for('nhien_lieu') }}" class="the-chuc-nang mau-xanh-la">
+
+                    <div class="bieu-tuong-chuc-nang">
+                        ⛽
+                    </div>
+
+                    <div class="noi-dung-the">
+                        <h3>Nhiên liệu</h3>
+                        <p>Quản lý các loại nhiên liệu</p>
+                    </div>
+
+                    <span class="mui-ten-the">→</span>
+
+                </a>
+
+
+                <a href="{{ url_for('nhap_hang') }}" class="the-chuc-nang mau-cam">
+
+                    <div class="bieu-tuong-chuc-nang">
+                        ⇩
+                    </div>
+
+                    <div class="noi-dung-the">
+                        <h3>Nhập hàng</h3>
+                        <p>Quản lý hoạt động nhập nhiên liệu</p>
+                    </div>
+
+                    <span class="mui-ten-the">→</span>
+
+                </a>
+
+
+                <a href="{{ url_for('ban_hang') }}" class="the-chuc-nang mau-tim">
+
+                    <div class="bieu-tuong-chuc-nang">
+                        ⇧
+                    </div>
+
+                    <div class="noi-dung-the">
+                        <h3>Bán hàng</h3>
+                        <p>Quản lý hoạt động bán hàng</p>
+                    </div>
+
+                    <span class="mui-ten-the">→</span>
+
+                </a>
+
+
+                <a href="{{ url_for('ton_bon') }}" class="the-chuc-nang mau-xanh-ngoc">
+
+                    <div class="bieu-tuong-chuc-nang">
+                        ▤
+                    </div>
+
+                    <div class="noi-dung-the">
+                        <h3>Tồn bồn</h3>
+                        <p>Theo dõi lượng nhiên liệu tồn</p>
+                    </div>
+
+                    <span class="mui-ten-the">→</span>
+
+                </a>
+
+
+                <a href="{{ url_for('nhan_vien.danh_sach') }}" class="the-chuc-nang mau-hong">
+
+                    <div class="bieu-tuong-chuc-nang">
+                        ♙
+                    </div>
+
+                    <div class="noi-dung-the">
+                        <h3>Nhân viên</h3>
+                        <p>Quản lý thông tin nhân viên</p>
+                    </div>
+
+                    <span class="mui-ten-the">→</span>
+
+                </a>
+
+
+                <a href="{{ url_for('ca_lam_viec.danh_sach') }}" class="the-chuc-nang mau-cham">
+
+                    <div class="bieu-tuong-chuc-nang">
+                        ◷
+                    </div>
+
+                    <div class="noi-dung-the">
+                        <h3>Ca làm việc</h3>
+                        <p>Quản lý và phân công ca</p>
+                    </div>
+
+                    <span class="mui-ten-the">→</span>
+
+                </a>
+
+
+                <a href="{{ url_for('tra_cuu') }}" class="the-chuc-nang mau-ngoc">
+
+                    <div class="bieu-tuong-chuc-nang">
+                        ⌕
+                    </div>
+
+                    <div class="noi-dung-the">
+                        <h3>Tra cứu</h3>
+                        <p>Tra cứu thông tin hệ thống</p>
+                    </div>
+
+                    <span class="mui-ten-the">→</span>
+
+                </a>
+
+
+                <a href="{{ url_for('thong_ke') }}" class="the-chuc-nang mau-vang">
+
+                    <div class="bieu-tuong-chuc-nang">
+                        ▥
+                    </div>
+
+                    <div class="noi-dung-the">
+                        <h3>Thống kê</h3>
+                        <p>Xem báo cáo và thống kê</p>
+                    </div>
+
+                    <span class="mui-ten-the">→</span>
+
+                </a>
+
+
+            </div>
+{% endblock %}

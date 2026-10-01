@@ -1,0 +1,187 @@
+.tieu-de-trang {
+    margin-bottom: 22px;
+}
+
+.tieu-de-trang h1 {
+    margin: 0 0 5px;
+    font-size: 27px;
+    color: #243b5a;
+    font-weight: 600;
+}
+
+.tieu-de-trang p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 15px;
+}
+
+.khung-form {
+    margin-top: 5vh;
+    overflow: hidden;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    width: 70%;
+    height: 65%;
+}
+
+.dau-form {
+    padding: 20px 22px;
+    border-bottom: 1px solid #e5e7eb;
+    background: linear-gradient(110deg,
+            #800ac4,
+            #061ef3 60%,
+            #16b5ed);
+    background-size: 200% 200%;
+    animation: doi-mau 5s ease infinite;
+    color: white;
+    box-shadow: 0 12px 30px rgba(0, 102, 204, 0.18);
+}
+
+@keyframes doi-mau {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.dau-form h2 {
+    margin: 0 0 5px;
+    font-size: 18px;
+    color: #f5f9ff;
+}
+
+.dau-form p {
+    margin: 0;
+    color: #aaabad;
+    font-size: 13px;
+}
+
+.khung-form form {
+    padding: 24px 22px;
+}
+
+.thong-bao-loi {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 20px;
+    padding: 12px 14px;
+    border: 1px solid #fecaca;
+    border-left: 4px solid #dc2626;
+    border-radius: 7px;
+    background: #fef2f2;
+    color: #991b1b;
+    font-size: 13px;
+}
+
+.thong-bao-loi span {
+    color: #b91c1c;
+    font-size: 12px;
+}
+
+.luoi-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.nhom-form label {
+    display: block;
+    margin-bottom: 7px;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.nhom-form input,
+.nhom-form select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    outline: none;
+    font-size: 14px;
+    color: #374151;
+    background: white;
+}
+
+.nhom-form input:focus,
+.nhom-form select:focus {
+    border-color: #2563eb;
+}
+
+.nhom-form.co-loi input,
+.nhom-form.co-loi select {
+    border-color: #dc2626;
+    background: #fffafa;
+}
+
+.nhom-form.co-loi input:focus,
+.nhom-form.co-loi select:focus {
+    border-color: #b91c1c;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.10);
+}
+
+.thong-bao-truong {
+    display: block;
+    margin-top: 6px;
+    color: #b91c1c;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.cuoi-form {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.nut-huy {
+    padding: 10px 17px;
+    border-radius: 7px;
+    border: 1px solid #d1d5db;
+    color: #4b5563;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nut-huy:hover {
+    background: #f3f4f6;
+}
+
+.nut-luu {
+    border: none;
+    padding: 10px 17px;
+    border-radius: 7px;
+    background: #2563eb;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.nut-luu:hover {
+    background: #1d4ed8;
+}
+
+@media (max-width: 700px) {
+    .khung-form {
+        width: 100%;
+    }
+
+    .luoi-form {
+        grid-template-columns: 1fr;
+    }
+}

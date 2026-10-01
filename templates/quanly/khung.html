@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hệ thống quản lý trạm xăng</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/style.css') }}">
+
+    {% block css %}{% endblock %}
+    <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</head>
+
+<body>
+
+    <!-- THANH BÊN TRÁI -->
+    <aside class="thanh-ben">
+
+        <!-- LOGO -->
+        <div class="thuong-hieu">
+
+            <div class="bieu-tuong">
+                <img src="{{ url_for('static', filename='images/logopetro.jpg') }}" alt="Logo Petrolimex">
+            </div>
+
+            <div>
+                <h1>TRẠM XĂNG</h1>
+                <p>PETROLIMEX VN</p>
+            </div>
+
+        </div>
+
+
+        <!-- TIÊU ĐỀ MENU -->
+        <div class="tieu-de-menu">
+            CÁC CHỨC NĂNG CHÍNH
+        </div>
+
+
+        <!-- DANH SÁCH MENU -->
+        <nav class="danh-sach-menu">
+
+            <a href="{{ url_for('quanly_trang_chu.home') }}" class="muc-menu {%if trang_hien_tai == 'Trang chủ'%} dang-chon{% endif %}">
+                <span class="bieu-tuong-menu">⌂</span>
+                <span>Trang chủ</span>
+            </a>
+
+            <a href="{{ url_for('bon_chua.danh_sach') }}"
+                class="muc-menu {%if trang_hien_tai == 'Bồn chứa'%} dang-chon{% endif %}">
+                <span class="bieu-tuong-menu">▣</span>
+                <span>Bồn chứa</span>
+            </a>
+
+            <a href="{{ url_for('nhien_lieu') }}"
+                class="muc-menu {%if trang_hien_tai == 'Nhiên liệu'%} dang-chon{% endif %}">
+                <span class="bieu-tuong-menu">♢</span>
+                <span>Nhiên liệu</span>
+            </a>
+
+            <a href="{{ url_for('nhap_hang') }}"
+                class="muc-menu {%if trang_hien_tai == 'Nhập hàng'%} dang-chon{% endif %}">
+                <span class="bieu-tuong-menu">⇩</span>
+                <span>Nhập hàng</span>
+            </a>
+
+            <a href="{{ url_for('ban_hang') }}"
+                class="muc-menu {%if trang_hien_tai == 'Bán hàng'%} dang-chon{% endif %}">
+                <span class="bieu-tuong-menu">⇧</span>
+                <span>Bán hàng</span>
+            </a>
+
+            <a href="{{ url_for('ton_bon') }}" class="muc-menu {%if trang_hien_tai == 'Tồn bồn'%} dang-chon{% endif %}">
+                <span class="bieu-tuong-menu">▤</span>
+                <span>Tồn bồn</span>
+            </a>
+
+            <a href="{{ url_for('nhan_vien.danh_sach') }}"
+                class="muc-menu {%if trang_hien_tai == 'Nhân viên'%} dang-chon{% endif %}">
+                <span class="bieu-tuong-menu">♙</span>
+                <span>Nhân viên</span>
+            </a>
+
+            <a href="{{ url_for('ca_lam_viec.danh_sach') }}"
+                class="muc-menu {%if trang_hien_tai == 'Ca làm việc'%} dang-chon{% endif %}">
+                <span class="bieu-tuong-menu">◷</span>
+                <span>Ca làm việc</span>
+            </a>
+
+            <a href="{{ url_for('tra_cuu') }}" class="muc-menu {%if trang_hien_tai == 'Tra cứu'%} dang-chon{% endif %}">
+                <span class="bieu-tuong-menu">⌕</span>
+                <span>Tra cứu</span>
+            </a>
+
+            <a href="{{ url_for('thong_ke') }}"
+                class="muc-menu {%if trang_hien_tai == 'Thống kê'%} dang-chon{% endif %}">
+                <span class="bieu-tuong-menu">▥</span>
+                <span>Thống kê</span>
+            </a>
+
+        </nav>
+
+
+        <!-- PHẦN HỖ TRỢ -->
+        <div class="cuoi-thanh-ben">
+
+            <div class="ho-tro">
+
+                <div class="bieu-tuong-ho-tro">
+                    ?
+                </div>
+
+                <div>
+                    <b>Hỗ trợ hệ thống</b>
+                    <small>Trợ giúp quản lý</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- KHU VỰC CHÍNH -->
+    <main class="khu-vuc-chinh">
+
+
+        <!-- THANH TRÊN -->
+        <header class="thanh-tren">
+
+            <div class="anh-vn">
+                <img src="{{ url_for('static', filename='images/logo_vn.png') }}" alt="Vietnamese Flag" loading="eager"
+                    decoding="async">
+            </div>
+
+            <div class="tieu-de-header">
+
+                <span>QUẢN LÝ TRẠM XĂNG</span>
+
+                <h2>HỆ THỐNG PETROLIMEX VIETNAM AI</h2>
+
+            </div>
+
+
+            <!-- THÔNG TIN QUẢN LÝ -->
+            <div class="phan-thong-tin">
+
+                <div class="thong-bao">
+                    ♢
+                    <span></span>
+                </div>
+
+
+                <div class="thong-tin-quan-ly">
+
+                    <div class="anh-dai-dien">
+                        QL
+                    </div>
+
+                    <div class="thong-tin">
+
+                        <b>Quản lý</b>
+
+                        <small>Quản trị hệ thống</small>
+
+                    </div>
+
+                    <div class="mui-ten">
+                        ▾
+                    </div>
+
+                </div>
+
+
+                <a href="{{ url_for('dang_nhap.dang_xuat') }}" class="nut-dang-xuat">
+                    Đăng xuất
+                </a>
+
+            </div>
+
+        </header>
+
+
+        <section class="noi-dung">
+
+            {% block noi_dung %}
+            {% endblock %}
+
+        </section>
+
+        <!-- CHÂN TRANG -->
+        <footer class="chan-trang">
+
+            <!-- Cột 1: Giới thiệu -->
+            <div class="footer-cot footer-gioi-thieu">
+
+                <h3><span class="footer-logo">⛽</span> FUEL MANAGEMENT</h3>
+
+                <p class="footer-mo-ta">
+                    Hệ thống quản lý trạm xăng được xây dựng nhằm
+                    hỗ trợ số hóa và tối ưu hóa hoạt động vận hành
+                    tại các trạm nhiên liệu.
+                </p>
+
+                <p class="footer-trang-thai"><span></span> Hệ thống đang hoạt động</p>
+
+            </div>
+
+
+            <!-- Cột 2: Hệ thống -->
+            <div class="footer-cot">
+
+                <h4>VỀ HỆ THỐNG</h4>
+
+                <p>Trang chủ</p>
+                <p>Quản lý nhiên liệu</p>
+                <p>Quản lý bán hàng</p>
+                <p>Quản lý nhân viên</p>
+                <p>Thống kê &amp; báo cáo</p>
+
+            </div>
+
+
+            <!-- Cột 3: Dự án -->
+            <div class="footer-cot">
+
+                <h4>THÔNG TIN DỰ ÁN</h4>
+
+                <p>Môn học: Ứng dụng Trí tuệ nhân tạo</p>
+                <p>Đồ án: Quản lý trạm xăng</p>
+                <p>Phiên bản: 1.0.0</p>
+                <p>Năm thực hiện: 2026</p>
+                <p>Trạng thái: Đang phát triển</p>
+
+            </div>
+
+
+            <!-- Cột 4: Đội ngũ -->
+            <div class="footer-cot">
+
+                <h4>ĐỘI NGŨ PHÁT TRIỂN</h4>
+
+                <p>
+                    <strong>Dương Đình Trung</strong>
+                </p>
+
+                <p>
+                    <strong>Trương Văn Tùng</strong>
+                </p>
+
+                <p class="footer-vai-tro">
+                    Developers & System Designers
+                </p>
+
+            </div>
+
+
+            <!-- Cột 5: Liên hệ -->
+            <div class="footer-cot">
+
+                <h4>LIÊN HỆ</h4>
+
+                <p><span class="footer-bieu-tuong">☎</span> <a href="tel:0347159334">0347 159 334</a></p>
+
+                <p>
+                    <span class="footer-bieu-tuong">⌖</span>
+                    Trường Đại học Công nghệ Thông tin và Truyền thông Thái Nguyên
+                </p>
+
+                <p>
+                    Thái Nguyên, Việt Nam
+                </p>
+
+            </div>
+
+
+            <!-- Dòng cuối -->
+            <div class="footer-cuoi">
+
+                <span>
+                    © 2026 Fuel Management System
+                </span>
+
+                <span>
+                    Developed by Trung & Tùng
+                </span>
+
+                <span>
+                    All Rights Reserved.
+                </span>
+
+            </div>
+
+        </footer>
+
+    </main>
+
+</body>
+
+</html>

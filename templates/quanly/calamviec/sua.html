@@ -1,0 +1,181 @@
+{% extends "quanly/khung.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/calamviec/sua.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+
+<div class="tieu-de-noi-dung">
+    <div>
+        <h1>Sửa Ca Làm Việc</h1>
+        <p>Cập nhật thông tin ca làm việc trong hệ thống</p>
+    </div>
+</div>
+
+<div class="khung-form">
+
+    <div class="dau-form">
+        <h2>Cập nhật ca làm việc</h2>
+        <p>Chỉnh sửa thông tin ca và nhân viên được phân công</p>
+    </div>
+
+    <form method="POST">
+
+        {% if errors %}
+        <div class="thong-bao-loi">
+            <strong>Không thể cập nhật ca làm việc</strong>
+
+            {% for loi in errors.values() %}
+            <span>{{ loi }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="luoi-form">
+
+            <div class="nhom-form">
+                <label>Mã ca</label>
+
+                <input type="text" value="{{ form_data.ma_ca }}" readonly>
+            </div>
+
+            <div class="nhom-form {% if errors.ten_ca %}co-loi{% endif %}">
+                <label>Tên ca</label>
+
+                <select name="ten_ca" id="ten-ca" required>
+                    <option value="">
+                        -- Chọn ca làm việc --
+                    </option>
+
+                    {% for ca in shift_options %}
+                    <option value="{{ ca }}" {% if form_data.ten_ca==ca %}selected{% endif %}>
+                        {{ ca }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                {% if errors.ten_ca %}
+                <span class="thong-bao-truong">
+                    {{ errors.ten_ca }}
+                </span>
+                {% endif %}
+            </div>
+
+            <div class="nhom-form {% if errors.ngay_lam_viec %}co-loi{% endif %}">
+                <label>Ngày làm việc</label>
+
+                <input type="date" name="ngay_lam_viec" value="{{ form_data.ngay_lam_viec }}" required>
+
+                {% if errors.ngay_lam_viec %}
+                <span class="thong-bao-truong">
+                    {{ errors.ngay_lam_viec }}
+                </span>
+                {% endif %}
+            </div>
+
+            <div class="nhom-form">
+                <label>Nhân viên</label>
+
+                <select disabled>
+                    {% for nhan_vien in danh_sach_nhan_vien %}
+                    {% if form_data.nhan_vien_id == nhan_vien.id|string %}
+                    <option selected>
+                        {{ nhan_vien.ho_ten }} ({{ nhan_vien.ma_nv }})
+                    </option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="nhom-form {% if errors.trang_thai %}co-loi{% endif %}">
+                <label>Trạng thái</label>
+
+                <select name="trang_thai" required>
+                    <option value="Đang hoạt động" {% if form_data.trang_thai=='Đang hoạt động' %}selected{% endif %}>
+                        Đang hoạt động
+                    </option>
+
+                    <option value="Đã đóng" {% if form_data.trang_thai=='Đã đóng' %}selected{% endif %}>
+                        Đã đóng
+                    </option>
+                </select>
+
+                {% if errors.trang_thai %}
+                <span class="thong-bao-truong">
+                    {{ errors.trang_thai }}
+                </span>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="thong-tin-gio">
+
+            <div>
+                <span>Thời gian bắt đầu</span>
+                <strong id="gio-bat-dau">--:--:--</strong>
+            </div>
+
+            <div>
+                <span>Thời gian kết thúc</span>
+                <strong id="gio-ket-thuc">--:--:--</strong>
+            </div>
+
+        </div>
+
+        <div class="cuoi-form">
+
+            <a href="{{ url_for('ca_lam_viec.danh_sach') }}" class="nut-huy">
+                Hủy
+            </a>
+
+            <button type="submit" class="nut-luu">
+                Lưu thay đổi
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+    const quyTacCa = {
+        "Ca Sáng": {
+            batDau: "06:00:00",
+            ketThuc: "12:00:00"
+        },
+        "Ca Chiều": {
+            batDau: "12:00:00",
+            ketThuc: "18:00:00"
+        },
+        "Ca Tối": {
+            batDau: "18:00:00",
+            ketThuc: "23:59:00"
+        }
+    };
+
+    const selectCa = document.getElementById("ten-ca");
+    const gioBatDau = document.getElementById("gio-bat-dau");
+    const gioKetThuc = document.getElementById("gio-ket-thuc");
+
+    function capNhatThoiGian() {
+        const tenCa = selectCa.value;
+        const quyTac = quyTacCa[tenCa];
+
+        if (quyTac) {
+            gioBatDau.textContent = quyTac.batDau;
+            gioKetThuc.textContent = quyTac.ketThuc;
+        } else {
+            gioBatDau.textContent = "--:--:--";
+            gioKetThuc.textContent = "--:--:--";
+        }
+    }
+
+    selectCa.addEventListener("change", capNhatThoiGian);
+
+    capNhatThoiGian();
+</script>
+
+{% endblock %}

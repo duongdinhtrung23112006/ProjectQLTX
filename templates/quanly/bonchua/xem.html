@@ -1,0 +1,110 @@
+{% extends "quanly/khung.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/bonchua/index.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/bonchua/xem.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+
+<div class="tieu-de-noi-dung">
+    <div>
+        <h1>Chi tiết bồn chứa</h1>
+        <p>Thông tin chi tiết của bồn chứa tại trạm</p>
+    </div>
+
+    <a href="{{ url_for('bon_chua.danh_sach') }}" class="nut-quay-lai">
+        <span aria-hidden="true">←</span>
+        Quay lại danh sách
+    </a>
+</div>
+
+<div class="chi-tiet-bon">
+
+    {% set ty_le_ton = (bon.ton_hien_tai / bon.suc_chua * 100) if bon.suc_chua else 0 %}
+
+    <div class="the-chi-tiet">
+
+        <div class="bieu-tuong-bon">
+            ▣
+        </div>
+
+        <div>
+            <span>Mã bồn</span>
+            <strong>{{ bon.ma_bon }}</strong>
+        </div>
+
+    </div>
+
+    <div class="thong-tin-chi-tiet">
+
+        <div class="dong-thong-tin">
+            <span>Tên bồn</span>
+            <strong>{{ bon.ten_bon }}</strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Loại nhiên liệu</span>
+            <strong>{{ bon.nhien_lieu }}</strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Sức chứa</span>
+            <strong>{{ "{:,.0f}".format(bon.suc_chua) }} L</strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Tồn hiện tại</span>
+            <strong>{{ "{:,.0f}".format(bon.ton_hien_tai) }} L</strong>
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Trạng thái</span>
+
+            {% if bon.trang_thai == "Đang hoạt động" %}
+
+            <strong style="color: rgb(35, 160, 4);" class="trang-thai dang-hoat-dong">
+                {{ bon.trang_thai }}
+            </strong>
+
+            {% else %}
+
+            <strong style="color: rgb(177, 27, 0);" class="trang-thai ngung-hoat-dong">
+                {{ bon.trang_thai }}
+            </strong>
+
+            {% endif %}
+
+        </div>
+
+        <div class="dong-thong-tin">
+            <span>Tỷ lệ tồn</span>
+
+            <strong>
+                {{ "%.1f"|format(ty_le_ton) }}%
+            </strong>
+        </div>
+
+    </div>
+
+    <div class="thanh-muc-tieu">
+
+        <div class="thanh-nen">
+            <progress
+                class="thanh-day"
+                value="{{ ty_le_ton if ty_le_ton <= 100 else 100 }}"
+                max="100"
+            ></progress>
+        </div>
+
+        <div class="chu-thich">
+            <span>Tồn hiện tại</span>
+            <span>{{ "{:,.0f}".format(bon.ton_hien_tai) }} / {{ "{:,.0f}".format(bon.suc_chua) }} L</span>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

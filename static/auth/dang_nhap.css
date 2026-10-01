@@ -1,0 +1,223 @@
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Arial, sans-serif;
+
+    background: #f3f6fb;
+}
+
+
+/* =========================
+   KHUNG ĐĂNG NHẬP
+   ========================= */
+
+.khung-dang-nhap {
+    width: 380px;
+
+    padding: 30px;
+
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================
+   TIÊU ĐỀ
+   ========================= */
+
+.tieu-de {
+    text-align: center;
+
+    margin-bottom: 25px;
+}
+
+
+.tieu-de h1 {
+    margin: 0 0 8px;
+
+    font-size: 24px;
+
+    color: #243b5a;
+}
+
+
+.tieu-de p {
+    margin: 0;
+
+    font-size: 14px;
+
+    color: #6b7280;
+}
+
+
+/* =========================
+   NHÓM FORM
+   ========================= */
+
+.nhom-form {
+    margin-bottom: 18px;
+}
+
+
+.nhom-form label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #374151;
+}
+
+
+.nhom-form input {
+    width: 100%;
+
+    padding: 11px 12px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    font-size: 14px;
+
+    color: #374151;
+
+    background: white;
+}
+
+
+.nhom-form input:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+/* =========================
+   THÔNG BÁO LỖI
+   ========================= */
+
+.thong-bao-loi {
+    margin-bottom: 18px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #fecaca;
+
+    border-left: 4px solid #dc2626;
+
+    border-radius: 7px;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================
+   NÚT ĐĂNG NHẬP
+   ========================= */
+
+.nut-dang-nhap {
+    width: 100%;
+
+    padding: 11px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.nut-dang-nhap:hover {
+    background: #1d4ed8;
+}
+
+
+/* =========================
+   THÔNG TIN HỖ TRỢ
+   ========================= */
+
+.thong-tin-ho-tro {
+    margin-top: 22px;
+
+    padding-top: 16px;
+
+    border-top: 1px solid #e5e7eb;
+
+    text-align: center;
+}
+
+
+.thong-tin-ho-tro p {
+    margin: 0 0 12px;
+
+    color: #6b7280;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+.thong-tin-ho-tro span {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #9ca3af;
+
+    font-size: 11px;
+}
+
+
+/* =========================
+   MÀN HÌNH NHỎ
+   ========================= */
+
+@media (max-width: 500px) {
+
+    .khung-dang-nhap {
+        width: calc(100% - 30px);
+
+        padding: 25px;
+    }
+
+}
