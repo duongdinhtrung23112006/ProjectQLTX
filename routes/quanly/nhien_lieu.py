@@ -30,9 +30,8 @@ def lay_danh_sach_nhien_lieu():
                 don_gia,
                 trang_thai
             FROM nhien_lieu
-            ORDER BY id DESC
+            ORDER BY ma_nhien_lieu
         """)
-
         return cursor.fetchall()
 
     finally:
@@ -70,7 +69,6 @@ def lay_form_data():
 
 
 def kiem_tra(form_data, nhien_lieu_id=None):
-
     errors = {}
 
     if not form_data["ma_nhien_lieu"]:
@@ -92,7 +90,6 @@ def kiem_tra(form_data, nhien_lieu_id=None):
         errors["don_gia"] = (
             "Vui lòng nhập đơn giá."
         )
-
     else:
         try:
             don_gia = float(
@@ -118,14 +115,11 @@ def kiem_tra(form_data, nhien_lieu_id=None):
         )
 
     if not errors:
-
         db = ket_noi()
         cursor = db.cursor(dictionary=True)
 
         try:
-
             if nhien_lieu_id is None:
-
                 cursor.execute("""
                     SELECT id
                     FROM nhien_lieu
@@ -135,7 +129,6 @@ def kiem_tra(form_data, nhien_lieu_id=None):
                 ))
 
             else:
-
                 cursor.execute("""
                     SELECT id
                     FROM nhien_lieu
@@ -166,14 +159,15 @@ def kiem_tra(form_data, nhien_lieu_id=None):
 
 @nhien_lieu_bp.route("/nhien-lieu")
 def danh_sach():
-
     danh_sach_nhien_lieu = (
         lay_danh_sach_nhien_lieu()
     )
 
     return render_template(
         "quanly/nhienlieu/index.html",
+
         trang_hien_tai="Nhiên liệu",
+
         danh_sach_nhien_lieu=danh_sach_nhien_lieu,
 
         tong_so_nhien_lieu=len(
@@ -227,7 +221,6 @@ def them():
             cursor = db.cursor()
 
             try:
-
                 cursor.execute("""
                     INSERT INTO nhien_lieu (
                         ma_nhien_lieu,
@@ -267,8 +260,11 @@ def them():
 
     return render_template(
         "quanly/nhienlieu/them.html",
+
         trang_hien_tai="Nhiên liệu",
+
         form_data=form_data,
+
         errors=errors
     )
 
@@ -290,7 +286,6 @@ def sua(id):
     )
 
     try:
-
         cursor.execute("""
             SELECT *
             FROM nhien_lieu
@@ -343,7 +338,6 @@ def sua(id):
             cursor = db.cursor()
 
             try:
-
                 cursor.execute("""
                     UPDATE nhien_lieu
                     SET
@@ -378,9 +372,13 @@ def sua(id):
 
     return render_template(
         "quanly/nhienlieu/sua.html",
+
         trang_hien_tai="Nhiên liệu",
+
         form_data=form_data,
+
         errors=errors,
+
         id=id
     )
 
@@ -400,7 +398,6 @@ def xoa(id):
     cursor = db.cursor()
 
     try:
-
         cursor.execute("""
             DELETE FROM nhien_lieu
             WHERE id = %s
@@ -434,7 +431,6 @@ def xem(id):
     )
 
     try:
-
         cursor.execute("""
             SELECT *
             FROM nhien_lieu
@@ -455,6 +451,8 @@ def xem(id):
 
     return render_template(
         "quanly/nhienlieu/xem.html",
+
         trang_hien_tai="Nhiên liệu",
+
         nhien_lieu=nhien_lieu
     )

@@ -6,57 +6,6 @@ const danhSach = document.getElementById(
     "danhSachBonChua"
 );
 
-
-// =========================
-// SẮP XẾP THEO MÃ BỒN
-// =========================
-
-function sapXepTheoMaBon() {
-
-    const cacDong = Array.from(
-        danhSach.querySelectorAll("tr")
-    );
-
-
-    cacDong.sort(function (dongA, dongB) {
-
-        const maA = dongA.cells[0]
-            .textContent
-            .trim();
-
-        const maB = dongB.cells[0]
-            .textContent
-            .trim();
-
-
-        /*
-         * localeCompare với numeric: true
-         * giúp so sánh phần số trong mã
-         *
-         * BC02 < BC10
-         */
-
-        return maA.localeCompare(
-            maB,
-            undefined,
-            {
-                numeric: true,
-                sensitivity: "base"
-            }
-        );
-
-    });
-
-
-    cacDong.forEach(function (dong) {
-
-        danhSach.appendChild(dong);
-
-    });
-
-}
-
-
 // =========================
 // TÌM KIẾM
 // =========================

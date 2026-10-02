@@ -6,50 +6,6 @@ const danhSach = document.getElementById(
     "danhSachNhienLieu"
 );
 
-
-// =========================
-// SẮP XẾP THEO MÃ NHIÊN LIỆU
-// =========================
-
-function sapXepTheoMaNhienLieu() {
-
-    const cacDong = Array.from(
-        danhSach.querySelectorAll("tr")
-    );
-
-
-    cacDong.sort(function (dongA, dongB) {
-
-        const maA = dongA.cells[0]
-            .textContent
-            .trim();
-
-        const maB = dongB.cells[0]
-            .textContent
-            .trim();
-
-
-        return maA.localeCompare(
-            maB,
-            undefined,
-            {
-                numeric: true,
-                sensitivity: "base"
-            }
-        );
-
-    });
-
-
-    cacDong.forEach(function (dong) {
-
-        danhSach.appendChild(dong);
-
-    });
-
-}
-
-
 // =========================
 // TÌM KIẾM
 // =========================

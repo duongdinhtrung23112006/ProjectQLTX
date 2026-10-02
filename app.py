@@ -10,6 +10,7 @@ from routes.quanly.nhien_lieu import nhien_lieu_bp
 # Import các blueprint từ các module khác nhau của nhân viên
 from routes.nhanvien.trang_chu import nhanvien_trang_chu_bp
 from routes.nhanvien.bon_chua import nhanvien_bon_chua_bp
+from routes.nhanvien.nhien_lieu import nhanvien_nhien_lieu_bp
 
 # Import các blueprint từ các module khác nhau của kế toán
 from routes.ketoan.trang_chu import ketoan_trang_chu_bp
@@ -39,6 +40,7 @@ app.register_blueprint(nhien_lieu_bp)
 # Đăng ký blueprint cho trang chủ của nhân viên
 app.register_blueprint(nhanvien_trang_chu_bp)
 app.register_blueprint(nhanvien_bon_chua_bp)
+app.register_blueprint(nhanvien_nhien_lieu_bp)
 
 # Đăng ký blueprint cho trang chủ của kế toán
 app.register_blueprint(ketoan_trang_chu_bp)

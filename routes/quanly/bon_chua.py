@@ -1,6 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for
+
 from services.database import ket_noi
+
 from services.auth_service import yeu_cau_vai_tro
+
 
 bon_chua_bp = Blueprint("bon_chua", __name__)
 
@@ -10,11 +13,17 @@ bon_chua_bp = Blueprint("bon_chua", __name__)
 def bao_ve_router_bon_chua():
     return None
 
+
 def lay_danh_sach_bon():
     ket_noi_db = ket_noi()
     cursor = ket_noi_db.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM bon_chua")
+    cursor.execute("""
+        SELECT *
+        FROM bon_chua
+        ORDER BY CAST(SUBSTRING(ma_bon, 4) AS UNSIGNED)
+    """)
+
     danh_sach_bon = cursor.fetchall()
 
     cursor.close()
@@ -22,8 +31,10 @@ def lay_danh_sach_bon():
 
     return danh_sach_bon
 
+
 @bon_chua_bp.route("/bon-chua")
 def danh_sach():
+
     danh_sach_bon = lay_danh_sach_bon()
 
     tong_so_bon = len(danh_sach_bon)
@@ -47,8 +58,13 @@ def danh_sach():
         ngung_hoat_dong=ngung_hoat_dong
     )
 
-@bon_chua_bp.route("/bon-chua/them", methods=["GET", "POST"])
+
+@bon_chua_bp.route(
+    "/bon-chua/them",
+    methods=["GET", "POST"]
+)
 def them():
+
     form_data = {
         "ma_bon": "",
         "ten_bon": "",
@@ -61,6 +77,7 @@ def them():
     errors = {}
 
     if request.method == "POST":
+
         form_data = {
             key: request.form.get(key, "").strip()
             for key in form_data
@@ -73,6 +90,7 @@ def them():
 
         if not ma_bon:
             errors["ma_bon"] = "Vui lòng nhập mã bồn."
+
         elif any(
             bon["ma_bon"].upper() == ma_bon
             for bon in lay_danh_sach_bon()
@@ -82,42 +100,70 @@ def them():
         if not ten_bon:
             errors["ten_bon"] = "Vui lòng nhập tên bồn."
 
-        if nhien_lieu not in {"RON 95", "E5 RON 92", "Diesel"}:
-            errors["nhien_lieu"] = "Vui lòng chọn loại nhiên liệu hợp lệ."
+        if nhien_lieu not in {
+            "RON 95",
+            "E5 RON 92",
+            "Diesel"
+        }:
+            errors["nhien_lieu"] = (
+                "Vui lòng chọn loại nhiên liệu hợp lệ."
+            )
 
         try:
             suc_chua = int(form_data["suc_chua"])
 
             if suc_chua <= 0:
-                errors["suc_chua"] = "Sức chứa phải lớn hơn 0."
+                errors["suc_chua"] = (
+                    "Sức chứa phải lớn hơn 0."
+                )
 
         except (TypeError, ValueError):
+
             suc_chua = None
-            errors["suc_chua"] = "Sức chứa phải là số nguyên hợp lệ."
+
+            errors["suc_chua"] = (
+                "Sức chứa phải là số nguyên hợp lệ."
+            )
 
         try:
-            ton_hien_tai = int(form_data["ton_hien_tai"])
+            ton_hien_tai = int(
+                form_data["ton_hien_tai"]
+            )
 
             if ton_hien_tai < 0:
-                errors["ton_hien_tai"] = "Tồn hiện tại không được nhỏ hơn 0."
+                errors["ton_hien_tai"] = (
+                    "Tồn hiện tại không được nhỏ hơn 0."
+                )
 
         except (TypeError, ValueError):
+
             ton_hien_tai = None
-            errors["ton_hien_tai"] = "Tồn hiện tại phải là số nguyên hợp lệ."
+
+            errors["ton_hien_tai"] = (
+                "Tồn hiện tại phải là số nguyên hợp lệ."
+            )
 
         if (
             suc_chua is not None
             and ton_hien_tai is not None
             and ton_hien_tai > suc_chua
         ):
-            errors["ton_hien_tai"] = "Tồn hiện tại không được cao hơn sức chứa."
+            errors["ton_hien_tai"] = (
+                "Tồn hiện tại không được cao hơn sức chứa."
+            )
 
-        if trang_thai not in {"Đang hoạt động", "Ngừng hoạt động"}:
-            errors["trang_thai"] = "Trạng thái không hợp lệ."
+        if trang_thai not in {
+            "Đang hoạt động",
+            "Ngừng hoạt động"
+        }:
+            errors["trang_thai"] = (
+                "Trạng thái không hợp lệ."
+            )
 
         form_data["ma_bon"] = ma_bon
 
         if errors:
+
             return render_template(
                 "quanly/bonchua/them.html",
                 trang_hien_tai="Bồn chứa",
@@ -131,7 +177,14 @@ def them():
         cursor.execute(
             """
             INSERT INTO bon_chua
-            (ma_bon, ten_bon, nhien_lieu, suc_chua, ton_hien_tai, trang_thai)
+            (
+                ma_bon,
+                ten_bon,
+                nhien_lieu,
+                suc_chua,
+                ton_hien_tai,
+                trang_thai
+            )
             VALUES (%s, %s, %s, %s, %s, %s)
             """,
             (
@@ -149,7 +202,9 @@ def them():
         cursor.close()
         ket_noi_db.close()
 
-        return redirect(url_for("bon_chua.danh_sach"))
+        return redirect(
+            url_for("bon_chua.danh_sach")
+        )
 
     return render_template(
         "quanly/bonchua/them.html",
@@ -158,15 +213,24 @@ def them():
         form_data=form_data
     )
 
-@bon_chua_bp.route("/bon-chua/sua/<int:id>", methods=["GET", "POST"])
+
+@bon_chua_bp.route(
+    "/bon-chua/sua/<int:id>",
+    methods=["GET", "POST"]
+)
 def sua(id):
+
     ket_noi_db = ket_noi()
-    cursor = ket_noi_db.cursor(dictionary=True)
+
+    cursor = ket_noi_db.cursor(
+        dictionary=True
+    )
 
     cursor.execute(
         "SELECT * FROM bon_chua WHERE id = %s",
         (id,)
     )
+
     bon = cursor.fetchone()
 
     cursor.close()
@@ -187,6 +251,7 @@ def sua(id):
     errors = {}
 
     if request.method == "POST":
+
         form_data = {
             key: request.form.get(key, "").strip()
             for key in form_data
@@ -198,49 +263,90 @@ def sua(id):
         trang_thai = form_data["trang_thai"]
 
         if not ma_bon:
-            errors["ma_bon"] = "Vui lòng nhập mã bồn."
+            errors["ma_bon"] = (
+                "Vui lòng nhập mã bồn."
+            )
+
         elif any(
             bon["ma_bon"].upper() == ma_bon
             and bon["id"] != id
             for bon in lay_danh_sach_bon()
         ):
-            errors["ma_bon"] = "Mã bồn này đã tồn tại."
+            errors["ma_bon"] = (
+                "Mã bồn này đã tồn tại."
+            )
 
         if not ten_bon:
-            errors["ten_bon"] = "Vui lòng nhập tên bồn."
+            errors["ten_bon"] = (
+                "Vui lòng nhập tên bồn."
+            )
 
-        if nhien_lieu not in {"RON 95", "E5 RON 92", "Diesel"}:
-            errors["nhien_lieu"] = "Vui lòng chọn loại nhiên liệu hợp lệ."
+        if nhien_lieu not in {
+            "RON 95",
+            "E5 RON 92",
+            "Diesel"
+        }:
+            errors["nhien_lieu"] = (
+                "Vui lòng chọn loại nhiên liệu hợp lệ."
+            )
 
         try:
-            suc_chua = int(form_data["suc_chua"])
+            suc_chua = int(
+                form_data["suc_chua"]
+            )
+
             if suc_chua <= 0:
-                errors["suc_chua"] = "Sức chứa phải lớn hơn 0."
+                errors["suc_chua"] = (
+                    "Sức chứa phải lớn hơn 0."
+                )
+
         except (TypeError, ValueError):
+
             suc_chua = None
-            errors["suc_chua"] = "Sức chứa phải là số nguyên hợp lệ."
+
+            errors["suc_chua"] = (
+                "Sức chứa phải là số nguyên hợp lệ."
+            )
 
         try:
-            ton_hien_tai = int(form_data["ton_hien_tai"])
+            ton_hien_tai = int(
+                form_data["ton_hien_tai"]
+            )
+
             if ton_hien_tai < 0:
-                errors["ton_hien_tai"] = "Tồn hiện tại không được nhỏ hơn 0."
+                errors["ton_hien_tai"] = (
+                    "Tồn hiện tại không được nhỏ hơn 0."
+                )
+
         except (TypeError, ValueError):
+
             ton_hien_tai = None
-            errors["ton_hien_tai"] = "Tồn hiện tại phải là số nguyên hợp lệ."
+
+            errors["ton_hien_tai"] = (
+                "Tồn hiện tại phải là số nguyên hợp lệ."
+            )
 
         if (
             suc_chua is not None
             and ton_hien_tai is not None
             and ton_hien_tai > suc_chua
         ):
-            errors["ton_hien_tai"] = "Tồn hiện tại không được cao hơn sức chứa."
+            errors["ton_hien_tai"] = (
+                "Tồn hiện tại không được cao hơn sức chứa."
+            )
 
-        if trang_thai not in {"Đang hoạt động", "Ngừng hoạt động"}:
-            errors["trang_thai"] = "Trạng thái không hợp lệ."
+        if trang_thai not in {
+            "Đang hoạt động",
+            "Ngừng hoạt động"
+        }:
+            errors["trang_thai"] = (
+                "Trạng thái không hợp lệ."
+            )
 
         form_data["ma_bon"] = ma_bon
 
         if errors:
+
             return render_template(
                 "quanly/bonchua/sua.html",
                 trang_hien_tai="Bồn chứa",
@@ -250,6 +356,7 @@ def sua(id):
             ), 422
 
         ket_noi_db = ket_noi()
+
         cursor = ket_noi_db.cursor()
 
         cursor.execute(
@@ -279,7 +386,9 @@ def sua(id):
         cursor.close()
         ket_noi_db.close()
 
-        return redirect(url_for("bon_chua.danh_sach"))
+        return redirect(
+            url_for("bon_chua.danh_sach")
+        )
 
     return render_template(
         "quanly/bonchua/sua.html",
@@ -289,9 +398,15 @@ def sua(id):
         id=id
     )
 
-@bon_chua_bp.route("/bon-chua/xoa/<int:id>", methods=["POST"])
+
+@bon_chua_bp.route(
+    "/bon-chua/xoa/<int:id>",
+    methods=["POST"]
+)
 def xoa(id):
+
     ket_noi_db = ket_noi()
+
     cursor = ket_noi_db.cursor()
 
     cursor.execute(
@@ -304,12 +419,19 @@ def xoa(id):
     cursor.close()
     ket_noi_db.close()
 
-    return redirect(url_for("bon_chua.danh_sach"))
+    return redirect(
+        url_for("bon_chua.danh_sach")
+    )
+
 
 @bon_chua_bp.route("/bon-chua/xem/<int:id>")
 def xem(id):
+
     ket_noi_db = ket_noi()
-    cursor = ket_noi_db.cursor(dictionary=True)
+
+    cursor = ket_noi_db.cursor(
+        dictionary=True
+    )
 
     cursor.execute(
         "SELECT * FROM bon_chua WHERE id = %s",
@@ -329,4 +451,3 @@ def xem(id):
         trang_hien_tai="Bồn chứa",
         bon=bon
     )
-
