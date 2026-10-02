@@ -1,0 +1,463 @@
+{% extends "quanly/khungquanly.html" %}
+
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='cssquanly/nhienlieu/index.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='cssquanly/nhienlieu/xoa.css'
+    ) }}"
+>
+
+{% endblock %}
+
+
+{% block noi_dung %}
+
+<div class="tieu-de-noi-dung">
+
+    <div>
+
+        <h1>Quản Lý Nhiên Liệu</h1>
+
+        <p>
+            Theo dõi thông tin và trạng thái kinh doanh
+            của các mặt hàng nhiên liệu
+        </p>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('nhien_lieu.them') }}"
+        class="nut-them"
+    >
+        + Thêm nhiên liệu
+    </a>
+
+</div>
+
+
+<div class="thong-ke-nhien-lieu">
+
+    <div class="the-thong-ke">
+
+        <div class="icon-thong-ke">
+            ⛽
+        </div>
+
+        <div>
+
+            <span style="color: rgb(0, 50, 214);">
+                Tổng số nhiên liệu
+            </span>
+
+            <strong style="color: rgb(0, 50, 214);">
+                {{ tong_so_nhien_lieu }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="the-thong-ke">
+
+        <div class="icon-thong-ke xanh">
+            ✓
+        </div>
+
+        <div>
+
+            <span style="color: rgb(5, 190, 14);">
+                Đang bán
+            </span>
+
+            <strong style="color: rgb(5, 190, 14);">
+                {{ dang_ban }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="the-thong-ke">
+
+        <div class="icon-thong-ke cam">
+            !
+        </div>
+
+        <div>
+
+            <span style="color: rgb(255, 17, 0);">
+                Ngừng bán
+            </span>
+
+            <strong style="color: rgb(255, 17, 0);">
+                {{ ngung_ban }}
+            </strong>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- TÌM KIẾM -->
+<!-- ========================= -->
+
+<div class="o-tim-kiem">
+
+    <span class="bieu-tuong-tim-kiem">
+        ⌕
+    </span>
+
+    <input
+        type="text"
+        id="timKiemNhienLieu"
+        placeholder="Tìm theo mã hoặc tên nhiên liệu..."
+        autocomplete="off"
+    >
+
+</div>
+
+
+<!-- ========================= -->
+<!-- DANH SÁCH NHIÊN LIỆU -->
+<!-- ========================= -->
+
+<div class="khung-bang">
+
+    <div class="thanh-tren-nhien-lieu">
+
+        <div>
+
+            <h2>
+                Danh sách nhiên liệu
+            </h2>
+
+            <p>
+                Thông tin nhiên liệu đang được quản lý
+                trong hệ thống
+            </p>
+
+        </div>
+
+        <span>
+            {{ tong_so_nhien_lieu }} LOẠI NHIÊN LIỆU
+        </span>
+
+    </div>
+
+
+    <table class="bang-du-lieu">
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Mã
+                </th>
+
+                <th>
+                    Tên nhiên liệu
+                </th>
+
+                <th>
+                    Đơn vị
+                </th>
+
+                <th>
+                    Đơn giá hiện tại
+                </th>
+
+                <th>
+                    Trạng thái
+                </th>
+
+                <th>
+                    Thao tác
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody id="danhSachNhienLieu">
+
+            {% for nhien_lieu in danh_sach_nhien_lieu %}
+
+            <tr>
+
+                <td>
+
+                    <strong>
+                        {{ nhien_lieu.ma_nhien_lieu }}
+                    </strong>
+
+                </td>
+
+
+                <td>
+
+                    {{ nhien_lieu.ten_nhien_lieu }}
+
+                </td>
+
+
+                <td>
+
+                    {{ nhien_lieu.don_vi }}
+
+                </td>
+
+
+                <td>
+
+                    {{
+                        "{:,.0f}".format(
+                            nhien_lieu.don_gia
+                        )
+                    }} đ
+
+                </td>
+
+
+                <td>
+
+                    {% if nhien_lieu.trang_thai == "Đang bán" %}
+
+                        <span class="trang-thai dang-hoat-dong">
+
+                            {{ nhien_lieu.trang_thai }}
+
+                        </span>
+
+                    {% else %}
+
+                        <span class="trang-thai ngung-hoat-dong">
+
+                            {{ nhien_lieu.trang_thai }}
+
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+
+                <td>
+
+                    <div class="nhom-thao-tac">
+
+                        <a
+                            href="{{ url_for(
+                                'nhien_lieu.xem',
+                                id=nhien_lieu.id
+                            ) }}"
+                            class="nut-xem"
+                        >
+                            Xem
+                        </a>
+
+
+                        <a
+                            href="{{ url_for(
+                                'nhien_lieu.sua',
+                                id=nhien_lieu.id
+                            ) }}"
+                            class="nut-sua"
+                        >
+                            Sửa
+                        </a>
+
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'nhien_lieu.xoa',
+                                id=nhien_lieu.id
+                            ) }}"
+                            style="display: inline;"
+                        >
+
+                            <button
+                                type="button"
+                                class="nut-xoa"
+                                onclick="moHopXacNhan(
+                                    '{{ nhien_lieu.id }}',
+                                    '{{ nhien_lieu.ma_nhien_lieu }}',
+                                    '{{ nhien_lieu.ten_nhien_lieu }}'
+                                )"
+                            >
+                                Xóa
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+
+            {% else %}
+
+            <tr>
+
+                <td
+                    colspan="6"
+                    class="khong-co-du-lieu"
+                >
+                    Chưa có nhiên liệu nào trong hệ thống !
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- HỘP XÁC NHẬN XÓA -->
+<!-- ========================= -->
+
+<div
+    id="hop-xac-nhan"
+    class="lop-phu"
+>
+
+    <div class="hop-thong-bao">
+
+        <div class="nhan-canh-bao">
+            CẢNH BÁO
+        </div>
+
+
+        <div class="bieu-tuong-xoa">
+            🗑️
+        </div>
+
+
+        <h2>
+            XÓA CÁI NÀY?
+        </h2>
+
+
+        <p class="mo-ta-xoa">
+
+            Bạn đang thực hiện thao tác xóa
+
+            <strong id="ten-nhien-lieu-xoa"></strong>.
+
+        </p>
+
+
+        <p class="ghi-chu-xoa">
+
+            Nếu xóa nhiên liệu này,
+
+            dữ liệu sẽ bị xóa khỏi hệ thống
+
+            và không thể khôi phục.
+
+        </p>
+
+
+        <div class="nut-xac-nhan">
+
+            <button
+                type="button"
+                class="nut-huy-xoa"
+                onclick="dongHopXacNhan()"
+            >
+                Hủy
+            </button>
+
+
+            <form
+                id="form-xoa"
+                method="POST"
+            >
+
+                <button
+                    type="submit"
+                    class="nut-dong-y-xoa"
+                >
+                    Xóa nhiên liệu
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    function moHopXacNhan(
+        id,
+        maNhienLieu,
+        tenNhienLieu
+    ) {
+
+        document.getElementById(
+            "ten-nhien-lieu-xoa"
+        ).textContent =
+            maNhienLieu + " - " + tenNhienLieu;
+
+
+        document.getElementById(
+            "form-xoa"
+        ).action =
+            "/nhien-lieu/xoa/" + id;
+
+
+        document.getElementById(
+            "hop-xac-nhan"
+        ).classList.add("hien-thi");
+
+    }
+
+
+    function dongHopXacNhan() {
+
+        document.getElementById(
+            "hop-xac-nhan"
+        ).classList.remove("hien-thi");
+
+    }
+
+</script>
+
+
+<script src="{{ url_for(
+    'static',
+    filename='js/quanly/nhienlieu/index.js'
+) }}"></script>
+
+
+{% endblock %}

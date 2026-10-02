@@ -1,4 +1,4 @@
-{% extends "quanly/khung.html" %}
+{% extends "quanly/khungquanly.html" %}
 
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/bonchua/index.css') }}">
@@ -18,48 +18,103 @@
     </a>
 </div>
 
+
 <div class="thong-ke-bon">
 
     <div class="the-thong-ke">
         <div class="icon-thong-ke">▣</div>
+
         <div>
-            <span style="color: rgb(0, 50, 214);">Tổng số bồn</span>
-            <strong style="color: rgb(0, 50, 214);">{{ tong_so_bon }}</strong>
+            <span style="color: rgb(0, 50, 214);">
+                Tổng số bồn
+            </span>
+
+            <strong style="color: rgb(0, 50, 214);">
+                {{ tong_so_bon }}
+            </strong>
         </div>
     </div>
+
 
     <div class="the-thong-ke">
         <div class="icon-thong-ke xanh">✓</div>
+
         <div>
-            <span style="color: rgb(5, 190, 14);">Đang hoạt động</span>
-            <strong style="color: rgb(5, 190, 14);">{{ dang_hoat_dong }}</strong>
+            <span style="color: rgb(5, 190, 14);">
+                Đang hoạt động
+            </span>
+
+            <strong style="color: rgb(5, 190, 14);">
+                {{ dang_hoat_dong }}
+            </strong>
         </div>
     </div>
 
+
     <div class="the-thong-ke">
         <div class="icon-thong-ke cam">!</div>
+
         <div>
-            <span style="color: rgb(255, 17, 0);">Ngừng hoạt động</span>
-            <strong style="color: rgb(255, 17, 0);">{{ ngung_hoat_dong }}</strong>
+            <span style="color: rgb(255, 17, 0);">
+                Ngừng hoạt động
+            </span>
+
+            <strong style="color: rgb(255, 17, 0);">
+                {{ ngung_hoat_dong }}
+            </strong>
         </div>
     </div>
 
 </div>
 
+
+<!-- ========================= -->
+<!-- TÌM KIẾM -->
+<!-- ========================= -->
+
+<div class="o-tim-kiem">
+
+    <span class="bieu-tuong-tim-kiem">
+        ⌕
+    </span>
+
+    <input
+        type="text"
+        id="timKiemBonChua"
+        placeholder="Tìm theo mã, tên bồn hoặc nhiên liệu..."
+        autocomplete="off"
+    >
+
+</div>
+
+
+<!-- ========================= -->
+<!-- DANH SÁCH BỒN CHỨA -->
+<!-- ========================= -->
+
 <div class="khung-bang">
 
     <div class="thanh-tren-bc">
+
         <div>
             <h2>Danh sách bồn chứa</h2>
-            <p>Thông tin các bồn chứa nhiên liệu tại trạm</p>
+
+            <p>
+                Thông tin các bồn chứa nhiên liệu tại trạm
+            </p>
         </div>
 
-        <span>{{ tong_so_bon }} bồn</span>
+        <span>
+            {{ tong_so_bon }} BỒN
+        </span>
+
     </div>
+
 
     <table class="bang-du-lieu">
 
         <thead>
+
             <tr>
                 <th>Mã bồn</th>
                 <th>Tên bồn</th>
@@ -69,33 +124,42 @@
                 <th>Trạng thái</th>
                 <th>Thao tác</th>
             </tr>
+
         </thead>
 
-        <tbody>
+
+        <tbody id="danhSachBonChua">
 
             {% for bon in danh_sach_bon %}
 
             <tr>
 
                 <td>
-                    <strong>{{ bon.ma_bon }}</strong>
+                    <strong>
+                        {{ bon.ma_bon }}
+                    </strong>
                 </td>
+
 
                 <td>
                     {{ bon.ten_bon }}
                 </td>
 
+
                 <td>
                     {{ bon.nhien_lieu }}
                 </td>
+
 
                 <td>
                     {{ "{:,.0f}".format(bon.suc_chua) }} L
                 </td>
 
+
                 <td>
                     {{ "{:,.0f}".format(bon.ton_hien_tai) }} L
                 </td>
+
 
                 <td>
 
@@ -115,20 +179,40 @@
 
                 </td>
 
+
                 <td>
 
-                    <a href="{{ url_for('bon_chua.xem', id=bon.id) }}" class="nut-xem">
+                    <a
+                        href="{{ url_for('bon_chua.xem', id=bon.id) }}"
+                        class="nut-xem"
+                    >
                         Xem
                     </a>
 
-                    <a href="{{ url_for('bon_chua.sua', id=bon.id) }}" class="nut-sua">
+
+                    <a
+                        href="{{ url_for('bon_chua.sua', id=bon.id) }}"
+                        class="nut-sua"
+                    >
                         Sửa
                     </a>
 
-                    <form method="POST" action="{{ url_for('bon_chua.xoa', id=bon.id) }}" style="display: inline;">
 
-                        <button type="button" class="nut-xoa"
-                            onclick="moHopXacNhan('{{ bon.id }}', '{{ bon.ma_bon }}', '{{ bon.ten_bon }}')">
+                    <form
+                        method="POST"
+                        action="{{ url_for('bon_chua.xoa', id=bon.id) }}"
+                        style="display: inline;"
+                    >
+
+                        <button
+                            type="button"
+                            class="nut-xoa"
+                            onclick="moHopXacNhan(
+                                '{{ bon.id }}',
+                                '{{ bon.ma_bon }}',
+                                '{{ bon.ten_bon }}'
+                            )"
+                        >
                             Xóa
                         </button>
 
@@ -138,12 +222,18 @@
 
             </tr>
 
+
             {% else %}
 
             <tr>
-                <td colspan="7" class="khong-co-du-lieu">
+
+                <td
+                    colspan="7"
+                    class="khong-co-du-lieu"
+                >
                     Chưa có bồn chứa nào trong hệ thống !
                 </td>
+
             </tr>
 
             {% endfor %}
@@ -155,36 +245,66 @@
 </div>
 
 
-<div id="hop-xac-nhan" class="lop-phu">
+<!-- ========================= -->
+<!-- HỘP XÁC NHẬN XÓA -->
+<!-- ========================= -->
+
+<div
+    id="hop-xac-nhan"
+    class="lop-phu"
+>
 
     <div class="hop-thong-bao">
 
-        <div class="nhan-canh-bao">CẢNH BÁO</div>
+        <div class="nhan-canh-bao">
+            CẢNH BÁO
+        </div>
+
 
         <div class="bieu-tuong-xoa">
             🗑️
         </div>
 
-        <h2>XÓA CÁI NÀY?</h2>
+
+        <h2>
+            XÓA CÁI NÀY?
+        </h2>
+
 
         <p class="mo-ta-xoa">
+
             Bạn đang thực hiện thao tác xóa
+
             <strong id="ten-bon-xoa"></strong>.
+
         </p>
+
 
         <p class="ghi-chu-xoa">
             Hành động này không thể hoàn tác.
         </p>
 
+
         <div class="nut-xac-nhan">
 
-            <button type="button" class="nut-huy-xoa" onclick="dongHopXacNhan()">
+            <button
+                type="button"
+                class="nut-huy-xoa"
+                onclick="dongHopXacNhan()"
+            >
                 Hủy
             </button>
 
-            <form id="form-xoa" method="POST">
 
-                <button type="submit" class="nut-dong-y-xoa">
+            <form
+                id="form-xoa"
+                method="POST"
+            >
+
+                <button
+                    type="submit"
+                    class="nut-dong-y-xoa"
+                >
                     Xóa bồn
                 </button>
 
@@ -199,24 +319,46 @@
 
 <script>
 
-    function moHopXacNhan(id, maBon, tenBon) {
+    function moHopXacNhan(
+        id,
+        maBon,
+        tenBon
+    ) {
 
-        document.getElementById("ten-bon-xoa").textContent =
+        document.getElementById(
+            "ten-bon-xoa"
+        ).textContent =
             maBon + " - " + tenBon;
 
-        document.getElementById("form-xoa").action =
+
+        document.getElementById(
+            "form-xoa"
+        ).action =
             "/bon-chua/xoa/" + id;
 
-        document.getElementById("hop-xac-nhan").classList.add("hien-thi");
+
+        document.getElementById(
+            "hop-xac-nhan"
+        ).classList.add("hien-thi");
 
     }
 
+
     function dongHopXacNhan() {
 
-        document.getElementById("hop-xac-nhan").classList.remove("hien-thi");
+        document.getElementById(
+            "hop-xac-nhan"
+        ).classList.remove("hien-thi");
 
     }
 
 </script>
+
+
+<script src="{{ url_for(
+    'static',
+    filename='js/quanly/bonchua/index.js'
+) }}"></script>
+
 
 {% endblock %}

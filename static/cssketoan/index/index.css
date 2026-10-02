@@ -1,0 +1,202 @@
+/* =========================
+   KHUNG CHAO MUNG
+========================= */
+
+.khung-chao-mung {
+	position: relative;
+	min-height: 180px;
+	padding: 32px 38px;
+	overflow: hidden;
+	border-radius: 18px;
+	background: linear-gradient(110deg, #500bf0, #00ff2a 60%, #16b5ed);
+	background-size: 200% 200%;
+	animation: doi-mau-trang-chu 5s ease infinite;
+	color: white;
+	box-shadow: 0 12px 30px rgba(0, 102, 204, 0.18);
+}
+
+.khung-chao-mung::before,
+.khung-chao-mung::after {
+	content: "";
+	position: absolute;
+	border-radius: 50%;
+}
+
+.khung-chao-mung::before {
+	width: 280px;
+	height: 280px;
+	right: -70px;
+	top: -130px;
+	border: 45px solid rgba(255, 255, 255, 0.07);
+}
+
+.khung-chao-mung::after {
+	width: 180px;
+	height: 180px;
+	right: 80px;
+	bottom: -130px;
+	border: 35px solid rgba(255, 255, 255, 0.06);
+}
+
+@keyframes doi-mau-trang-chu {
+	0% { background-position: 0% 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 0% 50%; }
+}
+
+.loi-chao {
+	margin-bottom: 15px;
+	font-size: 14px;
+	letter-spacing: 1.5px;
+	opacity: 0.75;
+}
+
+.khung-chao-mung h1 {
+	margin-bottom: 15px;
+	font-size: 32px;
+}
+
+.khung-chao-mung h1 span {
+	color: #baf0ff;
+}
+
+.mo-ta {
+	font-size: 14px;
+	opacity: 0.8;
+}
+
+.trang-tri {
+	position: absolute;
+	right: 90px;
+	top: 35px;
+	font-size: 95px;
+	opacity: 0.16;
+	transform: rotate(-10deg);
+}
+
+/* =========================
+   CAC CHUC NANG
+========================= */
+
+.tieu-de-chuc-nang {
+	margin-top: 30px;
+	margin-bottom: 18px;
+}
+
+.tieu-de-chuc-nang h2 {
+	margin-bottom: 5px;
+	font-size: 20px;
+    color: #001aff;
+}
+
+.tieu-de-chuc-nang p {
+	color: #6e747c;
+	font-size: 14px;
+}
+
+.luoi-chuc-nang {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 18px;
+}
+
+.the-chuc-nang {
+	position: relative;
+	min-height: 125px;
+	padding: 22px;
+	display: flex;
+	align-items: center;
+	gap: 17px;
+	overflow: hidden;
+	text-decoration: none;
+	background: rgb(129, 171, 250);
+	border: 2px solid #dde1e7;
+	border-radius: 15px;
+	animation: noi-nhe 4s ease-in-out infinite;
+	transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+}
+
+.the-chuc-nang::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 45%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+	transform: skewX(-20deg);
+	animation: vet-sang 6s ease-in-out infinite;
+}
+
+@keyframes noi-nhe {
+	0%, 100% { transform: translateY(0); }
+	50% { transform: translateY(-3px); }
+}
+
+@keyframes vet-sang {
+	0% { left: -100%; }
+	35%, 100% { left: 150%; }
+}
+
+.the-chuc-nang:hover {
+	transform: translateY(-8px) scale(1.03);
+	background: linear-gradient(135deg, #4169e1, #6a5acd, #00a8e8);
+	border-color: #a9c9ff;
+	box-shadow: 0 20px 40px rgba(37, 76, 180, 0.3), 0 0 25px rgba(83, 130, 255, 0.35);
+}
+
+.bieu-tuong-chuc-nang {
+	flex-shrink: 0;
+	width: 55px;
+	height: 55px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 14px;
+	font-size: 25px;
+}
+
+.noi-dung-the h3 {
+	margin-bottom: 7px;
+	color: #243b5a;
+	font-size: 18px;
+	font-weight: 500;
+}
+
+.noi-dung-the p {
+	color: #686e77;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.mui-ten-the {
+	position: absolute;
+	right: 20px;
+	bottom: 17px;
+	font-size: 18px;
+	opacity: 0;
+	transition: 0.2s;
+}
+
+.the-chuc-nang:hover .mui-ten-the {
+	opacity: 1;
+	transform: translateX(3px);
+}
+
+.mau-xanh .bieu-tuong-chuc-nang { background: #e5f1ff; color: #1479e9; }
+.mau-xanh-la .bieu-tuong-chuc-nang { background: #e5f9ed; color: #18a957; }
+.mau-cam .bieu-tuong-chuc-nang { background: #fff0df; color: #f28b20; }
+.mau-tim .bieu-tuong-chuc-nang { background: #f1e8ff; color: #8b45df; }
+.mau-xanh-ngoc .bieu-tuong-chuc-nang { background: #e3f8fb; color: #0797a8; }
+.mau-hong .bieu-tuong-chuc-nang { background: #ffe8f0; color: #e84878; }
+.mau-cham .bieu-tuong-chuc-nang { background: #e9eaff; color: #5962d9; }
+.mau-ngoc .bieu-tuong-chuc-nang { background: #e2f7f3; color: #159d8a; }
+.mau-vang .bieu-tuong-chuc-nang { background: #fff5d9; color: #d69a00; }
+
+@media (max-width: 1100px) {
+	.luoi-chuc-nang { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 750px) {
+	.luoi-chuc-nang { grid-template-columns: 1fr; }
+}

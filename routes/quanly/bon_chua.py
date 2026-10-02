@@ -1,12 +1,12 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from services.database import ket_noi
-from services.auth_service import yeu_cau_dang_nhap
+from services.auth_service import yeu_cau_vai_tro
 
 bon_chua_bp = Blueprint("bon_chua", __name__)
 
 
 @bon_chua_bp.before_request
-@yeu_cau_dang_nhap
+@yeu_cau_vai_tro("Quản lý")
 def bao_ve_router_bon_chua():
     return None
 

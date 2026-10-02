@@ -1,148 +1,359 @@
-{% extends "quanly/khung.html" %}
+{% extends "quanly/khungquanly.html" %}
+
 
 {% block css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/calamviec/index.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/calamviec/xoa.css') }}">
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='cssquanly/calamviec/index.css'
+    ) }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='cssquanly/calamviec/xoa.css'
+    ) }}"
+>
+
 {% endblock %}
+
 
 {% block noi_dung %}
 
+
+<!-- ========================= -->
+<!-- TIÊU ĐỀ TRANG -->
+<!-- ========================= -->
+
 <div class="tieu-de-noi-dung">
+
     <div>
-        <h1>Quản Lý Ca Làm Việc</h1>
-        <p>Phân công và theo dõi lịch làm việc của nhân viên</p>
+
+        <h1>
+            Quản Lý Ca Làm Việc
+        </h1>
+
+        <p>
+            Phân công và theo dõi lịch làm việc của nhân viên
+        </p>
+
     </div>
 
-    <a href="{{ url_for('ca_lam_viec.them') }}" class="nut-them">
+
+    <a
+        href="{{ url_for('ca_lam_viec.them') }}"
+        class="nut-them"
+    >
         + Thêm ca làm việc
     </a>
+
 </div>
+
+
+<!-- ========================= -->
+<!-- THỐNG KÊ -->
+<!-- ========================= -->
 
 <div class="thong-ke-ca">
 
+
     <div class="the-thong-ke">
-        <div class="icon-thong-ke">◷</div>
+
+        <div class="icon-thong-ke">
+            ◷
+        </div>
+
         <div>
-            <span style="color: rgb(0, 50, 214);">Tổng số ca</span>
+
+            <span style="color: rgb(0, 50, 214);">
+                Tổng số ca
+            </span>
+
             <strong style="color: rgb(0, 50, 214);">
                 {{ tong_so_ca }}
             </strong>
+
         </div>
+
     </div>
 
+
     <div class="the-thong-ke">
-        <div class="icon-thong-ke xanh">✓</div>
+
+        <div class="icon-thong-ke xanh">
+            ✓
+        </div>
+
         <div>
-            <span style="color: rgb(5, 190, 14);">Đang hoạt động</span>
+
+            <span style="color: rgb(5, 190, 14);">
+                Đang hoạt động
+            </span>
+
             <strong style="color: rgb(5, 190, 14);">
                 {{ dang_hoat_dong }}
             </strong>
+
         </div>
+
     </div>
 
+
     <div class="the-thong-ke">
-        <div class="icon-thong-ke cam">!</div>
+
+        <div class="icon-thong-ke cam">
+            !
+        </div>
+
         <div>
-            <span style="color: rgb(255, 17, 0);">Đã đóng</span>
+
+            <span style="color: rgb(255, 17, 0);">
+                Đã đóng
+            </span>
+
             <strong style="color: rgb(255, 17, 0);">
                 {{ da_dong }}
             </strong>
+
         </div>
+
     </div>
+
 
 </div>
 
+
+<!-- ========================= -->
+<!-- TÌM KIẾM -->
+<!-- ========================= -->
+
+<div class="o-tim-kiem">
+
+    <span class="bieu-tuong-tim-kiem">
+        ⌕
+    </span>
+
+    <input
+        type="text"
+        id="timKiemCaLamViec"
+        placeholder="Tìm theo mã ca, tên ca, ngày làm việc hoặc nhân viên..."
+        autocomplete="off"
+    >
+
+</div>
+
+
+<!-- ========================= -->
+<!-- DANH SÁCH CA -->
+<!-- ========================= -->
+
 <div class="khung-bang">
 
+
     <div class="thanh-tren-ca">
+
         <div>
-            <h2>Danh sách ca làm việc</h2>
-            <p>Thông tin ca làm việc và nhân viên được phân vào ca</p>
+
+            <h2>
+                Danh sách ca làm việc
+            </h2>
+
+            <p>
+                Thông tin ca làm việc và nhân viên được phân vào ca
+            </p>
+
         </div>
 
-        <span>{{ tong_so_ca }} ca</span>
+
+        <span>
+            {{ tong_so_ca }} ca
+        </span>
+
     </div>
+
 
     <table class="bang-du-lieu">
 
+
         <thead>
+
             <tr>
-                <th>Mã ca</th>
-                <th>Tên ca</th>
-                <th>Ngày làm việc</th>
-                <th>Thời gian bắt đầu</th>
-                <th>Thời gian kết thúc</th>
-                <th>Nhân viên</th>
-                <th>Trạng thái</th>
-                <th>Thao tác</th>
+
+                <th>
+                    Mã ca
+                </th>
+
+                <th>
+                    Tên ca
+                </th>
+
+                <th>
+                    Ngày làm việc
+                </th>
+
+                <th>
+                    Thời gian bắt đầu
+                </th>
+
+                <th>
+                    Thời gian kết thúc
+                </th>
+
+                <th>
+                    Nhân viên
+                </th>
+
+                <th>
+                    Trạng thái
+                </th>
+
+                <th>
+                    Thao tác
+                </th>
+
             </tr>
+
         </thead>
 
-        <tbody>
+
+        <tbody id="danhSachCaLamViec">
+
 
             {% for ca in danh_sach_ca %}
 
+
             <tr>
 
-                <td>
-                    <strong>{{ ca.ma_ca }}</strong>
-                </td>
+
+                <!-- MÃ CA -->
 
                 <td>
+
+                    <strong>
+                        {{ ca.ma_ca }}
+                    </strong>
+
+                </td>
+
+
+                <!-- TÊN CA -->
+
+                <td>
+
                     {{ ca.ten_ca }}
+
                 </td>
 
+
+                <!-- NGÀY LÀM VIỆC -->
+
                 <td>
+
                     {{ ca.ngay_lam_viec.strftime('%d/%m/%Y') }}
+
                 </td>
 
+
+                <!-- THỜI GIAN BẮT ĐẦU -->
+
                 <td>
+
                     {{ ca.thoi_gian_bat_dau or '—' }}
+
                 </td>
 
+
+                <!-- THỜI GIAN KẾT THÚC -->
+
                 <td>
+
                     {{ ca.thoi_gian_ket_thuc or '—' }}
+
                 </td>
 
+
+                <!-- NHÂN VIÊN -->
+
                 <td>
+
                     {{ ca.nhan_vien_text or '—' }}
+
                 </td>
 
+
+                <!-- TRẠNG THÁI -->
+
                 <td>
+
                     {% if ca.trang_thai == 'Đang hoạt động' %}
 
                         <span class="trang-thai dang-hoat-dong">
+
                             {{ ca.trang_thai }}
+
                         </span>
 
                     {% else %}
 
                         <span class="trang-thai da-dong">
+
                             {{ ca.trang_thai }}
+
                         </span>
 
                     {% endif %}
+
                 </td>
+
+
+                <!-- THAO TÁC -->
 
                 <td>
 
-                    <a href="{{ url_for('ca_lam_viec.xem', id=ca.id) }}"
-                       class="nut-xem">
+                    <a
+                        href="{{ url_for(
+                            'ca_lam_viec.xem',
+                            id=ca.id
+                        ) }}"
+                        class="nut-xem"
+                    >
                         Xem
                     </a>
 
-                    <a href="{{ url_for('ca_lam_viec.sua', id=ca.id) }}"
-                       class="nut-sua">
+
+                    <a
+                        href="{{ url_for(
+                            'ca_lam_viec.sua',
+                            id=ca.id
+                        ) }}"
+                        class="nut-sua"
+                    >
                         Sửa
                     </a>
 
-                    <form method="POST"
-                          action="{{ url_for('ca_lam_viec.xoa', id=ca.id) }}"
-                          style="display: inline;">
 
-                        <button type="button"
-                                class="nut-xoa"
-                                onclick="moHopXacNhan('{{ ca.id }}', '{{ ca.ma_ca }}', '{{ ca.ten_ca }}')">
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'ca_lam_viec.xoa',
+                            id=ca.id
+                        ) }}"
+                        style="display: inline;"
+                    >
+
+                        <button
+                            type="button"
+                            class="nut-xoa"
+                            onclick="moHopXacNhan(
+                                '{{ ca.id }}',
+                                '{{ ca.ma_ca }}',
+                                '{{ ca.ten_ca }}'
+                            )"
+                        >
                             Xóa
                         </button>
 
@@ -150,88 +361,180 @@
 
                 </td>
 
+
             </tr>
+
 
             {% else %}
 
+
             <tr>
-                <td colspan="8" class="khong-co-du-lieu">
+
+                <td
+                    colspan="8"
+                    class="khong-co-du-lieu"
+                >
                     Chưa có ca làm việc nào trong hệ thống !
                 </td>
+
             </tr>
+
 
             {% endfor %}
 
+
         </tbody>
+
 
     </table>
 
+
 </div>
 
-<div id="hop-xac-nhan" class="lop-phu">
+
+<!-- ========================= -->
+<!-- HỘP XÁC NHẬN XÓA -->
+<!-- ========================= -->
+
+<div
+    id="hop-xac-nhan"
+    class="lop-phu"
+>
+
 
     <div class="hop-thong-bao">
 
+
         <div class="nhan-canh-bao">
+
             CẢNH BÁO
+
         </div>
+
 
         <div class="bieu-tuong-xoa">
+
             🗑️
+
         </div>
 
+
         <h2>
+
             XÓA CÁI NÀY?
+
         </h2>
 
+
         <p class="mo-ta-xoa">
-            Bạn đang thực hiện thao tác xóa 
+
+            Bạn đang thực hiện thao tác xóa
+
             <strong id="ten-ca-xoa"></strong>.
+
         </p>
 
+
         <p class="ghi-chu-xoa">
-            Nhân viên sẽ không thể xem hoặc chỉnh sửa ca làm việc này sau khi bị xóa.
+
+            Nhân viên sẽ không thể xem hoặc chỉnh sửa
+            ca làm việc này sau khi bị xóa.
+
         </p>
+
 
         <div class="nut-xac-nhan">
 
-            <button type="button"
-                    class="nut-huy-xoa"
-                    onclick="dongHopXacNhan()">
+
+            <button
+                type="button"
+                class="nut-huy-xoa"
+                onclick="dongHopXacNhan()"
+            >
                 Hủy
             </button>
 
-            <form id="form-xoa" method="POST">
 
-                <button type="submit"
-                        class="nut-dong-y-xoa">
+            <form
+                id="form-xoa"
+                method="POST"
+            >
+
+                <button
+                    type="submit"
+                    class="nut-dong-y-xoa"
+                >
                     Xóa ca
                 </button>
 
             </form>
 
+
         </div>
+
 
     </div>
 
+
 </div>
 
+
+<!-- ========================= -->
+<!-- JAVASCRIPT POPUP XÓA -->
+<!-- ========================= -->
+
 <script>
-    function moHopXacNhan(id, maCa, tenCa) {
-        document.getElementById('ten-ca-xoa').textContent =
-            maCa + ' - ' + tenCa;
 
-        document.getElementById('form-xoa').action =
-            '/ca-lam-viec/xoa/' + id;
+    function moHopXacNhan(
+        id,
+        maCa,
+        tenCa
+    ) {
 
-        document.getElementById('hop-xac-nhan')
-            .classList.add('hien-thi');
+        document.getElementById(
+            "ten-ca-xoa"
+        ).textContent =
+            maCa + " - " + tenCa;
+
+
+        document.getElementById(
+            "form-xoa"
+        ).action =
+            "/ca-lam-viec/xoa/" + id;
+
+
+        document.getElementById(
+            "hop-xac-nhan"
+        ).classList.add(
+            "hien-thi"
+        );
+
     }
+
 
     function dongHopXacNhan() {
-        document.getElementById('hop-xac-nhan')
-            .classList.remove('hien-thi');
+
+        document.getElementById(
+            "hop-xac-nhan"
+        ).classList.remove(
+            "hien-thi"
+        );
+
     }
+
 </script>
+
+
+<!-- ========================= -->
+<!-- JAVASCRIPT CA LÀM VIỆC -->
+<!-- ========================= -->
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/quanly/calamviec/index.js'
+    ) }}"
+></script>
+
 
 {% endblock %}

@@ -8,7 +8,7 @@
 	padding: 32px 38px;
 	overflow: hidden;
 	border-radius: 18px;
-	background: linear-gradient(110deg, #0756a3, #081ee0 60%, #16b5ed);
+	background: linear-gradient(110deg, #500bf0, #e500fa 60%, #16b5ed);
 	background-size: 200% 200%;
 	animation: doi-mau-trang-chu 5s ease infinite;
 	color: white;

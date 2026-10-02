@@ -1,12 +1,12 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from services.database import ket_noi
-from services.auth_service import yeu_cau_dang_nhap
+from services.auth_service import yeu_cau_vai_tro
 
 ca_lam_viec_bp = Blueprint("ca_lam_viec", __name__)
 
 
 @ca_lam_viec_bp.before_request
-@yeu_cau_dang_nhap
+@yeu_cau_vai_tro("Quản lý")
 def bao_ve_router_ca_lam_viec():
     return None
 
@@ -34,10 +34,16 @@ def lay_danh_sach_nhan_vien():
     cursor = db.cursor(dictionary=True)
 
     cursor.execute("""
-        SELECT id, ma_nv, ho_ten
-        FROM nhan_vien
-        WHERE trang_thai = 'Đang làm việc'
-        ORDER BY ho_ten
+        SELECT
+            nv.id,
+            nv.ma_nv,
+            nv.ho_ten
+        FROM nhan_vien nv
+        INNER JOIN tai_khoan tk
+            ON nv.id = tk.nhan_vien_id
+        WHERE nv.trang_thai = 'Đang làm việc'
+          AND tk.vai_tro = 'Nhân viên ca'
+        ORDER BY nv.ho_ten
     """)
 
     danh_sach = cursor.fetchall()

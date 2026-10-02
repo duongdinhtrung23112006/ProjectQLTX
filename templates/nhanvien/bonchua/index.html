@@ -1,0 +1,225 @@
+{% extends "nhanvien/khungnhanvien.html" %}
+
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='cssnhanvien/bonchua/index.css') }}"
+>
+
+{% endblock %}
+
+{% block noi_dung %}
+
+<div class="tieu-de-noi-dung">
+    <div>
+        <h1>Quản Lý Bồn Chứa</h1>
+        <p>Theo dõi thông tin và lượng nhiên liệu trong các bồn chứa</p>
+    </div>
+</div>
+
+
+<div class="thong-ke-bon">
+
+    <div class="the-thong-ke">
+        <div class="icon-thong-ke">▣</div>
+
+        <div>
+            <span style="color: rgb(0, 50, 214);">
+                Tổng số bồn
+            </span>
+
+            <strong style="color: rgb(0, 50, 214);">
+                {{ tong_so_bon }}
+            </strong>
+        </div>
+    </div>
+
+
+    <div class="the-thong-ke">
+        <div class="icon-thong-ke xanh">✓</div>
+
+        <div>
+            <span style="color: rgb(5, 190, 14);">
+                Đang hoạt động
+            </span>
+
+            <strong style="color: rgb(5, 190, 14);">
+                {{ dang_hoat_dong }}
+            </strong>
+        </div>
+    </div>
+
+
+    <div class="the-thong-ke">
+        <div class="icon-thong-ke cam">!</div>
+
+        <div>
+            <span style="color: rgb(255, 17, 0);">
+                Ngừng hoạt động
+            </span>
+
+            <strong style="color: rgb(255, 17, 0);">
+                {{ ngung_hoat_dong }}
+            </strong>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- TÌM KIẾM -->
+<!-- ========================= -->
+
+<div class="o-tim-kiem">
+
+    <span class="bieu-tuong-tim-kiem">
+        ⌕
+    </span>
+
+    <input
+        type="text"
+        id="timKiemBonChua"
+        placeholder="Tìm theo mã, tên bồn hoặc nhiên liệu..."
+        autocomplete="off"
+    >
+
+</div>
+
+
+<!-- ========================= -->
+<!-- DANH SÁCH BỒN CHỨA -->
+<!-- ========================= -->
+
+<div class="khung-bang">
+
+    <div class="thanh-tren-bc">
+
+        <div>
+            <h2>Danh sách bồn chứa</h2>
+
+            <p>
+                Thông tin các bồn chứa nhiên liệu tại trạm
+            </p>
+        </div>
+
+        <span>
+            {{ tong_so_bon }} BỒN
+        </span>
+
+    </div>
+
+
+    <table class="bang-du-lieu">
+
+        <thead>
+            <tr>
+                <th>Mã bồn</th>
+                <th>Tên bồn</th>
+                <th>Nhiên liệu</th>
+                <th>Sức chứa</th>
+                <th>Tồn hiện tại</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+
+
+        <tbody id="danhSachBonChua">
+
+            {% for bon in danh_sach_bon %}
+
+            <tr>
+
+                <td>
+                    <strong>
+                        {{ bon.ma_bon }}
+                    </strong>
+                </td>
+
+
+                <td>
+                    {{ bon.ten_bon }}
+                </td>
+
+
+                <td>
+                    {{ bon.nhien_lieu }}
+                </td>
+
+
+                <td>
+                    {{ "{:,.0f}".format(bon.suc_chua) }} L
+                </td>
+
+
+                <td>
+                    {{ "{:,.0f}".format(bon.ton_hien_tai) }} L
+                </td>
+
+
+                <td>
+
+                    {% if bon.trang_thai == "Đang hoạt động" %}
+
+                    <span class="trang-thai dang-hoat-dong">
+                        {{ bon.trang_thai }}
+                    </span>
+
+                    {% else %}
+
+                    <span class="trang-thai ngung-hoat-dong">
+                        {{ bon.trang_thai }}
+                    </span>
+
+                    {% endif %}
+
+                </td>
+
+
+                <td>
+
+                    <a
+                        href="{{ url_for('nhanvien_bon_chua.xem', id=bon.id) }}"
+                        class="nut-xem"
+                    >
+                        Xem
+                    </a>
+
+                </td>
+
+            </tr>
+
+
+            {% else %}
+
+            <tr>
+
+                <td
+                    colspan="7"
+                    class="khong-co-du-lieu"
+                >
+                    Chưa có bồn chứa nào trong hệ thống !
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/nhanvien/bonchua/index.js'
+    ) }}"
+></script>
+
+
+{% endblock %}

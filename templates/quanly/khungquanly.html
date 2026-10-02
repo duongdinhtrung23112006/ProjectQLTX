@@ -7,10 +7,10 @@
 
     <title>Hệ thống quản lý trạm xăng</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='cssnhanvien/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/style.css') }}">
 
     {% block css %}{% endblock %}
-    <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/quanly/khungql.js') }}" defer></script>
 </head>
 
 <body>
@@ -42,7 +42,7 @@
         <!-- DANH SÁCH MENU -->
         <nav class="danh-sach-menu">
 
-            <a href="{{ url_for('nhanvien_trang_chu.home') }}" class="muc-menu {%if trang_hien_tai == 'Trang chủ'%} dang-chon{% endif %}">
+            <a href="{{ url_for('quanly_trang_chu.home') }}" class="muc-menu {%if trang_hien_tai == 'Trang chủ'%} dang-chon{% endif %}">
                 <span class="bieu-tuong-menu">⌂</span>
                 <span>Trang chủ</span>
             </a>
@@ -50,53 +50,53 @@
             <a href="{{ url_for('bon_chua.danh_sach') }}"
                 class="muc-menu {%if trang_hien_tai == 'Bồn chứa'%} dang-chon{% endif %}">
                 <span class="bieu-tuong-menu">▣</span>
-                <span>Bồn chứa</span>
+                <span>Quản lý bồn chứa</span>
             </a>
 
-            <a href="{{ url_for('nhien_lieu') }}"
+            <a href="{{ url_for('nhien_lieu.danh_sach') }}"
                 class="muc-menu {%if trang_hien_tai == 'Nhiên liệu'%} dang-chon{% endif %}">
                 <span class="bieu-tuong-menu">♢</span>
-                <span>Nhiên liệu</span>
+                <span>Quản lý nhiên liệu</span>
             </a>
 
             <a href="{{ url_for('nhap_hang') }}"
                 class="muc-menu {%if trang_hien_tai == 'Nhập hàng'%} dang-chon{% endif %}">
                 <span class="bieu-tuong-menu">⇩</span>
-                <span>Nhập hàng</span>
+                <span>Quản lý nhập hàng</span>
             </a>
 
             <a href="{{ url_for('ban_hang') }}"
                 class="muc-menu {%if trang_hien_tai == 'Bán hàng'%} dang-chon{% endif %}">
                 <span class="bieu-tuong-menu">⇧</span>
-                <span>Bán hàng</span>
+                <span>Quản lý bán hàng</span>
             </a>
 
             <a href="{{ url_for('ton_bon') }}" class="muc-menu {%if trang_hien_tai == 'Tồn bồn'%} dang-chon{% endif %}">
                 <span class="bieu-tuong-menu">▤</span>
-                <span>Tồn bồn</span>
+                <span>Quản lý tồn bồn</span>
             </a>
 
             <a href="{{ url_for('nhan_vien.danh_sach') }}"
                 class="muc-menu {%if trang_hien_tai == 'Nhân viên'%} dang-chon{% endif %}">
                 <span class="bieu-tuong-menu">♙</span>
-                <span>Nhân viên</span>
+                <span>Quản lý nhân viên</span>
             </a>
 
             <a href="{{ url_for('ca_lam_viec.danh_sach') }}"
                 class="muc-menu {%if trang_hien_tai == 'Ca làm việc'%} dang-chon{% endif %}">
                 <span class="bieu-tuong-menu">◷</span>
-                <span>Ca làm việc</span>
+                <span>Quản lý ca làm việc</span>
             </a>
 
             <a href="{{ url_for('tra_cuu') }}" class="muc-menu {%if trang_hien_tai == 'Tra cứu'%} dang-chon{% endif %}">
                 <span class="bieu-tuong-menu">⌕</span>
-                <span>Tra cứu</span>
+                <span>Tra cứu số liệu</span>
             </a>
 
             <a href="{{ url_for('thong_ke') }}"
                 class="muc-menu {%if trang_hien_tai == 'Thống kê'%} dang-chon{% endif %}">
                 <span class="bieu-tuong-menu">▥</span>
-                <span>Thống kê</span>
+                <span>Thống kê số liệu</span>
             </a>
 
         </nav>

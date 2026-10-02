@@ -7,7 +7,7 @@
 
     <title>Hệ thống quản lý trạm xăng</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='cssketoan/style.css') }}">
 
     {% block css %}{% endblock %}
     <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
@@ -42,7 +42,7 @@
         <!-- DANH SÁCH MENU -->
         <nav class="danh-sach-menu">
 
-            <a href="{{ url_for('quanly_trang_chu.home') }}" class="muc-menu {%if trang_hien_tai == 'Trang chủ'%} dang-chon{% endif %}">
+            <a href="{{ url_for('ketoan_trang_chu.home') }}" class="muc-menu {%if trang_hien_tai == 'Trang chủ'%} dang-chon{% endif %}">
                 <span class="bieu-tuong-menu">⌂</span>
                 <span>Trang chủ</span>
             </a>

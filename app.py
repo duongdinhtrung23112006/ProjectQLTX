@@ -1,14 +1,23 @@
 from flask import Flask, render_template
 
+# Import các blueprint từ các module khác nhau của quản lý
 from routes.quanly.bon_chua import bon_chua_bp
 from routes.quanly.ca_lam_viec import ca_lam_viec_bp
 from routes.quanly.nhan_vien import nhan_vien_bp
 from routes.quanly.trang_chu import quanly_trang_chu_bp
+from routes.quanly.nhien_lieu import nhien_lieu_bp
 
+# Import các blueprint từ các module khác nhau của nhân viên
 from routes.nhanvien.trang_chu import nhanvien_trang_chu_bp
+from routes.nhanvien.bon_chua import nhanvien_bon_chua_bp
 
+# Import các blueprint từ các module khác nhau của kế toán
+from routes.ketoan.trang_chu import ketoan_trang_chu_bp
+
+# Import các dịch vụ cần thiết
 from services.auth_service import yeu_cau_dang_nhap
 
+# Import các blueprint từ các module khác nhau của xác thực
 from routes.auth.dang_nhap import dang_nhap_bp
 
 # from services.quan_ly_ca import khoi_dong_tu_dong_dong_ca
@@ -25,17 +34,16 @@ app.register_blueprint(dang_nhap_bp)
 app.register_blueprint(quanly_trang_chu_bp)
 app.register_blueprint(bon_chua_bp)
 app.register_blueprint(nhan_vien_bp)
+app.register_blueprint(nhien_lieu_bp)
 
 # Đăng ký blueprint cho trang chủ của nhân viên
 app.register_blueprint(nhanvien_trang_chu_bp)
+app.register_blueprint(nhanvien_bon_chua_bp)
 
-@app.route("/nhien-lieu")
-@yeu_cau_dang_nhap
-def nhien_lieu():
-    return render_template(
-        "quanly/nhien_lieu.html",
-        trang_hien_tai="Nhiên liệu"
-    )
+# Đăng ký blueprint cho trang chủ của kế toán
+app.register_blueprint(ketoan_trang_chu_bp)
+
+
 
 
 @app.route("/nhap-hang")

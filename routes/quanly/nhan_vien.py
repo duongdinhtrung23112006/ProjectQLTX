@@ -1,13 +1,13 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from werkzeug.security import generate_password_hash
-from services.auth_service import yeu_cau_dang_nhap
+from services.auth_service import yeu_cau_vai_tro
 
 from services.database import ket_noi
 
 nhan_vien_bp = Blueprint("nhan_vien", __name__)
 
 @nhan_vien_bp.before_request
-@yeu_cau_dang_nhap
+@yeu_cau_vai_tro("Quản lý")
 def bao_ve_router_nhan_vien():
     return None
 
@@ -27,7 +27,7 @@ def lay_danh_sach_nhan_vien():
 
 
 @nhan_vien_bp.route("/nhan-vien")
-@yeu_cau_dang_nhap
+@yeu_cau_vai_tro("Quản lý")
 def danh_sach():
     danh_sach_nhan_vien = lay_danh_sach_nhan_vien()
 

@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from werkzeug.security import check_password_hash
 
+from services.auth_service import chuan_hoa_vai_tro
 from services.database import ket_noi
 
 
@@ -71,32 +72,33 @@ def dang_nhap():
                     # ĐĂNG NHẬP THÀNH CÔNG
                     # =========================
 
+                    vai_tro = chuan_hoa_vai_tro(tai_khoan["vai_tro"])
                     session["tai_khoan_id"] = tai_khoan["id"]
 
                     session["nhan_vien_id"] = tai_khoan["nhan_vien_id"]
 
-                    session["vai_tro"] = tai_khoan["vai_tro"]
+                    session["vai_tro"] = vai_tro
 
                     session["ten_dang_nhap"] = tai_khoan["ten_dang_nhap"]
 
-                    if tai_khoan["vai_tro"] == "Quản lý":
-                      return redirect(
-                      url_for("quanly_trang_chu.home")
-                    )
+                    if vai_tro == "Quản lý":
+                        return redirect(
+                            url_for("quanly_trang_chu.home")
+                        )
 
-                    elif tai_khoan["vai_tro"] == "Nhân viên ca":
-                      return redirect(
-                      url_for("nhanvien_trang_chu.home")
-                    )
+                    elif vai_tro == "Nhân viên ca":
+                        return redirect(
+                            url_for("nhanvien_trang_chu.home")
+                        )
 
-                    elif tai_khoan["vai_tro"] == "Kế toán":
-                      return redirect(
-                      url_for("ketoan_trang_chu.home")
-                    )
+                    elif vai_tro == "Kế toán":
+                        return redirect(
+                            url_for("ketoan_trang_chu.home")
+                        )
 
                     else:
-                     session.clear()
-                     loi = "Vai trò tài khoản không hợp lệ."
+                        session.clear()
+                        loi = "Vai trò tài khoản không hợp lệ."
         
 
             except Exception as e:
