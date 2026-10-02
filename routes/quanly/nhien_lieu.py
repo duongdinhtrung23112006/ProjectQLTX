@@ -11,6 +11,7 @@ nhien_lieu_bp = Blueprint(
 
 
 @nhien_lieu_bp.before_request
+@yeu_cau_vai_tro("Quản lý")
 def bao_ve_router_nhien_lieu():
     return None
 
@@ -199,6 +200,7 @@ def danh_sach():
     "/nhien-lieu/them",
     methods=["GET", "POST"]
 )
+@yeu_cau_vai_tro("Quản lý")
 def them():
 
     form_data = {
@@ -279,6 +281,7 @@ def them():
     "/nhien-lieu/sua/<int:id>",
     methods=["GET", "POST"]
 )
+@yeu_cau_vai_tro("Quản lý")
 def sua(id):
 
     db = ket_noi()
@@ -390,6 +393,7 @@ def sua(id):
     "/nhien-lieu/xoa/<int:id>",
     methods=["POST"]
 )
+@yeu_cau_vai_tro("Quản lý")
 def xoa(id):
 
     db = ket_noi()

@@ -1,0 +1,61 @@
+{% extends "quanly/khungquanly.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/nhienlieu/index.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/nhienlieu/xem.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+<div class="tieu-de-noi-dung">
+	<div>
+		<h1>Chi Tiết Nhiên Liệu</h1>
+		<p>Thông tin chi tiết mặt hàng nhiên liệu tại trạm</p>
+	</div>
+
+	<div class="nhom-nut-chi-tiet">
+		<a href="{{ url_for('nhien_lieu.danh_sach') }}" class="nut-quay-lai">
+			<span aria-hidden="true">←</span>
+			Quay lại danh sách
+		</a>
+		<a href="{{ url_for('nhien_lieu.sua', id=nhien_lieu.id) }}" class="nut-sua-chi-tiet">
+			Sửa nhiên liệu
+		</a>
+	</div>
+</div>
+
+<div class="chi-tiet-nhien-lieu">
+	<div class="the-chi-tiet">
+		<div class="bieu-tuong-nhien-lieu" aria-hidden="true">⛽</div>
+		<div>
+			<span>Mã nhiên liệu</span>
+			<strong>{{ nhien_lieu.ma_nhien_lieu }}</strong>
+		</div>
+	</div>
+
+	<div class="thong-tin-chi-tiet">
+		<div class="dong-thong-tin">
+			<span>Tên nhiên liệu</span>
+			<strong>{{ nhien_lieu.ten_nhien_lieu }}</strong>
+		</div>
+
+		<div class="dong-thong-tin">
+			<span>Đơn vị</span>
+			<strong>{{ nhien_lieu.don_vi }}</strong>
+		</div>
+
+		<div class="dong-thong-tin">
+			<span>Đơn giá hiện tại</span>
+			<strong>{{ "{:,.0f}".format(nhien_lieu.don_gia) }} đ</strong>
+		</div>
+
+		<div class="dong-thong-tin">
+			<span>Trạng thái</span>
+			{% if nhien_lieu.trang_thai == "Đang bán" %}
+			<strong class="trang-thai dang-hoat-dong">{{ nhien_lieu.trang_thai }}</strong>
+			{% else %}
+			<strong class="trang-thai ngung-hoat-dong">{{ nhien_lieu.trang_thai }}</strong>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}

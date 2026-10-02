@@ -1,0 +1,32 @@
+.tieu-de-trang {
+	margin-bottom: 22px;
+}
+
+.tieu-de-trang h1 {
+	margin: 0 0 5px;
+	color: #243b5a;
+	font-size: 27px;
+	font-weight: 600;
+}
+
+.tieu-de-trang p {
+	margin: 0;
+	color: #2064ec;
+	font-size: 15px;
+}
+
+.khung-form-container {
+	display: flex;
+	justify-content: center;
+}
+
+.khung-form {
+	height: auto;
+	margin-top: 2vh;
+}
+
+@media (max-width: 700px) {
+	.khung-form {
+		width: 100%;
+	}
+}

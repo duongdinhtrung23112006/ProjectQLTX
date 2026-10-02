@@ -1,0 +1,88 @@
+{% extends "quanly/khungquanly.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/nhienlieu/them.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/nhienlieu/sua.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+<div class="tieu-de-trang">
+	<div>
+		<h1>Sửa Nhiên Liệu</h1>
+		<p>Cập nhật thông tin nhiên liệu đang được quản lý</p>
+	</div>
+</div>
+
+<div class="khung-form-container">
+	<div class="khung-form">
+		<div class="dau-form">
+			<h2>Thông tin nhiên liệu</h2>
+			<p>Điều chỉnh thông tin bên dưới rồi lưu thay đổi</p>
+		</div>
+
+		<form method="POST" novalidate>
+			{% if errors %}
+			<div class="thong-bao-loi" role="alert">
+				<strong>Không thể lưu nhiên liệu</strong>
+				<span>Vui lòng kiểm tra lại các thông tin được đánh dấu bên dưới.</span>
+			</div>
+			{% endif %}
+
+			{% if errors.chung %}
+			<div class="thong-bao-loi" role="alert">{{ errors.chung }}</div>
+			{% endif %}
+
+			<div class="luoi-form">
+				<div class="nhom-form {% if errors.ma_nhien_lieu %}co-loi{% endif %}">
+					<label for="ma_nhien_lieu">Mã nhiên liệu</label>
+					<input id="ma_nhien_lieu" type="text" name="ma_nhien_lieu"
+						value="{{ form_data.ma_nhien_lieu|default('') }}" maxlength="20" required>
+					{% if errors.ma_nhien_lieu %}<small class="thong-bao-truong">{{ errors.ma_nhien_lieu }}</small>{% endif %}
+				</div>
+
+				<div class="nhom-form {% if errors.ten_nhien_lieu %}co-loi{% endif %}">
+					<label for="ten_nhien_lieu">Tên nhiên liệu</label>
+					<select id="ten_nhien_lieu" name="ten_nhien_lieu" required>
+						<option value="">-- Chọn nhiên liệu --</option>
+						<option value="Xăng RON95-III" {% if form_data.ten_nhien_lieu == 'Xăng RON95-III' %}selected{% endif %}>Xăng RON95-III</option>
+						<option value="Xăng E5 RON92-II" {% if form_data.ten_nhien_lieu == 'Xăng E5 RON92-II' %}selected{% endif %}>Xăng E5 RON92-II</option>
+						<option value="Dầu Diesel 0.05S-II" {% if form_data.ten_nhien_lieu == 'Dầu Diesel 0.05S-II' %}selected{% endif %}>Dầu Diesel 0.05S-II</option>
+					</select>
+					{% if errors.ten_nhien_lieu %}<small class="thong-bao-truong">{{ errors.ten_nhien_lieu }}</small>{% endif %}
+				</div>
+
+				<div class="nhom-form {% if errors.don_vi %}co-loi{% endif %}">
+					<label for="don_vi">Đơn vị</label>
+					<input id="don_vi" type="text" name="don_vi"
+						value="{{ form_data.don_vi|default('') }}" maxlength="20" required>
+					{% if errors.don_vi %}<small class="thong-bao-truong">{{ errors.don_vi }}</small>{% endif %}
+				</div>
+
+				<div class="nhom-form {% if errors.don_gia %}co-loi{% endif %}">
+					<label for="don_gia">Đơn giá hiện tại</label>
+					<div class="o-don-vi">
+						<input id="don_gia" type="number" name="don_gia"
+							value="{{ form_data.don_gia|default('') }}" min="0.01" step="0.01" required>
+						<span>đ</span>
+					</div>
+					{% if errors.don_gia %}<small class="thong-bao-truong">{{ errors.don_gia }}</small>{% endif %}
+				</div>
+
+				<div class="nhom-form {% if errors.trang_thai %}co-loi{% endif %}">
+					<label for="trang_thai">Trạng thái</label>
+					<select id="trang_thai" name="trang_thai" required>
+						<option value="Đang bán" {% if form_data.trang_thai == 'Đang bán' %}selected{% endif %}>Đang bán</option>
+						<option value="Ngừng bán" {% if form_data.trang_thai == 'Ngừng bán' %}selected{% endif %}>Ngừng bán</option>
+					</select>
+					{% if errors.trang_thai %}<small class="thong-bao-truong">{{ errors.trang_thai }}</small>{% endif %}
+				</div>
+			</div>
+
+			<div class="cuoi-form">
+				<a href="{{ url_for('nhien_lieu.danh_sach') }}" class="nut-huy">Hủy</a>
+				<button type="submit" class="nut-luu">Lưu thay đổi</button>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock %}
