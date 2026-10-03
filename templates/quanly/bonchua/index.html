@@ -1,71 +1,109 @@
 {% extends "quanly/khungquanly.html" %}
 
 {% block css %}
+
 <link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/bonchua/index.css') }}">
+
 <link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/bonchua/xoa.css') }}">
+
 {% endblock %}
 
 {% block noi_dung %}
 
 <div class="tieu-de-noi-dung">
+
     <div>
+
         <h1>Quản Lý Bồn Chứa</h1>
+
         <p>Theo dõi thông tin và lượng nhiên liệu trong các bồn chứa</p>
+
     </div>
 
     <a href="{{ url_for('bon_chua.them') }}" class="nut-them">
+
         + Thêm bồn chứa
+
     </a>
+
 </div>
+
 
 
 <div class="thong-ke-bon">
 
     <div class="the-thong-ke">
+
         <div class="icon-thong-ke">▣</div>
 
         <div>
+
             <span style="color: rgb(0, 50, 214);">
+
                 Tổng số bồn
+
             </span>
 
             <strong style="color: rgb(0, 50, 214);">
+
                 {{ tong_so_bon }}
+
             </strong>
+
         </div>
+
     </div>
 
 
+
     <div class="the-thong-ke">
+
         <div class="icon-thong-ke xanh">✓</div>
 
         <div>
+
             <span style="color: rgb(5, 190, 14);">
+
                 Đang hoạt động
+
             </span>
 
             <strong style="color: rgb(5, 190, 14);">
+
                 {{ dang_hoat_dong }}
+
             </strong>
+
         </div>
+
     </div>
+
 
 
     <div class="the-thong-ke">
+
         <div class="icon-thong-ke cam">!</div>
 
         <div>
+
             <span style="color: rgb(255, 17, 0);">
+
                 Ngừng hoạt động
+
             </span>
 
             <strong style="color: rgb(255, 17, 0);">
+
                 {{ ngung_hoat_dong }}
+
             </strong>
+
         </div>
+
     </div>
 
 </div>
+
 
 
 <!-- ========================= -->
@@ -75,17 +113,25 @@
 <div class="o-tim-kiem">
 
     <span class="bieu-tuong-tim-kiem">
+
         ⌕
+
     </span>
 
     <input
+
         type="text"
+
         id="timKiemBonChua"
+
         placeholder="Tìm theo mã, tên bồn hoặc nhiên liệu..."
+
         autocomplete="off"
+
     >
 
 </div>
+
 
 
 <!-- ========================= -->
@@ -97,18 +143,25 @@
     <div class="thanh-tren-bc">
 
         <div>
+
             <h2>Danh sách bồn chứa</h2>
 
             <p>
+
                 Thông tin các bồn chứa nhiên liệu tại trạm
+
             </p>
+
         </div>
 
         <span>
+
             {{ tong_so_bon }} BỒN
+
         </span>
 
     </div>
+
 
 
     <table class="bang-du-lieu">
@@ -116,16 +169,25 @@
         <thead>
 
             <tr>
+
                 <th>Mã bồn</th>
+
                 <th>Tên bồn</th>
+
                 <th>Nhiên liệu</th>
+
                 <th>Sức chứa</th>
+
                 <th>Tồn hiện tại</th>
+
                 <th>Trạng thái</th>
+
                 <th>Thao tác</th>
+
             </tr>
 
         </thead>
+
 
 
         <tbody id="danhSachBonChua">
@@ -135,30 +197,47 @@
             <tr>
 
                 <td>
+
                     <strong>
+
                         {{ bon.ma_bon }}
+
                     </strong>
+
                 </td>
 
 
+
                 <td>
+
                     {{ bon.ten_bon }}
+
                 </td>
 
 
+
                 <td>
-                    {{ bon.nhien_lieu }}
+
+                    {{ bon.ten_nhien_lieu }}
+
                 </td>
 
 
+
                 <td>
+
                     {{ "{:,.0f}".format(bon.suc_chua) }} L
+
                 </td>
+
 
 
                 <td>
+
                     {{ "{:,.0f}".format(bon.ton_hien_tai) }} L
+
                 </td>
+
 
 
                 <td>
@@ -166,13 +245,17 @@
                     {% if bon.trang_thai == "Đang hoạt động" %}
 
                     <span class="trang-thai dang-hoat-dong">
+
                         {{ bon.trang_thai }}
+
                     </span>
 
                     {% else %}
 
                     <span class="trang-thai ngung-hoat-dong">
+
                         {{ bon.trang_thai }}
+
                     </span>
 
                     {% endif %}
@@ -180,40 +263,67 @@
                 </td>
 
 
+
                 <td>
 
                     <a
+
                         href="{{ url_for('bon_chua.xem', id=bon.id) }}"
+
                         class="nut-xem"
+
                     >
+
                         Xem
+
                     </a>
+
 
 
                     <a
+
                         href="{{ url_for('bon_chua.sua', id=bon.id) }}"
+
                         class="nut-sua"
+
                     >
+
                         Sửa
+
                     </a>
 
 
+
                     <form
+
                         method="POST"
+
                         action="{{ url_for('bon_chua.xoa', id=bon.id) }}"
+
                         style="display: inline;"
+
                     >
 
                         <button
+
                             type="button"
+
                             class="nut-xoa"
+
                             onclick="moHopXacNhan(
+
                                 '{{ bon.id }}',
+
                                 '{{ bon.ma_bon }}',
+
                                 '{{ bon.ten_bon }}'
+
                             )"
+
                         >
+
                             Xóa
+
                         </button>
 
                     </form>
@@ -223,15 +333,21 @@
             </tr>
 
 
+
             {% else %}
 
             <tr>
 
                 <td
+
                     colspan="7"
+
                     class="khong-co-du-lieu"
+
                 >
+
                     Chưa có bồn chứa nào trong hệ thống !
+
                 </td>
 
             </tr>
@@ -245,30 +361,43 @@
 </div>
 
 
+
 <!-- ========================= -->
 <!-- HỘP XÁC NHẬN XÓA -->
 <!-- ========================= -->
 
 <div
+
     id="hop-xac-nhan"
+
     class="lop-phu"
+
 >
 
     <div class="hop-thong-bao">
 
         <div class="nhan-canh-bao">
+
             CẢNH BÁO
+
         </div>
+
 
 
         <div class="bieu-tuong-xoa">
+
             🗑️
+
         </div>
 
 
+
         <h2>
+
             XÓA CÁI NÀY?
+
         </h2>
+
 
 
         <p class="mo-ta-xoa">
@@ -280,32 +409,51 @@
         </p>
 
 
+
         <p class="ghi-chu-xoa">
+
             Hành động này không thể hoàn tác.
+
         </p>
+
 
 
         <div class="nut-xac-nhan">
 
             <button
+
                 type="button"
+
                 class="nut-huy-xoa"
+
                 onclick="dongHopXacNhan()"
+
             >
+
                 Hủy
+
             </button>
 
 
+
             <form
+
                 id="form-xoa"
+
                 method="POST"
+
             >
 
                 <button
+
                     type="submit"
+
                     class="nut-dong-y-xoa"
+
                 >
+
                     Xóa bồn
+
                 </button>
 
             </form>
@@ -317,37 +465,55 @@
 </div>
 
 
+
 <script>
 
     function moHopXacNhan(
+
         id,
+
         maBon,
+
         tenBon
+
     ) {
 
         document.getElementById(
+
             "ten-bon-xoa"
+
         ).textContent =
+
             maBon + " - " + tenBon;
 
 
+
         document.getElementById(
+
             "form-xoa"
+
         ).action =
+
             "/bon-chua/xoa/" + id;
 
 
+
         document.getElementById(
+
             "hop-xac-nhan"
+
         ).classList.add("hien-thi");
 
     }
 
 
+
     function dongHopXacNhan() {
 
         document.getElementById(
+
             "hop-xac-nhan"
+
         ).classList.remove("hien-thi");
 
     }
@@ -355,10 +521,15 @@
 </script>
 
 
+
 <script src="{{ url_for(
+
     'static',
+
     filename='js/quanly/bonchua/index.js'
+
 ) }}"></script>
+
 
 
 {% endblock %}

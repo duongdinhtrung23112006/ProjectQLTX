@@ -1,0 +1,284 @@
+{% extends "quanly/khungquanly.html" %}
+
+{% block css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='cssquanly/nhaphang/xem.css') }}"
+>
+{% endblock %}
+
+{% block noi_dung %}
+
+<div class="trang-xem-nhap-hang">
+
+    <!-- Tiêu đề -->
+    <div class="tieu-de-noi-dung">
+        <div>
+            <h1>Chi tiết phiếu nhập hàng</h1>
+            <p>Xem thông tin chi tiết của phiếu nhập hàng</p>
+        </div>
+
+        <a
+            href="{{ url_for('nhap_hang.danh_sach') }}"
+            class="nut-quay-lai"
+        >
+            ← Quay lại
+        </a>
+    </div>
+
+
+    <!-- Thông tin phiếu -->
+    <div class="khung-thong-tin">
+
+        <div class="dau-khung">
+            <div class="bieu-tuong">
+                📋
+            </div>
+
+            <div>
+                <h2>{{ phieu.ma_nhap }}</h2>
+                <p>Thông tin phiếu nhập hàng</p>
+            </div>
+
+            <div class="trang-thai-khung">
+                {% if phieu.trang_thai == "Đã duyệt" %}
+                    <span class="trang-thai da-duyet">
+                        Đã duyệt
+                    </span>
+
+                {% elif phieu.trang_thai == "Chờ duyệt" %}
+                    <span class="trang-thai cho-duyet">
+                        Chờ duyệt
+                    </span>
+
+                {% else %}
+                    <span class="trang-thai tu-choi">
+                        Từ chối
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+
+
+        <!-- Nội dung -->
+        <div class="noi-dung-thong-tin">
+
+            <!-- Thông tin phiếu -->
+            <div class="nhom-thong-tin">
+
+                <h3>Thông tin phiếu</h3>
+
+                <div class="luoi-thong-tin">
+
+                    <div class="dong-thong-tin">
+                        <span class="nhan">
+                            Mã phiếu
+                        </span>
+
+                        <strong>
+                            {{ phieu.ma_nhap }}
+                        </strong>
+                    </div>
+
+                    <div class="dong-thong-tin">
+                        <span class="nhan">
+                            Ngày tạo
+                        </span>
+
+                        <span>
+                            {{ phieu.ngay_tao.strftime('%d/%m/%Y') }}
+                        </span>
+                    </div>
+
+                    <div class="dong-thong-tin">
+                        <span class="nhan">
+                            Trạng thái
+                        </span>
+
+                        <span>
+                            {{ phieu.trang_thai }}
+                        </span>
+                    </div>
+
+                    <div class="dong-thong-tin">
+                        <span class="nhan">
+                            Nhân viên lập
+                        </span>
+
+                        <span>
+                            {{ phieu.ho_ten }}
+                        </span>
+                    </div>
+
+                    <div class="dong-thong-tin">
+                        <span class="nhan">
+                            Mã nhân viên
+                        </span>
+
+                        <span>
+                            {{ phieu.ma_nv }}
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Thông tin nhiên liệu -->
+            <div class="nhom-thong-tin">
+
+                <h3>Thông tin nhiên liệu</h3>
+
+                <div class="luoi-thong-tin">
+
+                    <div class="dong-thong-tin">
+                        <span class="nhan">
+                            Mã nhiên liệu
+                        </span>
+
+                        <strong>
+                            {{ phieu.ma_nhien_lieu }}
+                        </strong>
+                    </div>
+
+                    <div class="dong-thong-tin">
+                        <span class="nhan">
+                            Tên nhiên liệu
+                        </span>
+
+                        <span>
+                            {{ phieu.ten_nhien_lieu }}
+                        </span>
+                    </div>
+
+                    <div class="dong-thong-tin">
+                        <span class="nhan">
+                            Đơn vị
+                        </span>
+
+                        <span>
+                            {{ phieu.don_vi }}
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Thông tin bồn -->
+            <div class="nhom-thong-tin">
+
+                <h3>Thông tin bồn nhận</h3>
+
+                <div class="luoi-thong-tin">
+
+                    <div class="dong-thong-tin">
+                        <span class="nhan">
+                            Mã bồn
+                        </span>
+
+                        <strong>
+                            {{ phieu.ma_bon }}
+                        </strong>
+                    </div>
+
+                    <div class="dong-thong-tin">
+                        <span class="nhan">
+                            Tên bồn
+                        </span>
+
+                        <span>
+                            {{ phieu.ten_bon }}
+                        </span>
+                    </div>
+
+                    <div class="dong-thong-tin">
+                        <span class="nhan">
+                            Sức chứa
+                        </span>
+
+                        <span>
+                            {{ "{:,.0f}".format(phieu.suc_chua) }}
+                            {{ phieu.don_vi }}
+                        </span>
+                    </div>
+
+                    <div class="dong-thong-tin">
+                        <span class="nhan">
+                            Tồn hiện tại
+                        </span>
+
+                        <span>
+                            {{ "{:,.0f}".format(phieu.ton_hien_tai) }}
+                            {{ phieu.don_vi }}
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <!-- Thanh tồn bồn -->
+              
+            <!-- Số lượng nhập -->
+            <div class="khoi-so-luong">
+
+                <div class="icon-so-luong">
+                    ↓
+                </div>
+
+                <div>
+                    <span>
+                        Số lượng nhập
+                    </span>
+
+                    <strong>
+                        {{ "{:,.0f}".format(phieu.so_luong) }}
+                        {{ phieu.don_vi }}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <!-- Nút xử lý -->
+            {% if phieu.trang_thai == "Chờ duyệt" %}
+
+                <div class="khu-vuc-xu-ly">
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('nhap_hang.duyet', id=phieu.id) }}"
+                    >
+                        <button
+                            type="submit"
+                            class="nut-duyet"
+                        >
+                            ✓ Duyệt phiếu
+                        </button>
+                    </form>
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('nhap_hang.tu_choi', id=phieu.id) }}"
+                    >
+                        <button
+                            type="submit"
+                            class="nut-tu-choi"
+                        >
+                            ✕ Từ chối
+                        </button>
+                    </form>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

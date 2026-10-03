@@ -1,100 +1,258 @@
 {% extends "quanly/khungquanly.html" %}
 
 {% block css %}
+
 <link rel="stylesheet" href="{{ url_for('static', filename='cssquanly/bonchua/them.css') }}">
+
 {% endblock %}
 
 {% block noi_dung %}
+
 <div class="tieu-de-trang">
+
     <div>
+
         <h1>Thêm Bồn Chứa</h1>
+
         <p>Nhập thông tin bồn chứa mới tại trạm xăng</p>
+
     </div>
+
 </div>
 
 <div style="display: flex; justify-content: center; height: 100%;">
+
     <div class="khung-form">
 
         <div class="dau-form">
+
             <h2>Thông tin bồn chứa</h2>
+
             <p>Vui lòng nhập đầy đủ thông tin bên dưới</p>
+
         </div>
 
         <form method="POST" novalidate>
 
             {% if errors %}
+
                 <div class="thong-bao-loi" role="alert">
+
                     <strong>Không thể lưu bồn chứa</strong>
-                    <span>Vui lòng kiểm tra lại các thông tin được đánh dấu bên dưới.</span>
+
+                    <span>
+                        Vui lòng kiểm tra lại các thông tin được đánh dấu bên dưới.
+                    </span>
+
                 </div>
+
             {% endif %}
 
             <div class="luoi-form">
 
                 <div class="nhom-form {% if errors.ma_bon %}co-loi{% endif %}">
+
                     <label>Mã bồn</label>
-                    <input type="text" name="ma_bon" value="{{ form_data.ma_bon|default('') }}" placeholder="Ví dụ: B007" maxlength="20">
-                    {% if errors.ma_bon %}<small class="thong-bao-truong">{{ errors.ma_bon }}</small>{% endif %}
+
+                    <input
+                        type="text"
+                        name="ma_bon"
+                        value="{{ form_data.ma_bon|default('') }}"
+                        placeholder="Ví dụ: B007"
+                        maxlength="20"
+                    >
+
+                    {% if errors.ma_bon %}
+                        <small class="thong-bao-truong">
+                            {{ errors.ma_bon }}
+                        </small>
+                    {% endif %}
+
                 </div>
+
 
                 <div class="nhom-form {% if errors.ten_bon %}co-loi{% endif %}">
+
                     <label>Tên bồn</label>
-                    <input type="text" name="ten_bon" value="{{ form_data.ten_bon|default('') }}" placeholder="Ví dụ: Bồn số 7">
-                    {% if errors.ten_bon %}<small class="thong-bao-truong">{{ errors.ten_bon }}</small>{% endif %}
+
+                    <input
+                        type="text"
+                        name="ten_bon"
+                        value="{{ form_data.ten_bon|default('') }}"
+                        placeholder="Ví dụ: Bồn số 7"
+                    >
+
+                    {% if errors.ten_bon %}
+                        <small class="thong-bao-truong">
+                            {{ errors.ten_bon }}
+                        </small>
+                    {% endif %}
+
                 </div>
 
-                <div class="nhom-form {% if errors.nhien_lieu %}co-loi{% endif %}">
+
+                <!-- NHIÊN LIỆU -->
+
+                <div class="nhom-form {% if errors.nhien_lieu_id %}co-loi{% endif %}">
+
                     <label>Nhiên liệu</label>
-                    <select name="nhien_lieu">
-                        <option value="">-- Chọn nhiên liệu --</option>
-                        <option value="RON 95" {% if form_data.nhien_lieu == 'RON 95' %}selected{% endif %}>RON 95</option>
-                        <option value="E5 RON 92" {% if form_data.nhien_lieu == 'E5 RON 92' %}selected{% endif %}>E5 RON 92</option>
-                        <option value="Diesel" {% if form_data.nhien_lieu == 'Diesel' %}selected{% endif %}>Diesel</option>
+
+                    <select name="nhien_lieu_id">
+
+                        <option value="">
+                            -- Chọn nhiên liệu --
+                        </option>
+
+                        {% for nhien_lieu in danh_sach_nhien_lieu %}
+
+                        <option
+                            value="{{ nhien_lieu.id }}"
+                            {% if form_data.nhien_lieu_id == nhien_lieu.id|string %}
+                                selected
+                            {% endif %}
+                        >
+
+                            {{ nhien_lieu.ma_nhien_lieu }}
+                            - {{ nhien_lieu.ten_nhien_lieu }}
+
+                        </option>
+
+                        {% endfor %}
+
                     </select>
-                    {% if errors.nhien_lieu %}<small class="thong-bao-truong">{{ errors.nhien_lieu }}</small>{% endif %}
+
+                    {% if errors.nhien_lieu_id %}
+
+                        <small class="thong-bao-truong">
+                            {{ errors.nhien_lieu_id }}
+                        </small>
+
+                    {% endif %}
+
                 </div>
+
 
                 <div class="nhom-form {% if errors.suc_chua %}co-loi{% endif %}">
+
                     <label>Sức chứa</label>
+
                     <div class="o-don-vi">
-                        <input type="number" name="suc_chua" value="{{ form_data.suc_chua|default('') }}" placeholder="Ví dụ: 20000" min="1" step="1">
+
+                        <input
+                            type="number"
+                            name="suc_chua"
+                            value="{{ form_data.suc_chua|default('') }}"
+                            placeholder="Ví dụ: 20000"
+                            min="1"
+                            step="1"
+                        >
+
                         <span>Lít</span>
+
                     </div>
-                    {% if errors.suc_chua %}<small class="thong-bao-truong">{{ errors.suc_chua }}</small>{% endif %}
+
+                    {% if errors.suc_chua %}
+
+                        <small class="thong-bao-truong">
+                            {{ errors.suc_chua }}
+                        </small>
+
+                    {% endif %}
+
                 </div>
+
 
                 <div class="nhom-form {% if errors.ton_hien_tai %}co-loi{% endif %}">
+
                     <label>Tồn hiện tại</label>
+
                     <div class="o-don-vi">
-                        <input type="number" name="ton_hien_tai" value="{{ form_data.ton_hien_tai|default('') }}" placeholder="Ví dụ: 10000" min="0" step="1">
+
+                        <input
+                            type="number"
+                            name="ton_hien_tai"
+                            value="{{ form_data.ton_hien_tai|default('') }}"
+                            placeholder="Ví dụ: 10000"
+                            min="0"
+                            step="1"
+                        >
+
                         <span>Lít</span>
+
                     </div>
-                    {% if errors.ton_hien_tai %}<small class="thong-bao-truong">{{ errors.ton_hien_tai }}</small>{% endif %}
+
+                    {% if errors.ton_hien_tai %}
+
+                        <small class="thong-bao-truong">
+                            {{ errors.ton_hien_tai }}
+                        </small>
+
+                    {% endif %}
+
                 </div>
 
+
                 <div class="nhom-form {% if errors.trang_thai %}co-loi{% endif %}">
+
                     <label>Trạng thái</label>
+
                     <select name="trang_thai">
-                        <option value="Đang hoạt động" {% if form_data.trang_thai == 'Đang hoạt động' %}selected{% endif %}>Đang hoạt động</option>
-                        <option value="Ngừng hoạt động" {% if form_data.trang_thai == 'Ngừng hoạt động' %}selected{% endif %}>Ngừng hoạt động</option>
+
+                        <option
+                            value="Đang hoạt động"
+                            {% if form_data.trang_thai == 'Đang hoạt động' %}
+                                selected
+                            {% endif %}
+                        >
+                            Đang hoạt động
+                        </option>
+
+                        <option
+                            value="Ngừng hoạt động"
+                            {% if form_data.trang_thai == 'Ngừng hoạt động' %}
+                                selected
+                            {% endif %}
+                        >
+                            Ngừng hoạt động
+                        </option>
+
                     </select>
-                    {% if errors.trang_thai %}<small class="thong-bao-truong">{{ errors.trang_thai }}</small>{% endif %}
+
+                    {% if errors.trang_thai %}
+
+                        <small class="thong-bao-truong">
+                            {{ errors.trang_thai }}
+                        </small>
+
+                    {% endif %}
+
                 </div>
 
             </div>
 
+
             <div class="cuoi-form">
-                <a href="{{ url_for('bon_chua.danh_sach') }}" class="nut-huy">
+
+                <a
+                    href="{{ url_for('bon_chua.danh_sach') }}"
+                    class="nut-huy"
+                >
                     Hủy
                 </a>
 
-                <button type="submit" class="nut-luu">
+                <button
+                    type="submit"
+                    class="nut-luu"
+                >
                     + Thêm bồn chứa
                 </button>
+
             </div>
+
         </form>
 
     </div>
+
 </div>
 
 {% endblock %}

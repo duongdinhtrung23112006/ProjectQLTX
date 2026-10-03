@@ -1,0 +1,701 @@
+{% extends "quanly/khungquanly.html" %}
+
+{% block css %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='cssquanly/nhaphang/index.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='cssquanly/nhaphang/xoa.css') }}"
+>
+
+{% endblock %}
+
+
+{% block noi_dung %}
+
+<div class="trang-nhap-hang">
+
+    <!-- =========================
+         TIÊU ĐỀ
+         ========================= -->
+
+    <div class="tieu-de-noi-dung">
+
+        <div>
+
+            <h1>
+                Quản lý nhập hàng
+            </h1>
+
+            <p>
+                Quản lý và xét duyệt phiếu nhập hàng vào bồn chứa
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         THỐNG KÊ
+         ========================= -->
+
+    <div class="thong-ke-nhap-hang">
+
+        <div class="the-thong-ke">
+
+            <div class="icon-thong-ke">
+                📋
+            </div>
+
+            <div>
+
+                <span>
+                    Tổng số phiếu
+                </span>
+
+                <strong>
+                    {{ tong_so_phieu }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="the-thong-ke">
+
+            <div class="icon-thong-ke cam">
+                ⏳
+            </div>
+
+            <div>
+
+                <span>
+                    Chờ duyệt
+                </span>
+
+                <strong>
+                    {{ cho_duyet }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="the-thong-ke">
+
+            <div class="icon-thong-ke xanh">
+                ✓
+            </div>
+
+            <div>
+
+                <span>
+                    Đã duyệt
+                </span>
+
+                <strong>
+                    {{ da_duyet }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="the-thong-ke">
+
+            <div class="icon-thong-ke tu-choi">
+                ✕
+            </div>
+
+            <div>
+
+                <span>
+                    Từ chối
+                </span>
+
+                <strong>
+                    {{ tu_choi }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         TÌM KIẾM
+         ========================= -->
+
+    <div class="khung-tim-kiem">
+
+        <form
+            method="GET"
+            action="{{ url_for('nhap_hang.danh_sach') }}"
+        >
+
+            <div class="hang-tim-kiem">
+
+                <!-- Tìm mã phiếu -->
+
+                <div class="o-tim-kiem">
+
+                    <span class="bieu-tuong-tim-kiem">
+                        🔎
+                    </span>
+
+                    <input
+                        type="text"
+                        name="ma_nhap"
+                        value="{{ ma_nhap }}"
+                        placeholder="Tìm theo mã phiếu nhập..."
+                    >
+
+                </div>
+
+
+                <!-- Từ ngày -->
+
+                <div class="o-tim-kiem ngay">
+
+                    <span class="nhan-tim-kiem">
+                        Từ ngày
+                    </span>
+
+                    <input
+                        type="date"
+                        name="ngay_tu"
+                        value="{{ ngay_tu }}"
+                    >
+
+                </div>
+
+
+                <!-- Đến ngày -->
+
+                <div class="o-tim-kiem ngay">
+
+                    <span class="nhan-tim-kiem">
+                        Đến ngày
+                    </span>
+
+                    <input
+                        type="date"
+                        name="ngay_den"
+                        value="{{ ngay_den }}"
+                    >
+
+                </div>
+
+
+                <!-- Trạng thái -->
+
+                <div class="o-tim-kiem trang-thai-loc">
+
+                    <select name="trang_thai">
+
+                        <option value="">
+                            Tất cả trạng thái
+                        </option>
+
+                        <option
+                            value="Chờ duyệt"
+                            {% if trang_thai == "Chờ duyệt" %}
+                                selected
+                            {% endif %}
+                        >
+                            Chờ duyệt
+                        </option>
+
+                        <option
+                            value="Đã duyệt"
+                            {% if trang_thai == "Đã duyệt" %}
+                                selected
+                            {% endif %}
+                        >
+                            Đã duyệt
+                        </option>
+
+                        <option
+                            value="Từ chối"
+                            {% if trang_thai == "Từ chối" %}
+                                selected
+                            {% endif %}
+                        >
+                            Từ chối
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Tìm kiếm -->
+
+                <button
+                    type="submit"
+                    class="nut-tim-kiem"
+                >
+                    Tìm kiếm
+                </button>
+
+
+                <!-- Làm mới -->
+
+                <a
+                    href="{{ url_for('nhap_hang.danh_sach') }}"
+                    class="nut-lam-moi"
+                >
+                    Làm mới
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- =========================
+         BẢNG
+         ========================= -->
+
+    <div class="khung-bang">
+
+        <div class="thanh-tren-nhap-hang">
+
+            <div>
+
+                <h2>
+                    Danh sách phiếu nhập
+                </h2>
+
+                <p>
+                    Phiếu chờ duyệt được ưu tiên hiển thị trước
+                </p>
+
+            </div>
+
+            <span>
+                {{ tong_so_phieu }} phiếu
+            </span>
+
+        </div>
+
+
+        {% if danh_sach_phieu %}
+
+        <div class="bang-cuon">
+
+            <table class="bang-du-lieu">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Mã phiếu
+                        </th>
+
+                        <th>
+                            Ngày tạo
+                        </th>
+
+                        <th>
+                            Nhân viên
+                        </th>
+
+                        <th>
+                            Nhiên liệu
+                        </th>
+
+                        <th>
+                            Bồn chứa
+                        </th>
+
+                        <th>
+                            Số lượng
+                        </th>
+
+                        <th>
+                            Trạng thái
+                        </th>
+
+                        <th>
+                            Thao tác
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for phieu in danh_sach_phieu %}
+
+                    <tr>
+
+                        <!-- MÃ PHIẾU -->
+
+                        <td>
+
+                            <strong>
+                                {{ phieu.ma_nhap }}
+                            </strong>
+
+                        </td>
+
+
+                        <!-- NGÀY -->
+
+                        <td>
+
+                            {{ phieu.ngay_tao.strftime('%d/%m/%Y') }}
+
+                        </td>
+
+
+                        <!-- NHÂN VIÊN -->
+
+                        <td>
+
+                            <div class="thong-tin-phieu">
+
+                                <strong>
+                                    {{ phieu.ho_ten }}
+                                </strong>
+
+                                <span>
+                                    {{ phieu.ma_nv }}
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- NHIÊN LIỆU -->
+
+                        <td>
+
+                            <div class="thong-tin-phieu">
+
+                                <strong>
+                                    {{ phieu.ma_nhien_lieu }}
+                                </strong>
+
+                                <span>
+                                    {{ phieu.ten_nhien_lieu }}
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- BỒN -->
+
+                        <td>
+
+                            <div class="thong-tin-phieu">
+
+                                <strong>
+                                    {{ phieu.ma_bon }}
+                                </strong>
+
+                                <span>
+                                    {{ phieu.ten_bon }}
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- SỐ LƯỢNG -->
+
+                        <td>
+
+                            <strong class="so-luong">
+
+                                {{ "{:,.0f}".format(phieu.so_luong) }}
+
+                            </strong>
+
+                            <span class="don-vi">
+
+                                {{ phieu.don_vi }}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- TRẠNG THÁI -->
+
+                        <td>
+
+                            {% if phieu.trang_thai == "Chờ duyệt" %}
+
+                                <span class="trang-thai cho-duyet">
+                                    Chờ duyệt
+                                </span>
+
+                            {% elif phieu.trang_thai == "Đã duyệt" %}
+
+                                <span class="trang-thai da-duyet">
+                                    Đã duyệt
+                                </span>
+
+                            {% elif phieu.trang_thai == "Từ chối" %}
+
+                                <span class="trang-thai tu-choi">
+                                    Từ chối
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- =========================
+                             THAO TÁC
+                             ========================= -->
+
+                        <td>
+
+                            <div class="nhom-thao-tac">
+
+                                <!-- XEM -->
+
+                                <a
+                                    href="{{ url_for(
+                                        'nhap_hang.xem',
+                                        id=phieu.id
+                                    ) }}"
+                                    class="nut-xem"
+                                >
+                                    Xem
+                                </a>
+
+
+                                {% if phieu.trang_thai == "Chờ duyệt" %}
+
+                                    <!-- DUYỆT -->
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for(
+                                            'nhap_hang.duyet',
+                                            id=phieu.id
+                                        ) }}"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            class="nut-duyet"
+                                        >
+                                            Duyệt
+                                        </button>
+
+                                    </form>
+
+
+                                    <!-- TỪ CHỐI -->
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for(
+                                            'nhap_hang.tu_choi',
+                                            id=phieu.id
+                                        ) }}"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            class="nut-tu-choi"
+                                        >
+                                            Từ chối
+                                        </button>
+
+                                    </form>
+
+
+                                    <!-- XÓA -->
+
+                                    <button
+                                        type="button"
+                                        class="nut-xoa"
+                                        onclick="moHopXacNhan(
+                                           '{{ phieu.id }}',
+                                            '{{ phieu.ma_nhap }}'
+                                        )"
+                                    >
+                                        Xóa
+                                    </button>
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+        <!-- KHÔNG CÓ DỮ LIỆU -->
+
+        <div class="khong-co-du-lieu">
+
+            <div class="bieu-tuong-rong">
+                📋
+            </div>
+
+            <p>
+                Không có phiếu nhập nào.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     HỘP XÁC NHẬN XÓA
+     ========================= -->
+
+<div
+    id="hop-xac-nhan"
+    class="lop-phu"
+>
+
+    <div class="hop-thong-bao">
+
+        <div class="nhan-canh-bao">
+            CẢNH BÁO
+        </div>
+
+
+        <div class="bieu-tuong-xoa">
+            🗑️
+        </div>
+
+
+        <h2>
+            XÓA PHIẾU NHẬP?
+        </h2>
+
+
+        <p class="mo-ta-xoa">
+
+            Bạn đang thực hiện thao tác xóa
+            <strong id="ma-phieu-nhap-xoa"></strong>.
+
+        </p>
+
+
+        <p class="ghi-chu-xoa">
+
+            Phiếu nhập chỉ được phép xóa khi đang ở trạng thái
+            <strong>Chờ duyệt</strong>.
+
+        </p>
+
+
+        <div class="nut-xac-nhan">
+
+            <button
+                type="button"
+                class="nut-huy-xoa"
+                onclick="dongHopXacNhan()"
+            >
+                Hủy
+            </button>
+
+
+            <form
+                id="form-xoa"
+                method="POST"
+            >
+
+                <button
+                    type="submit"
+                    class="nut-dong-y-xoa"
+                >
+                    Xóa phiếu nhập
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    function moHopXacNhan(
+        id,
+        maNhap
+    ) {
+
+        document.getElementById(
+            "ma-phieu-nhap-xoa"
+        ).textContent = maNhap;
+
+
+        document.getElementById(
+            "form-xoa"
+        ).action =
+            "/quanly/nhap-hang/xoa/" + id;
+
+
+        document.getElementById(
+            "hop-xac-nhan"
+        ).classList.add(
+            "hien-thi"
+        );
+
+    }
+
+
+    function dongHopXacNhan() {
+
+        document.getElementById(
+            "hop-xac-nhan"
+        ).classList.remove(
+            "hien-thi"
+        );
+
+    }
+
+</script>
+
+
+{% endblock %}

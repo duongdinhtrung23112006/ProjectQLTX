@@ -1,0 +1,529 @@
+{% extends "nhanvien/khungnhanvien.html" %}
+
+
+{% block css %}
+
+<link rel="stylesheet" href="{{ url_for(
+        'static',
+        filename='cssnhanvien/nhaphang/index.css'
+    ) }}">
+
+<link rel="stylesheet" href="{{ url_for(
+        'static',
+        filename='cssnhanvien/nhaphang/xoa.css'
+    ) }}">
+
+{% endblock %}
+
+
+{% block noi_dung %}
+
+
+<!-- =========================
+     TIÊU ĐỀ
+     ========================= -->
+
+<div class="tieu-de-noi-dung">
+
+    <div>
+
+        <h1>
+            Quản Lý Nhập Hàng
+        </h1>
+
+        <p>
+            Theo dõi thông tin các phiếu nhập hàng vào bồn chứa
+        </p>
+
+    </div>
+
+
+    <a href="{{ url_for('nhanvien_nhap_hang.them') }}" class="nut-them">
+        + Thêm phiếu nhập
+    </a>
+</div>
+
+
+<!-- =========================
+     THỐNG KÊ
+     ========================= -->
+
+<div class="thong-ke-nhap-hang">
+
+    <div class="the-thong-ke">
+
+        <div class="icon-thong-ke">
+            📦
+        </div>
+
+        <div>
+
+            <span style="color: rgb(0, 50, 214);">
+                Tổng số phiếu nhập
+            </span>
+
+            <strong style="color: rgb(0, 50, 214);">
+                {{ tong_so_phieu_nhap }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="the-thong-ke">
+
+        <div class="icon-thong-ke xanh">
+            ↓
+        </div>
+
+        <div>
+
+            <span style="color: rgb(5, 190, 14);">
+                Tổng số lượng nhập
+            </span>
+
+            <strong style="color: rgb(5, 190, 14);">
+                {{ "{:,}".format(tong_so_luong_nhap) }} lít
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="the-thong-ke">
+
+        <div class="icon-thong-ke cam">
+            !
+        </div>
+
+        <div>
+
+            <span style="color: rgb(255, 17, 0);">
+                Phiếu chờ duyệt
+            </span>
+
+            <strong style="color: rgb(255, 17, 0);">
+                {{ so_phieu_cho_duyet }}
+            </strong>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     TÌM KIẾM
+     ========================= -->
+
+<div class="o-tim-kiem">
+
+    <span class="bieu-tuong-tim-kiem">
+        ⌕
+    </span>
+
+    <input type="text" id="timKiemPhieuNhap" placeholder="Tìm theo mã phiếu, nhiên liệu hoặc bồn..." autocomplete="off">
+
+</div>
+
+
+<!-- =========================
+     DANH SÁCH PHIẾU NHẬP
+     ========================= -->
+
+<div class="khung-bang">
+
+    <div class="thanh-tren-nhap-hang">
+
+        <div>
+
+            <h2>
+                Danh sách phiếu nhập
+            </h2>
+
+            <p>
+                Thông tin các phiếu nhập hàng do bạn tạo
+            </p>
+
+        </div>
+
+        <span>
+            {{ tong_so_phieu_nhap }} PHIẾU
+        </span>
+
+    </div>
+
+
+    <table class="bang-du-lieu">
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Mã phiếu
+                </th>
+
+                <th>
+                    Ngày tạo
+                </th>
+
+                <th>
+                    Nhiên liệu
+                </th>
+
+                <th>
+                    Bồn nhận
+                </th>
+
+                <th>
+                    Số lượng
+                </th>
+
+                <th>
+                    Trạng thái
+                </th>
+
+                <th>
+                    Thao tác
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody id="danhSachPhieuNhap">
+
+            {% for phieu in danh_sach_phieu_nhap %}
+
+            <tr>
+
+
+                <!-- MÃ PHIẾU -->
+
+                <td>
+
+                    <strong>
+                        {{ phieu.ma_nhap }}
+                    </strong>
+
+                </td>
+
+
+                <!-- NGÀY TẠO -->
+
+                <td>
+
+                    {{ phieu.ngay_tao.strftime("%d/%m/%Y") }}
+
+                </td>
+
+
+                <!-- NHIÊN LIỆU -->
+
+                <td>
+
+                    {{ phieu.ten_nhien_lieu }}
+
+                </td>
+
+
+                <!-- BỒN NHẬN -->
+
+                <td>
+
+                    {{ phieu.ma_bon }}
+
+                </td>
+
+
+                <!-- SỐ LƯỢNG -->
+
+                <td>
+
+                    {{ "{:,}".format(phieu.so_luong) }} lít
+
+                </td>
+
+
+                <!-- TRẠNG THÁI -->
+                <td>
+                    {% if phieu.trang_thai == "Chờ duyệt" %}
+                    <span class="trang-thai cho-duyet">
+                        {{ phieu.trang_thai }}
+                    </span>
+
+                    {% elif phieu.trang_thai == "Đã duyệt" %}
+                    <span class="trang-thai da-duyet">
+                        {{ phieu.trang_thai }}
+                    </span>
+
+                    {% elif phieu.trang_thai == "Từ chối" %}
+                    <span class="trang-thai tu-choi">
+                        {{ phieu.trang_thai }}
+                    </span>
+
+                    {% else %}
+                    <span class="trang-thai">
+                        {{ phieu.trang_thai }}
+                    </span>
+                    {% endif %}
+                </td>
+
+
+                <!-- THAO TÁC -->
+
+                <td>
+
+                    <div class="nhom-thao-tac">
+
+
+                        <!-- XEM -->
+
+                        <a href="{{ url_for('nhanvien_nhap_hang.xem', id=phieu.id) }}" class="nut-xem">
+                            Xem
+                        </a>
+
+
+                        {% if phieu.trang_thai == "Chờ duyệt" %}
+
+
+                        <!-- SỬA -->
+
+                        <a href="{{ url_for('nhanvien_nhap_hang.sua', id=phieu.id) }}" class="nut-sua">
+                            Sửa
+                        </a>
+
+
+                        <!-- XÓA -->
+
+                        <form method="POST" action="#" style="display: inline;">
+
+                            <button type="button" class="nut-xoa" onclick="moHopXacNhan(
+                                    '{{ phieu.id }}',
+                                    '{{ phieu.ma_nhap }}'
+                                )">
+                                Xóa
+                            </button>
+
+                        </form>
+
+
+                        {% endif %}
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+
+            {% else %}
+
+            <tr>
+
+                <td colspan="7" class="khong-co-du-lieu">
+                    Chưa có phiếu nhập hàng nào trong hệ thống !
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<!-- =========================
+     HỘP XÁC NHẬN XÓA
+     ========================= -->
+
+<div id="hop-xac-nhan" class="lop-phu">
+
+    <div class="hop-thong-bao">
+
+        <div class="nhan-canh-bao">
+            CẢNH BÁO
+        </div>
+
+
+        <div class="bieu-tuong-xoa">
+            🗑️
+        </div>
+
+
+        <h2>
+            XÓA PHIẾU NHẬP?
+        </h2>
+
+
+        <p class="mo-ta-xoa">
+
+            Bạn đang thực hiện thao tác xóa
+
+            <strong id="ma-phieu-nhap-xoa"></strong>.
+
+        </p>
+
+
+        <p class="ghi-chu-xoa">
+
+            Phiếu nhập chỉ được phép xóa khi đang ở trạng thái
+            <strong>Chờ duyệt</strong>.
+
+        </p>
+
+
+        <div class="nut-xac-nhan">
+
+            <button type="button" class="nut-huy-xoa" onclick="dongHopXacNhan()">
+                Hủy
+            </button>
+
+
+            <form id="form-xoa" method="POST">
+
+                <button type="submit" class="nut-dong-y-xoa">
+                    Xóa phiếu nhập
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     JAVASCRIPT XÓA
+     ========================= -->
+
+<script>
+
+    function moHopXacNhan(
+        id,
+        maNhap
+    ) {
+
+        document.getElementById(
+            "ma-phieu-nhap-xoa"
+        ).textContent = maNhap;
+
+
+        document.getElementById(
+            "form-xoa"
+        ).action =
+            "/nhap-hang/xoa/" + id;
+
+
+        document.getElementById(
+            "hop-xac-nhan"
+        ).classList.add(
+            "hien-thi"
+        );
+
+    }
+
+
+    function dongHopXacNhan() {
+
+        document.getElementById(
+            "hop-xac-nhan"
+        ).classList.remove(
+            "hien-thi"
+        );
+
+    }
+
+</script>
+
+
+<!-- =========================
+     JAVASCRIPT TÌM KIẾM
+     ========================= -->
+
+<script>
+
+    (() => {
+
+        "use strict";
+
+
+        const oTimKiem =
+            document.getElementById(
+                "timKiemPhieuNhap"
+            );
+
+
+        const danhSach =
+            document.getElementById(
+                "danhSachPhieuNhap"
+            );
+
+
+        if (!oTimKiem || !danhSach) {
+            return;
+        }
+
+
+        oTimKiem.addEventListener(
+            "input",
+            function () {
+
+                const tuKhoa =
+                    this.value
+                        .toLowerCase()
+                        .trim();
+
+
+                const cacDong =
+                    danhSach.querySelectorAll(
+                        "tr"
+                    );
+
+
+                cacDong.forEach(
+                    function (dong) {
+
+                        const noiDung =
+                            dong.textContent
+                                .toLowerCase();
+
+
+                        if (
+                            noiDung.includes(
+                                tuKhoa
+                            )
+                        ) {
+
+                            dong.style.display =
+                                "";
+
+                        } else {
+
+                            dong.style.display =
+                                "none";
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+    })();
+
+</script>
+
+
+{% endblock %}

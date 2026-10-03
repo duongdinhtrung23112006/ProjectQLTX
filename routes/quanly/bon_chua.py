@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 
 from services.database import ket_noi
-
 from services.auth_service import yeu_cau_vai_tro
 
 
@@ -14,38 +13,79 @@ def bao_ve_router_bon_chua():
     return None
 
 
+def lay_danh_sach_nhien_lieu():
+    ket_noi_db = ket_noi()
+    cursor = ket_noi_db.cursor(dictionary=True)
+
+    try:
+        cursor.execute("""
+            SELECT
+                id,
+                ma_nhien_lieu,
+                ten_nhien_lieu,
+                don_vi,
+                don_gia,
+                trang_thai
+            FROM nhien_lieu
+            WHERE trang_thai = 'Đang bán'
+            ORDER BY ma_nhien_lieu
+        """)
+
+        return cursor.fetchall()
+
+    finally:
+        cursor.close()
+        ket_noi_db.close()
+
+
 def lay_danh_sach_bon():
     ket_noi_db = ket_noi()
     cursor = ket_noi_db.cursor(dictionary=True)
 
-    cursor.execute("""
-        SELECT *
-        FROM bon_chua
-        ORDER BY CAST(SUBSTRING(ma_bon, 4) AS UNSIGNED)
-    """)
+    try:
+        cursor.execute("""
+            SELECT
+                bc.id,
+                bc.ma_bon,
+                bc.ten_bon,
+                bc.nhien_lieu_id,
+                nl.ma_nhien_lieu,
+                nl.ten_nhien_lieu,
+                nl.don_vi,
+                bc.suc_chua,
+                bc.ton_hien_tai,
+                bc.trang_thai
+            FROM bon_chua bc
+            JOIN nhien_lieu nl
+                ON bc.nhien_lieu_id = nl.id
+            ORDER BY CAST(
+                SUBSTRING(bc.ma_bon, 3)
+                AS UNSIGNED
+            )
+        """)
 
-    danh_sach_bon = cursor.fetchall()
+        return cursor.fetchall()
 
-    cursor.close()
-    ket_noi_db.close()
-
-    return danh_sach_bon
+    finally:
+        cursor.close()
+        ket_noi_db.close()
 
 
 @bon_chua_bp.route("/bon-chua")
 def danh_sach():
-
     danh_sach_bon = lay_danh_sach_bon()
 
     tong_so_bon = len(danh_sach_bon)
 
     dang_hoat_dong = sum(
-        1 for bon in danh_sach_bon
+        1
+        for bon in danh_sach_bon
         if bon["trang_thai"] == "Đang hoạt động"
     )
 
     ngung_hoat_dong = sum(
-        1 for bon in danh_sach_bon
+        1
+        for bon in danh_sach_bon
         if bon["trang_thai"] == "Ngừng hoạt động"
     )
 
@@ -65,10 +105,12 @@ def danh_sach():
 )
 def them():
 
+    danh_sach_nhien_lieu = lay_danh_sach_nhien_lieu()
+
     form_data = {
         "ma_bon": "",
         "ten_bon": "",
-        "nhien_lieu": "",
+        "nhien_lieu_id": "",
         "suc_chua": "",
         "ton_hien_tai": "",
         "trang_thai": "Đang hoạt động"
@@ -85,7 +127,7 @@ def them():
 
         ma_bon = form_data["ma_bon"].upper()
         ten_bon = form_data["ten_bon"]
-        nhien_lieu = form_data["nhien_lieu"]
+        nhien_lieu_id = form_data["nhien_lieu_id"]
         trang_thai = form_data["trang_thai"]
 
         if not ma_bon:
@@ -100,14 +142,29 @@ def them():
         if not ten_bon:
             errors["ten_bon"] = "Vui lòng nhập tên bồn."
 
-        if nhien_lieu not in {
-            "RON 95",
-            "E5 RON 92",
-            "Diesel"
-        }:
-            errors["nhien_lieu"] = (
-                "Vui lòng chọn loại nhiên liệu hợp lệ."
+        # Kiểm tra nhiên liệu có tồn tại
+        nhien_lieu_id_int = None
+
+        if not nhien_lieu_id:
+            errors["nhien_lieu_id"] = (
+                "Vui lòng chọn nhiên liệu."
             )
+        else:
+            try:
+                nhien_lieu_id_int = int(nhien_lieu_id)
+
+                if not any(
+                    nhien_lieu["id"] == nhien_lieu_id_int
+                    for nhien_lieu in danh_sach_nhien_lieu
+                ):
+                    errors["nhien_lieu_id"] = (
+                        "Nhiên liệu không hợp lệ."
+                    )
+
+            except ValueError:
+                errors["nhien_lieu_id"] = (
+                    "Nhiên liệu không hợp lệ."
+                )
 
         try:
             suc_chua = int(form_data["suc_chua"])
@@ -118,9 +175,7 @@ def them():
                 )
 
         except (TypeError, ValueError):
-
             suc_chua = None
-
             errors["suc_chua"] = (
                 "Sức chứa phải là số nguyên hợp lệ."
             )
@@ -136,9 +191,7 @@ def them():
                 )
 
         except (TypeError, ValueError):
-
             ton_hien_tai = None
-
             errors["ton_hien_tai"] = (
                 "Tồn hiện tại phải là số nguyên hợp lệ."
             )
@@ -163,44 +216,50 @@ def them():
         form_data["ma_bon"] = ma_bon
 
         if errors:
-
             return render_template(
                 "quanly/bonchua/them.html",
                 trang_hien_tai="Bồn chứa",
                 errors=errors,
-                form_data=form_data
+                form_data=form_data,
+                danh_sach_nhien_lieu=danh_sach_nhien_lieu
             ), 422
 
         ket_noi_db = ket_noi()
         cursor = ket_noi_db.cursor()
 
-        cursor.execute(
-            """
-            INSERT INTO bon_chua
-            (
-                ma_bon,
-                ten_bon,
-                nhien_lieu,
-                suc_chua,
-                ton_hien_tai,
-                trang_thai
+        try:
+            cursor.execute(
+                """
+                INSERT INTO bon_chua
+                (
+                    ma_bon,
+                    ten_bon,
+                    nhien_lieu_id,
+                    suc_chua,
+                    ton_hien_tai,
+                    trang_thai
+                )
+                VALUES (%s, %s, %s, %s, %s, %s)
+                """,
+                (
+                    ma_bon,
+                    ten_bon,
+                    nhien_lieu_id_int,
+                    int(suc_chua),
+                    int(ton_hien_tai),
+                    trang_thai
+                )
             )
-            VALUES (%s, %s, %s, %s, %s, %s)
-            """,
-            (
-                ma_bon,
-                ten_bon,
-                nhien_lieu,
-                int(suc_chua),
-                int(ton_hien_tai),
-                trang_thai
-            )
-        )
 
-        ket_noi_db.commit()
+            ket_noi_db.commit()
 
-        cursor.close()
-        ket_noi_db.close()
+        except Exception:
+            ket_noi_db.rollback()
+            raise
+
+        finally:
+            cursor.close()
+            ket_noi_db.close()
 
         return redirect(
             url_for("bon_chua.danh_sach")
@@ -210,7 +269,8 @@ def them():
         "quanly/bonchua/them.html",
         trang_hien_tai="Bồn chứa",
         errors=errors,
-        form_data=form_data
+        form_data=form_data,
+        danh_sach_nhien_lieu=danh_sach_nhien_lieu
     )
 
 
@@ -221,28 +281,35 @@ def them():
 def sua(id):
 
     ket_noi_db = ket_noi()
+    cursor = ket_noi_db.cursor(dictionary=True)
 
-    cursor = ket_noi_db.cursor(
-        dictionary=True
-    )
+    try:
+        cursor.execute(
+            """
+            SELECT *
+            FROM bon_chua
+            WHERE id = %s
+            """,
+            (id,)
+        )
 
-    cursor.execute(
-        "SELECT * FROM bon_chua WHERE id = %s",
-        (id,)
-    )
+        bon = cursor.fetchone()
 
-    bon = cursor.fetchone()
-
-    cursor.close()
-    ket_noi_db.close()
+    finally:
+        cursor.close()
+        ket_noi_db.close()
 
     if bon is None:
         return "Không tìm thấy bồn chứa", 404
 
+    danh_sach_nhien_lieu = lay_danh_sach_nhien_lieu()
+
     form_data = {
         "ma_bon": bon["ma_bon"],
         "ten_bon": bon["ten_bon"],
-        "nhien_lieu": bon["nhien_lieu"],
+        "nhien_lieu_id": str(
+            bon["nhien_lieu_id"]
+        ),
         "suc_chua": bon["suc_chua"],
         "ton_hien_tai": bon["ton_hien_tai"],
         "trang_thai": bon["trang_thai"]
@@ -259,7 +326,7 @@ def sua(id):
 
         ma_bon = form_data["ma_bon"].upper()
         ten_bon = form_data["ten_bon"]
-        nhien_lieu = form_data["nhien_lieu"]
+        nhien_lieu_id = form_data["nhien_lieu_id"]
         trang_thai = form_data["trang_thai"]
 
         if not ma_bon:
@@ -268,9 +335,9 @@ def sua(id):
             )
 
         elif any(
-            bon["ma_bon"].upper() == ma_bon
-            and bon["id"] != id
-            for bon in lay_danh_sach_bon()
+            bon_khac["ma_bon"].upper() == ma_bon
+            and bon_khac["id"] != id
+            for bon_khac in lay_danh_sach_bon()
         ):
             errors["ma_bon"] = (
                 "Mã bồn này đã tồn tại."
@@ -281,14 +348,30 @@ def sua(id):
                 "Vui lòng nhập tên bồn."
             )
 
-        if nhien_lieu not in {
-            "RON 95",
-            "E5 RON 92",
-            "Diesel"
-        }:
-            errors["nhien_lieu"] = (
-                "Vui lòng chọn loại nhiên liệu hợp lệ."
+        nhien_lieu_id_int = None
+
+        if not nhien_lieu_id:
+            errors["nhien_lieu_id"] = (
+                "Vui lòng chọn nhiên liệu."
             )
+        else:
+            try:
+                nhien_lieu_id_int = int(
+                    nhien_lieu_id
+                )
+
+                if not any(
+                    nhien_lieu["id"] == nhien_lieu_id_int
+                    for nhien_lieu in danh_sach_nhien_lieu
+                ):
+                    errors["nhien_lieu_id"] = (
+                        "Nhiên liệu không hợp lệ."
+                    )
+
+            except ValueError:
+                errors["nhien_lieu_id"] = (
+                    "Nhiên liệu không hợp lệ."
+                )
 
         try:
             suc_chua = int(
@@ -301,9 +384,7 @@ def sua(id):
                 )
 
         except (TypeError, ValueError):
-
             suc_chua = None
-
             errors["suc_chua"] = (
                 "Sức chứa phải là số nguyên hợp lệ."
             )
@@ -319,9 +400,7 @@ def sua(id):
                 )
 
         except (TypeError, ValueError):
-
             ton_hien_tai = None
-
             errors["ton_hien_tai"] = (
                 "Tồn hiện tại phải là số nguyên hợp lệ."
             )
@@ -346,45 +425,51 @@ def sua(id):
         form_data["ma_bon"] = ma_bon
 
         if errors:
-
             return render_template(
                 "quanly/bonchua/sua.html",
                 trang_hien_tai="Bồn chứa",
                 errors=errors,
                 form_data=form_data,
-                id=id
+                id=id,
+                danh_sach_nhien_lieu=danh_sach_nhien_lieu
             ), 422
 
         ket_noi_db = ket_noi()
-
         cursor = ket_noi_db.cursor()
 
-        cursor.execute(
-            """
-            UPDATE bon_chua
-            SET ma_bon = %s,
-                ten_bon = %s,
-                nhien_lieu = %s,
-                suc_chua = %s,
-                ton_hien_tai = %s,
-                trang_thai = %s
-            WHERE id = %s
-            """,
-            (
-                ma_bon,
-                ten_bon,
-                nhien_lieu,
-                int(suc_chua),
-                int(ton_hien_tai),
-                trang_thai,
-                id
+        try:
+            cursor.execute(
+                """
+                UPDATE bon_chua
+                SET
+                    ma_bon = %s,
+                    ten_bon = %s,
+                    nhien_lieu_id = %s,
+                    suc_chua = %s,
+                    ton_hien_tai = %s,
+                    trang_thai = %s
+                WHERE id = %s
+                """,
+                (
+                    ma_bon,
+                    ten_bon,
+                    nhien_lieu_id_int,
+                    int(suc_chua),
+                    int(ton_hien_tai),
+                    trang_thai,
+                    id
+                )
             )
-        )
 
-        ket_noi_db.commit()
+            ket_noi_db.commit()
 
-        cursor.close()
-        ket_noi_db.close()
+        except Exception:
+            ket_noi_db.rollback()
+            raise
+
+        finally:
+            cursor.close()
+            ket_noi_db.close()
 
         return redirect(
             url_for("bon_chua.danh_sach")
@@ -395,7 +480,8 @@ def sua(id):
         trang_hien_tai="Bồn chứa",
         errors=errors,
         form_data=form_data,
-        id=id
+        id=id,
+        danh_sach_nhien_lieu=danh_sach_nhien_lieu
     )
 
 
@@ -406,42 +492,70 @@ def sua(id):
 def xoa(id):
 
     ket_noi_db = ket_noi()
-
     cursor = ket_noi_db.cursor()
 
-    cursor.execute(
-        "DELETE FROM bon_chua WHERE id = %s",
-        (id,)
-    )
+    try:
+        cursor.execute(
+            """
+            DELETE FROM bon_chua
+            WHERE id = %s
+            """,
+            (id,)
+        )
 
-    ket_noi_db.commit()
+        ket_noi_db.commit()
 
-    cursor.close()
-    ket_noi_db.close()
+    except Exception:
+        ket_noi_db.rollback()
+        raise
+
+    finally:
+        cursor.close()
+        ket_noi_db.close()
 
     return redirect(
         url_for("bon_chua.danh_sach")
     )
 
 
-@bon_chua_bp.route("/bon-chua/xem/<int:id>")
+@bon_chua_bp.route(
+    "/bon-chua/xem/<int:id>"
+)
 def xem(id):
 
     ket_noi_db = ket_noi()
-
     cursor = ket_noi_db.cursor(
         dictionary=True
     )
 
-    cursor.execute(
-        "SELECT * FROM bon_chua WHERE id = %s",
-        (id,)
-    )
+    try:
+        cursor.execute(
+            """
+            SELECT
+                bc.id,
+                bc.ma_bon,
+                bc.ten_bon,
+                bc.nhien_lieu_id,
+                nl.ma_nhien_lieu,
+                nl.ten_nhien_lieu,
+                nl.don_vi,
+                nl.don_gia,
+                bc.suc_chua,
+                bc.ton_hien_tai,
+                bc.trang_thai
+            FROM bon_chua bc
+            JOIN nhien_lieu nl
+                ON bc.nhien_lieu_id = nl.id
+            WHERE bc.id = %s
+            """,
+            (id,)
+        )
 
-    bon = cursor.fetchone()
+        bon = cursor.fetchone()
 
-    cursor.close()
-    ket_noi_db.close()
+    finally:
+        cursor.close()
+        ket_noi_db.close()
 
     if bon is None:
         return "Không tìm thấy bồn chứa", 404

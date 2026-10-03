@@ -1,0 +1,312 @@
+{% extends "nhanvien/khungnhanvien.html" %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='cssnhanvien/nhaphang/them.css') }}">
+
+{% endblock %}
+
+{% block noi_dung %}
+
+<div class="tieu-de-noi-dung">
+
+    <div>
+
+        <h1>Thêm Phiếu Nhập Hàng</h1>
+
+        <p>Nhập thông tin hàng hóa được nhập vào bồn chứa</p>
+
+    </div>
+
+    <a href="{{ url_for('nhanvien_nhap_hang.danh_sach') }}" class="nut-quay-lai">
+
+        ← Quay lại
+
+    </a>
+
+</div>
+
+
+<div class="khung-form">
+
+    <div class="dau-form">
+
+        <div>
+
+            <h2>Thông tin phiếu nhập</h2>
+
+            <p>
+                Các thông tin có dấu <span>*</span> là bắt buộc
+            </p>
+
+        </div>
+
+        <div class="trang-thai-moi">
+
+            Chờ duyệt
+
+        </div>
+
+    </div>
+
+
+    <form method="POST">
+
+        <div class="luoi-form">
+
+            <!-- Mã phiếu -->
+
+            <div class="nhom-form">
+
+                <label>Mã phiếu</label>
+
+                <div class="o-chi-doc">
+
+                    <span>🔖</span>
+
+                    <strong>Tự động tạo</strong>
+
+                </div>
+
+                <small>
+                    Mã phiếu sẽ được hệ thống tự sinh sau khi lưu.
+                </small>
+
+            </div>
+
+
+            <!-- Ngày tạo -->
+
+            <div class="nhom-form">
+
+                <label>Ngày tạo</label>
+
+                <div class="o-chi-doc">
+
+                    <span>📅</span>
+
+                    <strong>Ngày hiện tại</strong>
+
+                </div>
+
+                <small>
+                    Ngày tạo được lấy tự động từ hệ thống.
+                </small>
+
+            </div>
+
+
+            <!-- Nhân viên -->
+
+            <div class="nhom-form">
+
+                <label>Nhân viên tạo phiếu</label>
+
+                <div class="o-chi-doc">
+
+                    <span>👤</span>
+
+                    <strong>
+                        {{ nhan_vien.ma_nv }} - {{ nhan_vien.ho_ten }}
+                    </strong>
+
+                </div>
+
+                <small>
+                    Nhân viên được xác định theo tài khoản đang đăng nhập.
+                </small>
+
+            </div>
+
+
+            <!-- Nhiên liệu -->
+
+            <div class="nhom-form">
+
+                <label for="nhien_lieu_id">
+
+                    Nhiên liệu <span>*</span>
+
+                </label>
+
+                <select
+                    id="nhien_lieu_id"
+                    name="nhien_lieu_id"
+                    class="{% if errors.get('nhien_lieu_id') %}co-loi{% endif %}"
+                >
+
+                    <option value="">
+                        -- Chọn nhiên liệu --
+                    </option>
+
+                    {% for nhien_lieu in danh_sach_nhien_lieu %}
+
+                    <option
+                        value="{{ nhien_lieu.id }}"
+                        {% if form_data.nhien_lieu_id == nhien_lieu.id|string %}selected{% endif %}
+                    >
+
+                        {{ nhien_lieu.ma_nhien_lieu }}
+                        - {{ nhien_lieu.ten_nhien_lieu }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                {% if errors.get('nhien_lieu_id') %}
+
+                <small class="thong-bao-loi">
+
+                    {{ errors.get('nhien_lieu_id') }}
+
+                </small>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Bồn nhận -->
+
+            <div class="nhom-form">
+
+                <label for="bon_id">
+
+                    Bồn nhận <span>*</span>
+
+                </label>
+
+                <select
+                    id="bon_id"
+                    name="bon_id"
+                    class="{% if errors.get('bon_id') %}co-loi{% endif %}"
+                >
+
+                    <option value="">
+                        -- Chọn bồn nhận --
+                    </option>
+
+                    {% for bon in danh_sach_bon %}
+
+                    <option
+                        value="{{ bon.id }}"
+                        {% if form_data.bon_id == bon.id|string %}selected{% endif %}
+                    >
+
+                        {{ bon.ma_bon }}
+                        - {{ bon.ten_bon }}
+                        ({{ bon.ten_nhien_lieu }})
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                {% if errors.get('bon_id') %}
+
+                <small class="thong-bao-loi">
+
+                    {{ errors.get('bon_id') }}
+
+                </small>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Số lượng -->
+
+            <div class="nhom-form">
+
+                <label for="so_luong">
+
+                    Số lượng nhập <span>*</span>
+
+                </label>
+
+                <div class="o-so-luong">
+
+                    <input
+                        type="number"
+                        id="so_luong"
+                        name="so_luong"
+                        value="{{ form_data.so_luong }}"
+                        min="1"
+                        placeholder="Nhập số lượng"
+                        class="{% if errors.get('so_luong') %}co-loi{% endif %}"
+                    >
+
+                    <span>lít</span>
+
+                </div>
+
+                {% if errors.get('so_luong') %}
+
+                <small class="thong-bao-loi">
+
+                    {{ errors.get('so_luong') }}
+
+                </small>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="ghi-chu">
+
+            <div class="bieu-tuong-ghi-chu">
+                ℹ️
+            </div>
+
+            <div>
+
+                <strong>Lưu ý</strong>
+
+                <p>
+
+                    Phiếu sau khi tạo sẽ ở trạng thái
+
+                    <strong>Chờ duyệt</strong>.
+
+                    Số lượng nhập chưa được cộng vào tồn bồn
+
+                    cho đến khi phiếu được quản lý duyệt.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="cuoi-form">
+
+            <a
+                href="{{ url_for('nhanvien_nhap_hang.danh_sach') }}"
+                class="nut-huy"
+            >
+
+                Hủy
+
+            </a>
+
+            <button type="submit" class="nut-luu">
+
+                ✓ Tạo phiếu nhập
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,9 +1,13 @@
 from flask import Blueprint, render_template
+
 from services.database import ket_noi
 from services.auth_service import yeu_cau_vai_tro
 
 
-nhanvien_bon_chua_bp = Blueprint("nhanvien_bon_chua", __name__)
+nhanvien_bon_chua_bp = Blueprint(
+    "nhanvien_bon_chua",
+    __name__
+)
 
 
 @nhanvien_bon_chua_bp.before_request
@@ -16,22 +20,42 @@ def lay_danh_sach_bon():
     ket_noi_db = ket_noi()
     cursor = ket_noi_db.cursor(dictionary=True)
 
-    cursor.execute("""
-        SELECT *
-        FROM bon_chua
-        ORDER BY ma_bon
-    """)
+    try:
+        cursor.execute("""
+            SELECT
+                bc.id,
+                bc.ma_bon,
+                bc.ten_bon,
+                bc.nhien_lieu_id,
+                nl.ma_nhien_lieu,
+                nl.ten_nhien_lieu,
+                nl.don_vi,
+                nl.don_gia,
+                bc.suc_chua,
+                bc.ton_hien_tai,
+                bc.trang_thai
+            FROM bon_chua bc
+            JOIN nhien_lieu nl
+                ON bc.nhien_lieu_id = nl.id
+            ORDER BY
+                CAST(
+                    SUBSTRING(bc.ma_bon, 3)
+                    AS UNSIGNED
+                )
+        """)
 
-    danh_sach_bon = cursor.fetchall()
+        return cursor.fetchall()
 
-    cursor.close()
-    ket_noi_db.close()
+    finally:
+        cursor.close()
+        ket_noi_db.close()
 
-    return danh_sach_bon
 
-
-@nhanvien_bon_chua_bp.route("/nhanvien/bon-chua")
+@nhanvien_bon_chua_bp.route(
+    "/nhanvien/bon-chua"
+)
 def danh_sach():
+
     danh_sach_bon = lay_danh_sach_bon()
 
     tong_so_bon = len(danh_sach_bon)
@@ -58,21 +82,41 @@ def danh_sach():
     )
 
 
-@nhanvien_bon_chua_bp.route("/nhanvien/bon-chua/xem/<int:id>")
+@nhanvien_bon_chua_bp.route(
+    "/nhanvien/bon-chua/xem/<int:id>"
+)
 def xem(id):
+
     ket_noi_db = ket_noi()
-    cursor = ket_noi_db.cursor(dictionary=True)
+    cursor = ket_noi_db.cursor(
+        dictionary=True
+    )
 
-    cursor.execute("""
-        SELECT *
-        FROM bon_chua
-        WHERE id = %s
-    """, (id,))
+    try:
+        cursor.execute("""
+            SELECT
+                bc.id,
+                bc.ma_bon,
+                bc.ten_bon,
+                bc.nhien_lieu_id,
+                nl.ma_nhien_lieu,
+                nl.ten_nhien_lieu,
+                nl.don_vi,
+                nl.don_gia,
+                bc.suc_chua,
+                bc.ton_hien_tai,
+                bc.trang_thai
+            FROM bon_chua bc
+            JOIN nhien_lieu nl
+                ON bc.nhien_lieu_id = nl.id
+            WHERE bc.id = %s
+        """, (id,))
 
-    bon = cursor.fetchone()
+        bon = cursor.fetchone()
 
-    cursor.close()
-    ket_noi_db.close()
+    finally:
+        cursor.close()
+        ket_noi_db.close()
 
     if bon is None:
         return "Không tìm thấy bồn chứa", 404

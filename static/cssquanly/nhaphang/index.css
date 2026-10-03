@@ -1,0 +1,725 @@
+.tieu-de-noi-dung {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.tieu-de-noi-dung h1 {
+    margin: 0 0 6px;
+    font-size: 27px;
+    color: #243b5a;
+    font-weight: 550;
+}
+
+.tieu-de-noi-dung p {
+    margin: 0;
+    color: #2064ec;
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   THỐNG KÊ
+   ========================================================= */
+
+.thong-ke-nhap-hang {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.the-thong-ke {
+    flex: 1;
+    background: white;
+    padding: 17px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.icon-thong-ke {
+    width: 42px;
+    height: 42px;
+    background: #dbeafe;
+    color: #2563eb;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.icon-thong-ke.xanh {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.icon-thong-ke.cam {
+    background: #ffedd5;
+    color: #ea580c;
+}
+
+.icon-thong-ke.tu-choi {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.the-thong-ke span {
+    display: block;
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.the-thong-ke strong {
+    font-size: 20px;
+    color: #243b5a;
+}
+
+
+/* =========================================================
+   TÌM KIẾM
+   ========================================================= */
+
+.khung-tim-kiem {
+    margin-bottom: 22px;
+}
+
+.hang-tim-kiem {
+    display: grid;
+    grid-template-columns:
+        minmax(180px, 1.5fr)
+        minmax(150px, 1fr)
+        minmax(150px, 1fr)
+        minmax(170px, 1fr)
+        auto
+        auto;
+
+    gap: 10px;
+    align-items: center;
+}
+
+.o-tim-kiem {
+    width: 100%;
+    box-sizing: border-box;
+
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 14px;
+
+    background: white;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.bieu-tuong-tim-kiem {
+    margin-right: 10px;
+
+    color: #6b7280;
+
+    font-size: 20px;
+}
+
+.o-tim-kiem input {
+    width: 100%;
+    height: 100%;
+
+    padding: 0;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #374151;
+
+    font-size: 14px;
+}
+
+.o-tim-kiem input::placeholder {
+    color: #9ca3af;
+}
+
+.o-tim-kiem:focus-within {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37, 99, 235, 0.1);
+}
+
+.o-tim-kiem.ngay {
+    gap: 8px;
+}
+
+.nhan-tim-kiem {
+    color: #6b7280;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.o-tim-kiem.ngay input {
+    font-size: 13px;
+}
+
+.trang-thai-loc {
+    padding: 0 12px;
+}
+
+.trang-thai-loc select {
+    width: 100%;
+    height: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #374151;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+.nut-tim-kiem,
+.nut-lam-moi {
+    height: 48px;
+
+    padding: 0 17px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+}
+
+.nut-tim-kiem {
+    border: none;
+
+    background: #2563eb;
+    color: white;
+}
+
+.nut-tim-kiem:hover {
+    background: #1d4ed8;
+}
+
+.nut-lam-moi {
+    background: #f8fafc;
+
+    color: #475569;
+
+    border: 1px solid #d1d5db;
+}
+
+.nut-lam-moi:hover {
+    background: #f1f5f9;
+}
+
+
+/* =========================================================
+   KHUNG BẢNG
+   ========================================================= */
+
+.khung-bang {
+    background: white;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.05);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   THANH XANH PHÍA TRÊN
+   ========================================================= */
+
+.thanh-tren-nhap-hang {
+    height: 10vh;
+
+    background: linear-gradient(
+        135deg,
+        #0756a3,
+        #081ee0 60%,
+        #16b5ed
+    );
+
+    background-size: 200% 200%;
+
+    animation:
+        doi-mau-nhap-hang 5s ease infinite;
+
+    color: white;
+
+    box-shadow:
+        0 12px 30px rgba(23, 37, 84, 0.28);
+
+    border-bottom: 2px solid #1d4ed8;
+
+    padding: 0 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.thanh-tren-nhap-hang h2 {
+    margin: 0 0 4px;
+
+    color: white;
+
+    font-size: 17px;
+}
+
+.thanh-tren-nhap-hang p {
+    margin: 0;
+
+    color: #dbeafe;
+
+    font-size: 13px;
+}
+
+.thanh-tren-nhap-hang > span {
+    color: white;
+
+    font-size: 13px;
+}
+
+@keyframes doi-mau-nhap-hang {
+
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+
+}
+
+
+/* =========================================================
+   BẢNG
+   ========================================================= */
+
+.bang-cuon {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.bang-du-lieu {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 1100px;
+}
+
+.bang-du-lieu th {
+    background: #f8fafc;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    text-align: left;
+
+    padding: 13px 16px;
+
+    border-bottom:
+        1px solid #e5e7eb;
+}
+
+.bang-du-lieu td {
+    padding: 15px 16px;
+
+    color: #374151;
+
+    font-size: 13px;
+
+    border-bottom:
+        1px solid #f1f5f9;
+
+    vertical-align: middle;
+}
+
+.bang-du-lieu tbody tr:hover {
+    background: #f8fafc;
+}
+
+.bang-du-lieu td > strong {
+    color: #2563eb;
+}
+
+
+/* =========================================================
+   THÔNG TIN PHIẾU
+   ========================================================= */
+
+.thong-tin-phieu {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.thong-tin-phieu strong {
+    color: #374151 !important;
+    font-size: 13px;
+}
+
+.thong-tin-phieu span {
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   SỐ LƯỢNG
+   ========================================================= */
+
+.so-luong {
+    color: #243b5a !important;
+    font-size: 14px;
+}
+
+.don-vi {
+    margin-left: 3px;
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   TRẠNG THÁI
+   ========================================================= */
+
+.trang-thai {
+    display: inline-block;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.trang-thai.cho-duyet {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+.trang-thai.da-duyet {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.trang-thai.tu-choi {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+
+/* =========================================================
+   NÚT THAO TÁC
+   ========================================================= */
+
+.nhom-thao-tac {
+    display: flex;
+
+    gap: 7px;
+
+    align-items: center;
+}
+
+.nhom-thao-tac form {
+    margin: 0;
+}
+
+.nut-xem,
+.nut-duyet,
+.nut-tu-choi {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 32px;
+
+    padding: 7px 10px;
+
+    border-radius: 8px;
+
+    border: 1px solid transparent;
+
+    cursor: pointer;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    transition:
+        all 0.2s ease;
+
+    text-decoration: none;
+}
+
+
+/* XEM */
+
+.nut-xem {
+    background: #eaf2ff;
+
+    color: #1d4ed8;
+
+    border-color:
+        rgba(37, 99, 235, 0.12);
+}
+
+.nut-xem:hover {
+    background: #dfeeff;
+
+    transform: translateY(-1px);
+}
+
+
+/* DUYỆT */
+
+.nut-duyet {
+    background: #dcfce7;
+
+    color: #15803d;
+
+    border-color:
+        rgba(22, 163, 74, 0.15);
+}
+
+.nut-duyet:hover {
+    background: #bbf7d0;
+
+    transform: translateY(-1px);
+}
+
+
+/* TỪ CHỐI */
+
+.nut-tu-choi {
+    background: linear-gradient(
+        180deg,
+        #fff5f5 0%,
+        #fee2e2 100%
+    );
+
+    color: #b91c1c;
+
+    border-color:
+        rgba(220, 38, 38, 0.18);
+
+    box-shadow:
+        0 6px 16px
+        rgba(220, 38, 38, 0.10);
+}
+
+.nut-tu-choi:hover {
+    background: linear-gradient(
+        180deg,
+        #ffe5e5 0%,
+        #fecaca 100%
+    );
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 18px
+        rgba(220, 38, 38, 0.16);
+}
+
+
+/* =========================================================
+   KHÔNG CÓ DỮ LIỆU
+   ========================================================= */
+
+.khong-co-du-lieu {
+    text-align: center;
+
+    padding: 35px 20px;
+
+    color: #ff9100;
+}
+
+.bieu-tuong-rong {
+    font-size: 35px;
+
+    margin-bottom: 8px;
+}
+
+.khong-co-du-lieu p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+/* =========================================================
+   XÓA
+   ========================================================= */
+
+.nut-xoa {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 32px;
+
+    padding: 7px 10px;
+
+    border-radius: 8px;
+
+    border: 1px solid
+        rgba(220, 38, 38, 0.18);
+
+    background: linear-gradient(
+        180deg,
+        #fff5f5 0%,
+        #fee2e2 100%
+    );
+
+    color: #b91c1c;
+
+    cursor: pointer;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    transition:
+        all 0.2s ease;
+
+    box-shadow:
+        0 6px 16px
+        rgba(220, 38, 38, 0.08);
+}
+
+.nut-xoa:hover {
+    background: linear-gradient(
+        180deg,
+        #ffe5e5 0%,
+        #fecaca 100%
+    );
+
+    border-color:
+        rgba(220, 38, 38, 0.28);
+
+    color: #991b1b;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 18px
+        rgba(220, 38, 38, 0.15);
+}
+
+.nut-xoa:active {
+    transform: translateY(0);
+
+    box-shadow:
+        0 3px 8px
+        rgba(220, 38, 38, 0.10);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+    .hang-tim-kiem {
+        grid-template-columns:
+            1fr 1fr 1fr;
+    }
+
+    .nut-tim-kiem,
+    .nut-lam-moi {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 900px) {
+
+    .thong-ke-nhap-hang {
+        flex-direction: column;
+    }
+
+    .hang-tim-kiem {
+        grid-template-columns: 1fr;
+    }
+
+    .khung-bang {
+        overflow-x: auto;
+    }
+
+    .bang-du-lieu {
+        min-width: 1100px;
+    }
+
+    .thanh-tren-nhap-hang {
+        padding: 0 20px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .tieu-de-noi-dung h1 {
+        font-size: 23px;
+    }
+
+    .tieu-de-noi-dung p {
+        font-size: 14px;
+    }
+
+    .the-thong-ke {
+        padding: 14px;
+    }
+
+}
+

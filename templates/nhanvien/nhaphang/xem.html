@@ -1,0 +1,145 @@
+{% extends "nhanvien/khungnhanvien.html" %}
+
+{% block css %}
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='cssnhanvien/nhaphang/xem.css') }}"
+>
+{% endblock %}
+
+{% block noi_dung %}
+<div class="trang-nhap-hang">
+
+    <div class="tieu-de-trang">
+        <div>
+            <h1>Chi tiết phiếu nhập hàng</h1>
+            <p>Xem thông tin chi tiết của phiếu nhập hàng</p>
+        </div>
+
+        <a
+            href="{{ url_for('nhanvien_nhap_hang.danh_sach') }}"
+            class="nut-quay-lai"
+        >
+            Quay lại
+        </a>
+    </div>
+
+    <div class="khung-chi-tiet">
+
+        <div class="tieu-de-khung">
+            <div>
+                <h2>{{ phieu.ma_nhap }}</h2>
+                <p>Thông tin phiếu nhập hàng</p>
+            </div>
+
+            <span
+                class="trang-thai
+                {% if phieu.trang_thai == 'Chờ duyệt' %}
+                    cho-duyet
+                {% elif phieu.trang_thai == 'Đã duyệt' %}
+                    da-duyet
+                {% elif phieu.trang_thai == 'Từ chối' %}
+                    tu-choi
+                {% endif %}"
+            >
+                {{ phieu.trang_thai }}
+            </span>
+        </div>
+
+        <div class="luoi-thong-tin">
+
+            <div class="nhom-thong-tin">
+                <span class="nhan">Mã phiếu nhập</span>
+                <span class="gia-tri">{{ phieu.ma_nhap }}</span>
+            </div>
+
+            <div class="nhom-thong-tin">
+                <span class="nhan">Ngày tạo</span>
+                <span class="gia-tri">
+                    {{ phieu.ngay_tao.strftime('%d/%m/%Y') }}
+                </span>
+            </div>
+
+            <div class="nhom-thong-tin">
+                <span class="nhan">Nhân viên tạo phiếu</span>
+                <span class="gia-tri">{{ phieu.ho_ten }}</span>
+            </div>
+
+            <div class="nhom-thong-tin">
+                <span class="nhan">Mã nhân viên</span>
+                <span class="gia-tri">{{ phieu.ma_nv }}</span>
+            </div>
+
+            <div class="nhom-thong-tin">
+                <span class="nhan">Mã nhiên liệu</span>
+                <span class="gia-tri">{{ phieu.ma_nhien_lieu }}</span>
+            </div>
+
+            <div class="nhom-thong-tin">
+                <span class="nhan">Tên nhiên liệu</span>
+                <span class="gia-tri">{{ phieu.ten_nhien_lieu }}</span>
+            </div>
+
+            <div class="nhom-thong-tin">
+                <span class="nhan">Bồn nhận</span>
+                <span class="gia-tri">
+                    {{ phieu.ma_bon }} - {{ phieu.ten_bon }}
+                </span>
+            </div>
+
+            <div class="nhom-thong-tin">
+                <span class="nhan">Số lượng nhập</span>
+                <span class="gia-tri so-luong">
+                    {{ "{:,.0f}".format(phieu.so_luong) }} lít
+                </span>
+            </div>
+
+        </div>
+
+        <div class="khu-vuc-mo-ta">
+            <span class="nhan">Thông tin bồn chứa</span>
+
+            <div class="thong-tin-bon">
+                <div>
+                    <span>Dung tích bồn</span>
+                    <strong>
+                        {{ "{:,.0f}".format(phieu.suc_chua) }} lít
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Tồn hiện tại</span>
+                    <strong>
+                        {{ "{:,.0f}".format(phieu.ton_hien_tai) }} lít
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Đơn vị</span>
+                    <strong>{{ phieu.don_vi }}</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="nhom-nut">
+            {% if phieu.trang_thai == 'Chờ duyệt' %}
+            <a
+                href="{{ url_for('nhanvien_nhap_hang.sua', id=phieu.id) }}"
+                class="nut nut-sua"
+            >
+                Sửa phiếu
+            </a>
+            {% endif %}
+
+            <a
+                href="{{ url_for('nhanvien_nhap_hang.danh_sach') }}"
+                class="nut nut-quay-lai"
+            >
+                Quay lại danh sách
+            </a>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
