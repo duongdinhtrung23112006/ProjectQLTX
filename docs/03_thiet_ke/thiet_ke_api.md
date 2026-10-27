@@ -81,21 +81,26 @@ Các chức năng này phải kiểm tra quyền theo vai trò.
 
 8. Bán hàng
 
-API bán hàng phải nhận tối thiểu:
+Nhân viên ca lập và quản lý phiếu của mình qua các route:
 
-Ngày bán.
-Nhân viên.
-Nhiên liệu.
-Bồn.
-Số lượng.
-Đơn giá.
+Phương thức	Route	Chức năng
+GET	/nhanvien/ban-hang	Danh sách phiếu của nhân viên
+GET/POST	/nhanvien/ban-hang/them	Lập phiếu chờ duyệt
 
-Backend phải kiểm tra:
+Chỉ phiếu `Chờ duyệt` mới được chỉnh sửa hoặc xóa bởi nhân viên. Lập, sửa và xóa phiếu chờ duyệt không làm thay đổi tồn bồn.
 
-Dữ liệu bắt buộc.
-Số lượng không âm.
-Nhiên liệu và bồn tồn tại.
-Số lượng bán không vượt tồn.
+Quản lý xem và xử lý phiếu trên phạm vi toàn trạm:
+
+Phương thức	Route	Chức năng
+GET	/quanly/ban-hang	Danh sách, tìm kiếm và lọc phiếu bán
+GET	/quanly/ban-hang/xem/<id>	Xem chi tiết phiếu
+POST	/quanly/ban-hang/duyet/<id>	Duyệt phiếu đang chờ
+POST	/quanly/ban-hang/tu-choi/<id>	Từ chối phiếu đang chờ
+POST	/quanly/ban-hang/xoa/<id>	Xóa phiếu theo trạng thái
+
+Đường dẫn `/ban-hang` và các thao tác con tương ứng được giữ làm bí danh tương thích với menu quản lý hiện có.
+
+Trạng thái sử dụng: `Chờ duyệt`, `Đã duyệt`, `Đã từ chối`. Chỉ phiếu chờ duyệt có thao tác duyệt/từ chối. Khi duyệt, hệ thống khóa phiếu và bồn, kiểm tra trạng thái nhiên liệu/bồn và tồn mới nhất, sau đó trừ tồn và đổi trạng thái trong cùng transaction. Khi xóa phiếu đã duyệt, số lượng được hoàn trả về đúng bồn trong transaction; thao tác bị từ chối nếu việc hoàn trả vượt sức chứa. Từ chối hoặc xóa phiếu chưa duyệt/đã từ chối không làm đổi tồn bồn.
 9. Báo cáo và thống kê
 
 Các API báo cáo/thống kê cung cấp dữ liệu:

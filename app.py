@@ -7,6 +7,7 @@ from routes.quanly.nhan_vien import nhan_vien_bp
 from routes.quanly.trang_chu import quanly_trang_chu_bp
 from routes.quanly.nhien_lieu import nhien_lieu_bp
 from routes.quanly.nhap_hang import nhap_hang_bp
+from routes.quanly.ban_hang import quanly_ban_hang_bp
 
 # Import các blueprint từ các module khác nhau của nhân viên
 from routes.nhanvien.trang_chu import nhanvien_trang_chu_bp
@@ -40,6 +41,7 @@ app.register_blueprint(bon_chua_bp)
 app.register_blueprint(nhan_vien_bp)
 app.register_blueprint(nhien_lieu_bp)
 app.register_blueprint(nhap_hang_bp)
+app.register_blueprint(quanly_ban_hang_bp)
 
 # Đăng ký blueprint cho trang chủ của nhân viên
 app.register_blueprint(nhanvien_trang_chu_bp)
@@ -51,15 +53,6 @@ app.register_blueprint(nhanvien_ban_hang_bp)
 # Đăng ký blueprint cho trang chủ của kế toán
 app.register_blueprint(ketoan_trang_chu_bp)
 
-
-
-@app.route("/ban-hang")
-@yeu_cau_dang_nhap
-def ban_hang():
-    return render_template(
-        "quanly/ban_hang.html",
-        trang_hien_tai="Bán hàng"
-    )
 
 
 app.register_blueprint(ca_lam_viec_bp)

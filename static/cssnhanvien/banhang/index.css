@@ -276,6 +276,11 @@
     background: #dcfce7;
 }
 
+.nhan-trang-thai.da-tu-choi {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
 .thao-tac-phieu {
     display: flex;
     align-items: center;

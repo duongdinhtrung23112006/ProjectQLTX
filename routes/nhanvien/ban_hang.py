@@ -25,6 +25,7 @@ nhanvien_ban_hang_bp = Blueprint(
 
 TRANG_THAI_CHO_DUYET = "Chờ duyệt"
 TRANG_THAI_DA_DUYET = "Đã duyệt"
+TRANG_THAI_DA_TU_CHOI = "Đã từ chối"
 SO_LUONG_TOI_DA = 2147483647
 THANH_TIEN_TOI_DA = Decimal("999999999999.99")
 
@@ -370,6 +371,7 @@ def danh_sach():
             if trang_thai not in {
                 TRANG_THAI_CHO_DUYET,
                 TRANG_THAI_DA_DUYET,
+                TRANG_THAI_DA_TU_CHOI,
             }:
                 loi_loc = "Trạng thái lọc không hợp lệ."
             else:

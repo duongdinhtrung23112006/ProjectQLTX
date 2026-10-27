@@ -1,0 +1,65 @@
+.nhan-trang-thai.da-tu-choi,
+.trang-thai.da-tu-choi {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
+.thao-tac-phieu form {
+    margin: 0;
+}
+
+.nut-duyet,
+.nut-tu-choi {
+    display: inline-flex;
+    min-height: 32px;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 10px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.nut-duyet {
+    color: #15803d;
+    background: #dcfce7;
+}
+
+.nut-tu-choi {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
+.thong-bao-he-thong {
+    margin-bottom: 16px;
+}
+
+.thong-bao-he-thong p {
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: 7px;
+}
+
+.thong-bao-he-thong-success {
+    color: #166534;
+    background: #f0fdf4;
+}
+
+.thong-bao-he-thong-error {
+    color: #b91c1c;
+    background: #fef2f2;
+}
+
+.nhom-nut-chi-tiet form {
+    margin: 0;
+}
+
+.nhom-nut-chi-tiet .nut-duyet,
+.nhom-nut-chi-tiet .nut-tu-choi {
+    min-height: 40px;
+    padding: 0 16px;
+    font-size: 14px;
+}

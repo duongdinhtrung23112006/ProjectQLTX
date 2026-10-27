@@ -56,6 +56,7 @@
             <option value="">Tất cả</option>
             <option value="Chờ duyệt" {% if filters.trang_thai == 'Chờ duyệt' %}selected{% endif %}>Chờ duyệt</option>
             <option value="Đã duyệt" {% if filters.trang_thai == 'Đã duyệt' %}selected{% endif %}>Đã duyệt</option>
+            <option value="Đã từ chối" {% if filters.trang_thai == 'Đã từ chối' %}selected{% endif %}>Đã từ chối</option>
         </select>
     </label>
     <label>
@@ -114,7 +115,7 @@
                     <td>{{ "{:,.2f}".format(phieu.don_gia) }}</td>
                     <td>{{ "{:,.2f}".format(phieu.thanh_tien) }}</td>
                     <td>
-                        <span class="nhan-trang-thai {% if phieu.trang_thai == 'Chờ duyệt' %}cho-duyet{% elif phieu.trang_thai == 'Đã duyệt' %}da-duyet{% endif %}">
+                        <span class="nhan-trang-thai {% if phieu.trang_thai == 'Chờ duyệt' %}cho-duyet{% elif phieu.trang_thai == 'Đã duyệt' %}da-duyet{% else %}da-tu-choi{% endif %}">
                             {{ phieu.trang_thai }}
                         </span>
                     </td>
