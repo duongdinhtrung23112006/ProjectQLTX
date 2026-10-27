@@ -1,0 +1,249 @@
+.tieu-de-noi-dung {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.tieu-de-noi-dung h1 {
+    margin: 0;
+    color: #172554;
+    font-size: 28px;
+}
+
+.tieu-de-noi-dung p {
+    margin: 7px 0 0;
+    color: #64748b;
+}
+
+.nut-quay-lai {
+    padding: 10px 16px;
+    border: 1px solid #dbe3f0;
+    border-radius: 8px;
+    color: #1e3a8a;
+    background: #fff;
+    text-decoration: none;
+}
+
+.khung-form-ban-hang {
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 5px 18px rgba(15, 23, 42, .06);
+}
+
+.dau-form-ban-hang {
+    display: flex;
+    min-height: 86px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 32px;
+    color: #fff;
+    background: linear-gradient(135deg, #0756a3, #081ee0 60%, #16b5ed);
+}
+
+.dau-form-ban-hang h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.dau-form-ban-hang p {
+    margin: 6px 0 0;
+    color: #dbeafe;
+    font-size: 13px;
+}
+
+.nhan-trang-thai {
+    padding: 7px 13px;
+    border-radius: 20px;
+    color: #c2410c;
+    background: #fff7ed;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.khung-form-ban-hang form {
+    padding: 30px 32px;
+}
+
+.luoi-form-ban-hang {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 30px;
+}
+
+.truong-form-ban-hang {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.truong-form-ban-hang label {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.truong-form-ban-hang label span {
+    color: #dc2626;
+}
+
+.truong-form-ban-hang select,
+.truong-form-ban-hang input,
+.truong-form-ban-hang textarea,
+.o-chi-doc {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    color: #1e293b;
+    background: #fff;
+    font: inherit;
+}
+
+.truong-form-ban-hang textarea {
+    resize: vertical;
+}
+
+.o-chi-doc {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #475569;
+    background: #f8fafc;
+}
+
+.o-chi-doc strong {
+    color: #334155;
+}
+
+.truong-form-ban-hang small {
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.loi-form {
+    color: #dc2626 !important;
+}
+
+.o-so-luong-ban {
+    position: relative;
+}
+
+.o-so-luong-ban input {
+    padding-right: 60px;
+}
+
+.o-so-luong-ban > span {
+    position: absolute;
+    top: 50%;
+    right: 13px;
+    transform: translateY(-50%);
+    color: #64748b;
+    font-size: 13px;
+    pointer-events: none;
+}
+
+.tong-tien {
+    color: #1d4ed8;
+    font-weight: 700;
+}
+
+.ghi-chu-ban-hang {
+    margin-top: 24px;
+}
+
+.canh-bao-ton,
+.ghi-chu-quy-trinh {
+    margin-top: 20px;
+    padding: 14px 16px;
+    border-radius: 7px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.canh-bao-ton {
+    border: 1px solid #fed7aa;
+    color: #9a3412;
+    background: #fff7ed;
+}
+
+.ghi-chu-quy-trinh {
+    border-left: 3px solid #2563eb;
+    color: #475569;
+    background: #f8fafc;
+}
+
+.nut-cuoi-form {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.nut-cuoi-form a,
+.nut-cuoi-form button {
+    display: inline-flex;
+    min-width: 110px;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 18px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    color: #475569;
+    background: #fff;
+    font: inherit;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.nut-cuoi-form button {
+    border-color: #1d4ed8;
+    color: #fff;
+    background: #1d4ed8;
+}
+
+@media (max-width: 900px) {
+    .luoi-form-ban-hang {
+        grid-template-columns: 1fr;
+    }
+
+    .dau-form-ban-hang {
+        padding: 20px 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .tieu-de-noi-dung {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .khung-form-ban-hang form {
+        padding: 22px 20px;
+    }
+
+    .dau-form-ban-hang {
+        padding: 18px 20px;
+    }
+
+    .nut-cuoi-form {
+        flex-direction: column-reverse;
+    }
+
+    .nut-cuoi-form a,
+    .nut-cuoi-form button {
+        width: 100%;
+    }
+}

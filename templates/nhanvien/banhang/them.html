@@ -1,0 +1,133 @@
+{% extends "nhanvien/khungnhanvien.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssnhanvien/banhang/them.css') }}">
+<script src="{{ url_for('static', filename='js/nhanvien/banhang/them.js') }}" defer></script>
+{% endblock %}
+
+{% block noi_dung %}
+<div class="tieu-de-noi-dung">
+    <div>
+        <h1>Thêm Phiếu Bán Hàng</h1>
+        <p>Ghi nhận giao dịch bán nhiên liệu</p>
+    </div>
+    <a class="nut-quay-lai" href="{{ url_for('nhanvien_ban_hang.danh_sach') }}">← Quay lại</a>
+</div>
+
+<div class="khung-form-ban-hang">
+    <div class="dau-form-ban-hang">
+        <div>
+            <h2>Thông tin phiếu bán</h2>
+            <p>Các thông tin có dấu <span>*</span> là bắt buộc</p>
+        </div>
+        <span class="nhan-trang-thai cho-duyet">Chờ duyệt</span>
+    </div>
+
+    <form method="POST">
+        {% if errors.get('database') %}
+        <p class="loi-form">{{ errors.database }}</p>
+        {% endif %}
+
+        <div class="luoi-form-ban-hang">
+            <div class="truong-form-ban-hang">
+                <label>Mã phiếu bán</label>
+                <div class="o-chi-doc">🔖 <strong>Tự động tạo</strong></div>
+                <small>Mã phiếu do hệ thống sinh khi lưu.</small>
+            </div>
+            <div class="truong-form-ban-hang">
+                <label>Ngày, giờ bán</label>
+                <div class="o-chi-doc">📅 Thời điểm hệ thống khi lưu phiếu</div>
+                <small>Ngày và giờ lấy từ cơ sở dữ liệu.</small>
+            </div>
+            <div class="truong-form-ban-hang">
+                <label>Nhân viên lập phiếu</label>
+                <div class="o-chi-doc">👤 {{ nhan_vien.ma_nv }} - {{ nhan_vien.ho_ten }}</div>
+                <small>Nhân viên được xác định theo tài khoản đăng nhập.</small>
+            </div>
+            <div class="truong-form-ban-hang">
+                <label for="ca_lam_viec_id">Ca làm việc <span>*</span></label>
+                <select id="ca_lam_viec_id" name="ca_lam_viec_id" required>
+                    <option value="">-- Chọn ca được phân công hôm nay --</option>
+                    {% for ca in danh_sach_ca %}
+                    <option value="{{ ca.id }}" {% if form_data.ca_lam_viec_id == ca.id|string %}selected{% endif %}>
+                        {{ ca.ma_ca }} - {{ ca.ten_ca }}
+                    </option>
+                    {% endfor %}
+                </select>
+                {% if errors.get('ca_lam_viec_id') %}<small class="loi-form">{{ errors.ca_lam_viec_id }}</small>{% endif %}
+                {% if not danh_sach_ca %}<small class="loi-form">Hôm nay bạn không có ca đang hoạt động được phân công.</small>{% endif %}
+            </div>
+            <div class="truong-form-ban-hang">
+                <label for="nhien_lieu_id">Nhiên liệu <span>*</span></label>
+                <select id="nhien_lieu_id" name="nhien_lieu_id" required>
+                    <option value="">-- Chọn nhiên liệu --</option>
+                    {% for nhien_lieu in danh_sach_nhien_lieu %}
+                    <option value="{{ nhien_lieu.id }}"
+                            data-don-gia="{{ nhien_lieu.don_gia }}"
+                            data-don-vi="{{ nhien_lieu.don_vi }}"
+                            {% if form_data.nhien_lieu_id == nhien_lieu.id|string %}selected{% endif %}>
+                        {{ nhien_lieu.ma_nhien_lieu }} - {{ nhien_lieu.ten_nhien_lieu }}
+                    </option>
+                    {% endfor %}
+                </select>
+                {% if errors.get('nhien_lieu_id') %}<small class="loi-form">{{ errors.nhien_lieu_id }}</small>{% endif %}
+            </div>
+            <div class="truong-form-ban-hang">
+                <label for="bon_id">Bồn chứa <span>*</span></label>
+                <select id="bon_id" name="bon_id" required>
+                    <option value="">-- Chọn bồn chứa --</option>
+                    {% for bon in danh_sach_bon %}
+                    <option value="{{ bon.id }}"
+                            data-nhien-lieu-id="{{ bon.nhien_lieu_id }}"
+                            data-ton="{{ bon.ton_hien_tai }}"
+                            {% if form_data.bon_id == bon.id|string %}selected{% endif %}>
+                        {{ bon.ma_bon }} - {{ bon.ten_bon }} ({{ bon.ten_nhien_lieu }})
+                    </option>
+                    {% endfor %}
+                </select>
+                {% if errors.get('bon_id') %}<small class="loi-form">{{ errors.bon_id }}</small>{% endif %}
+            </div>
+            <div class="truong-form-ban-hang">
+                <label for="so_luong">Số lượng bán <span>*</span></label>
+                <div class="o-so-luong-ban">
+                    <input id="so_luong" name="so_luong" type="number" min="1" step="1"
+                           value="{{ form_data.so_luong }}" required>
+                    <span id="donViNhienLieu">lít</span>
+                </div>
+                {% if errors.get('so_luong') %}<small class="loi-form">{{ errors.so_luong }}</small>{% endif %}
+            </div>
+            <div class="truong-form-ban-hang">
+                <label>Đơn giá hiện tại</label>
+                <div class="o-chi-doc" id="donGiaHienTai">Chọn nhiên liệu</div>
+                <small>Giá được lấy từ dữ liệu nhiên liệu.</small>
+            </div>
+            <div class="truong-form-ban-hang">
+                <label>Thành tiền dự kiến</label>
+                <div class="o-chi-doc tong-tien" id="thanhTienDuKien">0</div>
+                <small>Máy chủ tự tính lại trước khi lưu.</small>
+            </div>
+        </div>
+
+        <div class="truong-form-ban-hang ghi-chu-ban-hang">
+            <label for="ghi_chu">Ghi chú</label>
+            <textarea id="ghi_chu" name="ghi_chu" rows="3">{{ form_data.ghi_chu }}</textarea>
+        </div>
+
+        {% if canh_bao_ton %}
+        <div class="canh-bao-ton">{{ canh_bao_ton }}</div>
+        {% endif %}
+
+        <div class="ghi-chu-quy-trinh">
+            Phiếu được lưu ở trạng thái <strong>Chờ duyệt</strong>. Tạo phiếu không làm
+            thay đổi tồn bồn; tồn chỉ được kiểm tra và trừ khi có quy trình duyệt sau này.
+        </div>
+
+        <div class="nut-cuoi-form">
+            <a href="{{ url_for('nhanvien_ban_hang.danh_sach') }}">Hủy</a>
+            <button type="submit" {% if not danh_sach_ca or not danh_sach_nhien_lieu or not danh_sach_bon %}disabled{% endif %}>
+                ✓ Tạo phiếu bán
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

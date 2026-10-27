@@ -1,0 +1,53 @@
+{% extends "nhanvien/khungnhanvien.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssnhanvien/banhang/xem.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+<div class="tieu-de-noi-dung">
+    <div>
+        <h1>Chi Tiết Phiếu Bán Hàng</h1>
+        <p>Xem thông tin chi tiết của phiếu bán hàng</p>
+    </div>
+    <a class="nut-quay-lai" href="{{ url_for('nhanvien_ban_hang.danh_sach') }}">← Quay lại</a>
+</div>
+
+<div class="khung-chi-tiet-ban-hang">
+    <div class="dau-chi-tiet-ban-hang">
+        <div>
+            <h2>{{ phieu.ma_ban }}</h2>
+            <p>Thông tin phiếu bán hàng</p>
+        </div>
+        <span class="trang-thai {% if phieu.trang_thai == 'Chờ duyệt' %}cho-duyet{% elif phieu.trang_thai == 'Đã duyệt' %}da-duyet{% endif %}">
+            {{ phieu.trang_thai }}
+        </span>
+    </div>
+
+    <div class="luoi-thong-tin-ban-hang">
+        <div><span>Mã phiếu bán</span><strong>{{ phieu.ma_ban }}</strong></div>
+        <div><span>Ngày bán</span><strong>{{ phieu.ngay_ban.strftime('%d/%m/%Y') }}</strong></div>
+        <div><span>Giờ bán</span><strong>{{ phieu.gio_ban }}</strong></div>
+        <div><span>Ca làm việc</span><strong>{{ phieu.ma_ca }} - {{ phieu.ten_ca }}</strong></div>
+        <div><span>Nhân viên lập phiếu</span><strong>{{ phieu.ma_nv }} - {{ phieu.ho_ten }}</strong></div>
+        <div><span>Nhiên liệu</span><strong>{{ phieu.ma_nhien_lieu }} - {{ phieu.ten_nhien_lieu }}</strong></div>
+        <div><span>Bồn chứa</span><strong>{{ phieu.ma_bon }} - {{ phieu.ten_bon }}</strong></div>
+        <div><span>Số lượng bán</span><strong>{{ "{:,.0f}".format(phieu.so_luong) }} {{ phieu.don_vi }}</strong></div>
+        <div><span>Đơn giá</span><strong>{{ "{:,.2f}".format(phieu.don_gia) }}</strong></div>
+        <div><span>Thành tiền</span><strong>{{ "{:,.2f}".format(phieu.thanh_tien) }}</strong></div>
+        <div class="ghi-chu-chi-tiet"><span>Ghi chú</span><strong>{{ phieu.ghi_chu or 'Không có' }}</strong></div>
+    </div>
+
+    <div class="ton-tham-khao">
+        <strong>Tồn bồn hiện tại: {{ "{:,.0f}".format(phieu.ton_hien_tai) }} {{ phieu.don_vi }}</strong>
+        <p>Đây là tồn tại thời điểm xem. Phiếu bán đang chờ duyệt chưa làm thay đổi lượng tồn này.</p>
+    </div>
+
+    <div class="nhom-nut-chi-tiet">
+        {% if phieu.trang_thai == 'Chờ duyệt' %}
+        <a class="nut-sua" href="{{ url_for('nhanvien_ban_hang.sua', id=phieu.id) }}">Sửa phiếu</a>
+        {% endif %}
+        <a class="nut-quay-lai" href="{{ url_for('nhanvien_ban_hang.danh_sach') }}">Quay lại danh sách</a>
+    </div>
+</div>
+{% endblock %}

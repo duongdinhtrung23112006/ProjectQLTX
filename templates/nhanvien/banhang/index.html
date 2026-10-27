@@ -1,0 +1,183 @@
+{% extends "nhanvien/khungnhanvien.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssnhanvien/banhang/index.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='cssnhanvien/banhang/xoa.css') }}">
+<script src="{{ url_for('static', filename='js/nhanvien/banhang/index.js') }}" defer></script>
+{% endblock %}
+
+{% block noi_dung %}
+<div class="tieu-de-noi-dung">
+    <div>
+        <h1>Quản Lý Bán Hàng</h1>
+        <p>Theo dõi thông tin các phiếu bán hàng do bạn lập</p>
+    </div>
+    <a class="nut-them" href="{{ url_for('nhanvien_ban_hang.them') }}">+ Thêm phiếu bán</a>
+</div>
+
+{% if loi_loc %}
+<div class="thong-bao-loc">{{ loi_loc }}</div>
+{% endif %}
+
+<div class="thong-ke-ban-hang">
+    <div class="the-thong-ke">
+        <div class="icon-thong-ke">📦</div>
+        <div>
+            <span class="mau-xanh">Tổng số phiếu bán</span>
+            <strong class="mau-xanh">{{ tong_so_phieu }}</strong>
+        </div>
+    </div>
+
+    <div class="the-thong-ke">
+        <div class="icon-thong-ke xanh">↓</div>
+        <div>
+            <span class="mau-la">Tổng số lượng bán</span>
+            <strong class="mau-la">{{ "{:,}".format(tong_so_luong_ban) }} lít</strong>
+        </div>
+    </div>
+
+    <div class="the-thong-ke">
+        <div class="icon-thong-ke cam">!</div>
+        <div>
+            <span class="mau-do">Phiếu chờ duyệt</span>
+            <strong class="mau-do">{{ so_phieu_cho_duyet }}</strong>
+        </div>
+    </div>
+</div>
+
+<form class="bo-loc-ban-hang" method="GET">
+    <label>
+        Tìm kiếm
+        <input type="search" name="q" value="{{ filters.q }}" placeholder="Mã phiếu, nhiên liệu, bồn...">
+    </label>
+    <label>
+        Trạng thái
+        <select name="trang_thai">
+            <option value="">Tất cả</option>
+            <option value="Chờ duyệt" {% if filters.trang_thai == 'Chờ duyệt' %}selected{% endif %}>Chờ duyệt</option>
+            <option value="Đã duyệt" {% if filters.trang_thai == 'Đã duyệt' %}selected{% endif %}>Đã duyệt</option>
+        </select>
+    </label>
+    <label>
+        Từ ngày
+        <input type="date" name="tu_ngay" value="{{ filters.tu_ngay }}">
+    </label>
+    <label>
+        Đến ngày
+        <input type="date" name="den_ngay" value="{{ filters.den_ngay }}">
+    </label>
+    <div class="nut-loc">
+        <button type="submit">Lọc phiếu</button>
+        <a href="{{ url_for('nhanvien_ban_hang.danh_sach') }}">Xóa lọc</a>
+    </div>
+</form>
+
+<div class="khung-bang-ban-hang">
+    <div class="thanh-tren-ban-hang">
+        <div>
+            <h2>Danh sách phiếu bán</h2>
+            <p>Phiếu chờ duyệt chưa làm thay đổi tồn bồn.</p>
+        </div>
+        <span>{{ tong_so_phieu }} PHIẾU</span>
+    </div>
+
+    <div class="cuon-bang">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã phiếu</th>
+                    <th>Ngày, giờ</th>
+                    <th>Ca làm việc</th>
+                    <th>Nhân viên</th>
+                    <th>Nhiên liệu</th>
+                    <th>Bồn chứa</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for phieu in danh_sach_phieu %}
+                <tr>
+                    <td><strong>{{ phieu.ma_ban }}</strong></td>
+                    <td>
+                        {{ phieu.ngay_ban.strftime('%d/%m/%Y') }}<br>
+                        <small>{{ phieu.gio_ban }}</small>
+                    </td>
+                    <td>{{ phieu.ten_ca }}</td>
+                    <td>{{ phieu.ho_ten }}<br><small>{{ phieu.ma_nv }}</small></td>
+                    <td>{{ phieu.ten_nhien_lieu }}</td>
+                    <td>{{ phieu.ma_bon }} - {{ phieu.ten_bon }}</td>
+                    <td>{{ "{:,.0f}".format(phieu.so_luong) }} {{ phieu.don_vi }}</td>
+                    <td>{{ "{:,.2f}".format(phieu.don_gia) }}</td>
+                    <td>{{ "{:,.2f}".format(phieu.thanh_tien) }}</td>
+                    <td>
+                        <span class="nhan-trang-thai {% if phieu.trang_thai == 'Chờ duyệt' %}cho-duyet{% elif phieu.trang_thai == 'Đã duyệt' %}da-duyet{% endif %}">
+                            {{ phieu.trang_thai }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="thao-tac-phieu">
+                            <a class="nut-xem" href="{{ url_for('nhanvien_ban_hang.xem', id=phieu.id) }}">Xem</a>
+                            {% if phieu.trang_thai == 'Chờ duyệt' %}
+                            <a class="nut-sua" href="{{ url_for('nhanvien_ban_hang.sua', id=phieu.id) }}">Sửa</a>
+                            <button class="nut-xoa"
+                                    type="button"
+                                    data-id="{{ phieu.id }}"
+                                    data-ma="{{ phieu.ma_ban }}">
+                                Xóa
+                            </button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td class="khong-co-phieu" colspan="11">
+                        {% if filters.q or filters.trang_thai or filters.tu_ngay or filters.den_ngay %}
+                        Không tìm thấy phiếu bán phù hợp với điều kiện lọc.
+                        {% else %}
+                        Bạn chưa lập phiếu bán nào.
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="hop-xac-nhan" class="lop-phu" role="dialog" aria-modal="true" aria-labelledby="tieu-de-xoa">
+    <div class="hop-thong-bao">
+        <div class="nhan-canh-bao">CẢNH BÁO</div>
+
+        <div class="bieu-tuong-xoa">🗑️</div>
+
+        <h2 id="tieu-de-xoa">XÓA PHIẾU BÁN?</h2>
+
+        <p class="mo-ta-xoa">
+            Bạn đang thực hiện thao tác xóa
+            <strong id="ma-phieu-ban-xoa"></strong>.
+        </p>
+
+        <p class="ghi-chu-xoa">
+            Phiếu bán chỉ được phép xóa khi đang ở trạng thái
+            <strong>Chờ duyệt</strong>.
+        </p>
+
+        <div class="nut-xac-nhan">
+            <button type="button" class="nut-huy-xoa" id="dong-hop-xac-nhan">
+                Hủy
+            </button>
+
+            <form id="form-xoa" method="POST">
+                <button type="submit" class="nut-dong-y-xoa">
+                    Xóa phiếu bán
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

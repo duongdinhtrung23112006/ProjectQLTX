@@ -13,6 +13,7 @@ from routes.nhanvien.trang_chu import nhanvien_trang_chu_bp
 from routes.nhanvien.bon_chua import nhanvien_bon_chua_bp
 from routes.nhanvien.nhien_lieu import nhanvien_nhien_lieu_bp
 from routes.nhanvien.nhap_hang import nhanvien_nhap_hang_bp
+from routes.nhanvien.ban_hang import nhanvien_ban_hang_bp
 
 # Import các blueprint từ các module khác nhau của kế toán
 from routes.ketoan.trang_chu import ketoan_trang_chu_bp
@@ -45,6 +46,7 @@ app.register_blueprint(nhanvien_trang_chu_bp)
 app.register_blueprint(nhanvien_bon_chua_bp)
 app.register_blueprint(nhanvien_nhien_lieu_bp)
 app.register_blueprint(nhanvien_nhap_hang_bp)
+app.register_blueprint(nhanvien_ban_hang_bp)
 
 # Đăng ký blueprint cho trang chủ của kế toán
 app.register_blueprint(ketoan_trang_chu_bp)

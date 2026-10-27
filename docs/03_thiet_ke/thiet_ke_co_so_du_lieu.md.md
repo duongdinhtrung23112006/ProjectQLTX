@@ -23,14 +23,20 @@ nhan_vien
     ├──< tai_khoan
     ├──< ca_lam_viec
     └──< nhap_hang
+    └──< ban_hang
 
 bon_chua
     └──< nhap_hang
+    └──< ban_hang
 
 nhien_lieu
     └──< nhap_hang
+    └──< ban_hang
 
-Các bảng nghiệp vụ bán hàng và các bảng phục vụ thống kê/AI sẽ được bổ sung theo thiết kế và phạm vi triển khai thực tế.
+ca_lam_viec
+    └──< ban_hang
+
+Các bảng phục vụ thống kê/AI được bổ sung theo thiết kế và phạm vi triển khai thực tế.
 
 3. Bảng nhiên liệu
 
@@ -101,21 +107,13 @@ Phiếu nhập có trạng thái để kiểm soát quá trình chờ duyệt, d
 
 Chỉ phiếu được phê duyệt mới làm thay đổi tồn bồn.
 
-9. Dữ liệu bán hàng
+9. Bảng bán hàng
 
-Dữ liệu bán hàng được thiết kế theo ngày, không bắt buộc ghi nhận từng giao dịch hoặc từng ca.
-
-Thông tin nghiệp vụ dự kiến gồm:
-
-Ngày bán.
-Nhân viên lập.
-Nhiên liệu.
-Bồn chứa.
-Số lượng bán.
-Đơn giá.
-Thành tiền.
-
-Dữ liệu bán hàng phải liên kết được với nhiên liệu và bồn chứa tương ứng.
+`ban_hang` lưu từng phiếu bán, liên kết với ca làm việc, nhân viên, nhiên liệu và bồn chứa.
+Mã phiếu là duy nhất; đơn giá và thành tiền được lưu tại thời điểm lập hoặc sửa phiếu.
+Phiếu mới có trạng thái `Chờ duyệt`. Tạo, sửa hoặc xóa phiếu đang chờ duyệt không thay đổi
+`bon_chua.ton_hien_tai`; tồn chỉ được kiểm tra và cập nhật trong transaction khi triển khai
+quy trình duyệt ở giai đoạn sau.
 
 10. Tính toàn vẹn dữ liệu
 Khóa chính phải duy nhất.

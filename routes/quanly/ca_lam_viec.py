@@ -8,8 +8,6 @@ ca_lam_viec_bp = Blueprint(
     "ca_lam_viec",
     __name__
 )
-
-
 @ca_lam_viec_bp.before_request
 @yeu_cau_vai_tro("Quản lý")
 def bao_ve_router_ca_lam_viec():

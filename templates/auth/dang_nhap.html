@@ -1,128 +1,136 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Đăng nhập - Trạm xăng</title>
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='auth/dang_nhap.css') }}"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Hệ thống Quản lý Trạm Xăng</title>
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+   <style>
+    body {
+        background: linear-gradient(rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.75)), 
+                    url("{{ url_for('static', filename='images/logochinh.png') }}") no-repeat center center fixed !important;
+        background-size: cover !important;
+    }
+</style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth/dang_nhap.css') }}">
 </head>
-
 <body>
 
-    <div class="khung-dang-nhap">
+    <div class="trang-dang-nhap">
+        <div class="khung-dang-nhap">
+            
+            <!-- TIÊU ĐỀ -->
+            <div class="tieu-de">
+                <div class="bieu-tuong-logo">
+                    <!-- Icon Trạm Xăng / Fuel Station SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 22v-8a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v8"></path>
+                        <path d="M7 10V2h4v8"></path>
+                        <path d="M15 11h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-7l-4-4"></path>
+                        <path d="M15 17v5"></path>
+                    </svg>
+                </div>
+                <h1>Đăng nhập hệ thống</h1>
+                <p>Hệ thống Quản lý & Điều hành Trạm Xăng</p>
+            </div>
 
-        <!-- TIÊU ĐỀ -->
+            <!-- THÔNG BÁO LỖI -->
+            {% if loi %}
+                <div class="thong-bao-loi">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    <span>{{ loi }}</span>
+                </div>
+            {% endif %}
 
-        <div class="tieu-de">
+            <!-- FORM ĐĂNG NHẬP -->
+            <form method="POST">
+                
+                <!-- TÊN ĐĂNG NHẬP -->
+                <div class="nhom-form">
+                    <label for="ten_dang_nhap">Tên đăng nhập</label>
+                    <div class="vung-nhap">
+                        <span class="icon-input">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        </span>
+                        <input
+                            type="text"
+                            id="ten_dang_nhap"
+                            name="ten_dang_nhap"
+                            value="{{ ten_dang_nhap }}"
+                            placeholder="Nhập tên đăng nhập của bạn"
+                            autocomplete="username"
+                            autofocus
+                            required
+                        >
+                    </div>
+                </div>
 
-            <h1>Đăng nhập</h1>
+                <!-- MẬT KHẨU -->
+                <div class="nhom-form">
+                    <label for="mat_khau">Mật khẩu</label>
+                    <div class="vung-nhap">
+                        <span class="icon-input">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </span>
+                        <input
+                            type="password"
+                            id="mat_khau"
+                            name="mat_khau"
+                            placeholder="Nhập mật khẩu"
+                            autocomplete="current-password"
+                            required
+                        >
+                        <!-- Nút ẩn/hiện mật khẩu -->
+                        <button type="button" id="nut-hien-mat-khau" class="nut-eye" title="Hiện/Ẩn mật khẩu">
+                            <!-- Icon mắt nhắm (mặc định) -->
+                            <svg id="icon-eye" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                        </button>
+                    </div>
+                </div>
 
-            <p>
-                Hệ thống quản lý trạm xăng
-            </p>
+                <!-- NÚT ĐĂNG NHẬP -->
+                <button type="submit" class="nut-dang-nhap">
+                    <span>Đăng nhập hệ thống</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
 
+                <!-- THÔNG TIN HỖ TRỢ -->
+                <div class="thong-tin-ho-tro">
+                    <p>
+                        Quên mật khẩu hoặc gặp sự cố xác thực? Vui lòng liên hệ <strong>Quản lý</strong> hoặc <strong>Admin</strong>.
+                    </p>
+                    <div class="phien-ban-meta">
+                        <span>V 1.0.0 (UTC+07)</span>
+                        <span>•</span>
+                        <span>Copyright © 2026 Dương Đình Trung</span>
+                    </div>
+                </div>
+
+            </form>
         </div>
-
-
-        <!-- THÔNG BÁO LỖI -->
-
-        {% if loi %}
-
-            <div class="thong-bao-loi">
-                {{ loi }}
-            </div>
-
-        {% endif %}
-
-
-        <!-- FORM ĐĂNG NHẬP -->
-
-        <form method="POST">
-
-            <!-- TÊN ĐĂNG NHẬP -->
-
-            <div class="nhom-form">
-
-                <label>
-                    Tên đăng nhập
-                </label>
-
-                <input
-                    type="text"
-                    name="ten_dang_nhap"
-                    value="{{ ten_dang_nhap }}"
-                    placeholder="Nhập tên đăng nhập"
-                    autocomplete="username"
-                    autofocus
-                >
-
-            </div>
-
-
-            <!-- MẬT KHẨU -->
-
-            <div class="nhom-form">
-
-                <label>
-                    Mật khẩu
-                </label>
-
-                <input
-                    type="password"
-                    name="mat_khau"
-                    placeholder="Nhập mật khẩu"
-                    autocomplete="current-password"
-                >
-
-            </div>
-
-
-            <!-- NÚT ĐĂNG NHẬP -->
-
-            <button
-                type="submit"
-                class="nut-dang-nhap"
-            >
-                Đăng nhập
-            </button>
-
-
-            <!-- THÔNG TIN HỖ TRỢ -->
-
-            <div class="thong-tin-ho-tro">
-
-                <p>
-                    Nếu quên mật khẩu hoặc lỗi xác thực email,
-                    vui lòng liên hệ với Quản Lý hoặc Admin
-                    để được hỗ trợ.
-                </p>
-
-                <span>
-                    V 1.0.0 (UTC+07)
-                </span>
-
-                <span>
-                    Copyright © 2026 by Dương Đình Trung
-                </span>
-
-            </div>
-
-        </form>
-
     </div>
 
-</body>
+    <!-- Script xử lý ẩn hiện mật khẩu -->
+    <script>
+        const nutHienMK = document.getElementById('nut-hien-mat-khau');
+        const inputMK = document.getElementById('mat_khau');
+        const iconEye = document.getElementById('icon-eye');
 
+        nutHienMK.addEventListener('click', function () {
+            const type = inputMK.getAttribute('type') === 'password' ? 'text' : 'password';
+            inputMK.setAttribute('type', type);
+
+            if (type === 'text') {
+                // Đổi sang icon mắt mở
+                iconEye.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+            } else {
+                // Đổi về icon mắt nhắm có gạch chéo
+                iconEye.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+            }
+        });
+    </script>
+</body>
 </html>
