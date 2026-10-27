@@ -8,6 +8,7 @@ from routes.quanly.trang_chu import quanly_trang_chu_bp
 from routes.quanly.nhien_lieu import nhien_lieu_bp
 from routes.quanly.nhap_hang import nhap_hang_bp
 from routes.quanly.ban_hang import quanly_ban_hang_bp
+from routes.quanly.ton_bon import quanly_ton_bon_bp
 
 # Import các blueprint từ các module khác nhau của nhân viên
 from routes.nhanvien.trang_chu import nhanvien_trang_chu_bp
@@ -15,9 +16,11 @@ from routes.nhanvien.bon_chua import nhanvien_bon_chua_bp
 from routes.nhanvien.nhien_lieu import nhanvien_nhien_lieu_bp
 from routes.nhanvien.nhap_hang import nhanvien_nhap_hang_bp
 from routes.nhanvien.ban_hang import nhanvien_ban_hang_bp
+from routes.nhanvien.ton_bon import nhanvien_ton_bon_bp
 
 # Import các blueprint từ các module khác nhau của kế toán
 from routes.ketoan.trang_chu import ketoan_trang_chu_bp
+from routes.ketoan.ton_bon import ketoan_ton_bon_bp
 
 # Import các dịch vụ cần thiết
 from services.auth_service import yeu_cau_dang_nhap
@@ -42,6 +45,7 @@ app.register_blueprint(nhan_vien_bp)
 app.register_blueprint(nhien_lieu_bp)
 app.register_blueprint(nhap_hang_bp)
 app.register_blueprint(quanly_ban_hang_bp)
+app.register_blueprint(quanly_ton_bon_bp)
 
 # Đăng ký blueprint cho trang chủ của nhân viên
 app.register_blueprint(nhanvien_trang_chu_bp)
@@ -49,9 +53,11 @@ app.register_blueprint(nhanvien_bon_chua_bp)
 app.register_blueprint(nhanvien_nhien_lieu_bp)
 app.register_blueprint(nhanvien_nhap_hang_bp)
 app.register_blueprint(nhanvien_ban_hang_bp)
+app.register_blueprint(nhanvien_ton_bon_bp)
 
 # Đăng ký blueprint cho trang chủ của kế toán
 app.register_blueprint(ketoan_trang_chu_bp)
+app.register_blueprint(ketoan_ton_bon_bp)
 
 
 
@@ -71,15 +77,6 @@ def thong_ke():
     )
 
 
-@app.route("/ton-bon")
-@yeu_cau_dang_nhap
-def ton_bon():
-    return render_template(
-        "quanly/ton_bon.html",
-        trang_hien_tai="Tồn bồn"
-    )
-
-
 @app.route("/tra-cuu")
 @yeu_cau_dang_nhap
 def tra_cuu():
@@ -88,6 +85,13 @@ def tra_cuu():
         trang_hien_tai="Tra cứu"
     )
 
+@app.route("/ai")
+@yeu_cau_dang_nhap
+def ai():
+    return render_template(
+        "quanly/ai.html",
+        trang_hien_tai="Trợ lý AI"
+    )
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

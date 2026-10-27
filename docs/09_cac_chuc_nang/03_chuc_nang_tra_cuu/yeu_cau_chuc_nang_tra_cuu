@@ -1,0 +1,223 @@
+Hãy triển khai hoàn chỉnh chức năng TRA CỨU SỐ LIỆU cho dự án quản lý trạm xăng có tích hợp AI tại:
+
+D:\ProjectQLTX
+
+Trước khi sửa code, hãy đọc cấu trúc dự án, các route, service, template, cơ chế đăng nhập và phân quyền, cùng schema database hiện có. Tận dụng kiến trúc và phong cách giao diện đang sử dụng, đặc biệt tham khảo các chức năng quản lý bán hàng, nhập hàng, ca làm việc, nhân viên và bồn chứa.
+
+I. MỤC TIÊU
+
+Xây dựng chức năng tra cứu số liệu dành cho hai vai trò:
+- Quản lý
+- Kế toán
+
+Chức năng chủ yếu phục vụ xem, tìm kiếm, lọc và tổng hợp số liệu hoạt động của trạm xăng. Đây là chức năng tra cứu chỉ đọc, không phải chức năng quản lý hoặc chỉnh sửa giao dịch.
+
+II. QUY TẮC DATABASE
+
+1. Không tạo bảng database mới.
+2. Không thêm hoặc sửa cột, không thay đổi cấu trúc database nếu không thực sự cần thiết.
+3. Tận dụng các bảng hiện có, dự kiến gồm:
+   - ban_hang
+   - nhap_hang
+   - ca_lam_viec
+   - nhan_vien
+   - nhien_lieu
+   - bon_chua
+4. Kiểm tra schema thực tế trước khi viết truy vấn. Không tự giả định các cột hoặc quan hệ chưa tồn tại.
+5. Nếu dữ liệu nào không có trong database thì không tự tạo dữ liệu giả hoặc hiển thị số liệu bịa đặt.
+6. Tái sử dụng kết nối database, service, helper, cơ chế đăng nhập và phân quyền đang có.
+
+III. CÁC CHỨC NĂNG
+
+1. Trang tổng quan tra cứu số liệu
+
+Tạo trang tổng quan gồm:
+- Tổng lượng xăng dầu đã bán.
+- Tổng tiền bán hàng.
+- Tổng lượng xăng dầu đã nhập.
+- Tổng số giao dịch bán hàng.
+- Tổng số giao dịch nhập hàng.
+
+Các chỉ số phải được tính từ dữ liệu thực tế theo bộ lọc đang áp dụng. Nếu không có dữ liệu, hiển thị 0 theo đúng đơn vị, không phát sinh lỗi.
+
+Không cộng lẫn số liệu nhập hàng và bán hàng thành một chỉ số không có ý nghĩa nghiệp vụ.
+
+2. Tra cứu bán hàng
+
+Cho phép người dùng:
+- Xem danh sách giao dịch bán hàng.
+- Tìm kiếm theo mã bán hàng.
+- Lọc theo ngày bắt đầu và ngày kết thúc.
+- Lọc theo ca làm việc.
+- Lọc theo nhân viên.
+- Lọc theo nhiên liệu.
+- Lọc theo bồn chứa.
+- Lọc theo trạng thái duyệt.
+
+Thông tin hiển thị tùy theo các cột thực tế:
+- Mã bán hàng.
+- Ngày và giờ bán.
+- Ca làm việc.
+- Nhân viên.
+- Nhiên liệu.
+- Bồn chứa.
+- Số lượng.
+- Đơn giá.
+- Thành tiền.
+- Trạng thái giao dịch.
+
+Có nút xem chi tiết từng giao dịch.
+
+3. Tra cứu nhập hàng
+
+Cho phép người dùng:
+- Xem danh sách các lần nhập hàng.
+- Tìm kiếm theo mã phiếu nhập nếu có.
+- Lọc theo khoảng thời gian.
+- Lọc theo ca hoặc nhân viên nếu schema hỗ trợ.
+- Lọc theo nhiên liệu.
+- Lọc theo bồn chứa.
+- Lọc theo trạng thái duyệt.
+
+Hiển thị các thông tin thực sự có trong database như mã phiếu, ngày nhập, nhiên liệu, bồn chứa, số lượng, đơn giá, thành tiền, nhân viên và trạng thái.
+
+Không tự thêm thông tin nhà cung cấp nếu hệ thống chưa có dữ liệu hoặc quan hệ tương ứng.
+
+Có nút xem chi tiết từng lần nhập.
+
+4. Bộ lọc và tìm kiếm
+
+Tạo bộ lọc dùng chung khi phù hợp:
+- Ngày bắt đầu.
+- Ngày kết thúc.
+- Loại dữ liệu: tất cả, bán hàng hoặc nhập hàng.
+- Trạng thái giao dịch.
+- Ca làm việc.
+- Nhân viên.
+- Nhiên liệu.
+- Bồn chứa.
+
+Chỉ hiển thị các bộ lọc phù hợp với loại dữ liệu đang tra cứu.
+
+Yêu cầu:
+- Cho phép áp dụng nhiều bộ lọc đồng thời.
+- Có nút Tra cứu và nút Đặt lại bộ lọc.
+- Kiểm tra ngày bắt đầu không lớn hơn ngày kết thúc.
+- Phân trang danh sách nếu dự án đã có cơ chế phân trang; nếu chưa có, triển khai phù hợp khi dữ liệu có thể lớn.
+- Không tải toàn bộ dữ liệu về frontend rồi mới lọc nếu có thể lọc trực tiếp bằng SQL.
+- Giữ nguyên bộ lọc khi chuyển trang hoặc xem chi tiết nếu phù hợp với kiến trúc hiện có.
+
+IV. QUY TẮC TÍNH TOÁN VÀ TRẠNG THÁI
+
+Đây là phần bắt buộc phải xử lý chính xác.
+
+1. Số liệu thực tế mặc định chỉ tính từ các giao dịch đã được duyệt.
+
+2. Giao dịch có trạng thái Chờ duyệt hoặc Đã từ chối không được cộng vào tổng lượng bán, tổng tiền bán hàng, tổng lượng nhập hoặc tổng tiền nhập thực tế.
+
+3. Khi người dùng chọn Tất cả trạng thái, hiển thị các giao dịch thuộc mọi trạng thái phù hợp với bộ lọc. Tuy nhiên, phải phân biệt rõ trạng thái của từng giao dịch và không cộng giao dịch chưa được duyệt vào chỉ số thực tế.
+
+4. Tổng tiền bán hàng được tính từ thành tiền của các giao dịch bán hàng đã duyệt.
+
+5. Tổng lượng bán được tính từ số lượng của các giao dịch bán hàng đã duyệt.
+
+6. Tổng lượng nhập được tính từ số lượng của các giao dịch nhập hàng đã duyệt.
+
+7. Tổng số giao dịch bán hàng và nhập hàng phải được xác định theo từng loại, tránh đếm trùng khi kết hợp nhiều bảng.
+
+8. Không JOIN trực tiếp nhiều bảng giao dịch theo cách làm nhân bản bản ghi và khiến tổng tiền hoặc số lượng bị cộng nhiều lần. Nếu cần kết hợp số liệu, hãy tổng hợp riêng từng nhóm trước khi kết hợp.
+
+9. Kiểm tra đơn vị đo của từng loại nhiên liệu. Không cộng các đơn vị khác nhau vào cùng một tổng lượng nếu không có quy đổi hợp lệ.
+
+10. Không tự tính lãi hoặc lợi nhuận nếu database không có đủ dữ liệu chi phí phù hợp.
+
+11. Chỉ sử dụng dữ liệu thật trong database. Không tạo số liệu minh họa trong giao diện chạy thật.
+
+V. GIAO DIỆN
+
+Thiết kế giao diện bằng tiếng Việt, nhất quán với giao diện hiện có của dự án.
+
+Trang tổng quan nên có:
+- Tiêu đề Tra cứu số liệu.
+- Bộ lọc thời gian và các điều kiện tra cứu.
+- Các thẻ thống kê tổng quan.
+- Khu vực danh sách giao dịch bán hàng.
+- Khu vực danh sách giao dịch nhập hàng.
+- Nút xem chi tiết.
+- Phân trang, trạng thái rỗng và thông báo lỗi phù hợp.
+
+Yêu cầu giao diện:
+- Thống nhất màu sắc, font chữ, khoảng cách, nút bấm và bảng dữ liệu với dự án.
+- Có thể sử dụng tab hoặc các khu vực riêng để chuyển giữa bán hàng và nhập hàng.
+- Hiển thị trạng thái giao dịch dễ phân biệt.
+- Định dạng ngày giờ theo cách dễ đọc.
+- Định dạng tiền Việt Nam phù hợp.
+- Hiển thị số lượng kèm đơn vị đo.
+- Bảng không bị vỡ khi xem trên màn hình nhỏ.
+- Có thông báo rõ ràng khi không tìm thấy dữ liệu.
+- Không tạo giao diện riêng biệt không nhất quán với các trang quản lý hiện có.
+
+VI. PHÂN QUYỀN VÀ BẢO MẬT
+
+1. Chỉ tài khoản có vai trò Quản lý hoặc Kế toán mới được truy cập chức năng này.
+
+2. Kiểm tra phân quyền ở backend cho mọi endpoint liên quan, không chỉ ẩn nút trên giao diện.
+
+3. Nhân viên ca và người chưa đăng nhập không được truy cập trái phép.
+
+4. Không cho phép thêm, sửa, xóa, duyệt hoặc từ chối giao dịch từ chức năng tra cứu.
+
+5. Không thay đổi tồn bồn, doanh thu hoặc trạng thái giao dịch khi người dùng mở trang, tìm kiếm, lọc hay xem chi tiết.
+
+6. Sử dụng truy vấn có tham số để tránh SQL injection.
+
+7. Không để người dùng truyền dữ liệu lọc làm thay đổi truy vấn ngoài phạm vi cho phép.
+
+VII. TỔ CHỨC CODE
+
+- Tuân thủ cấu trúc Flask và quy ước đặt tên hiện tại.
+- Tái sử dụng các service, helper, decorator phân quyền và template chung khi phù hợp.
+- Không viết lại chức năng đăng nhập hoặc cơ chế phân quyền đang hoạt động.
+- Không tạo thêm file trùng chức năng nếu đã có file phù hợp.
+- Không sửa các chức năng khác ngoài phạm vi cần thiết.
+- Không xóa hoặc ghi đè những thay đổi sẵn có của người dùng.
+- Nếu cần chỉnh sửa file hiện có, hãy đọc kỹ nội dung và giữ nguyên những phần không liên quan.
+- Xử lý lỗi database và dữ liệu rỗng an toàn.
+- Không để lộ mật khẩu, thông tin kết nối hoặc dữ liệu nhạy cảm.
+
+VIII. KIỂM THỬ
+
+Sau khi triển khai, kiểm tra tối thiểu:
+
+1. Quản lý truy cập được trang tra cứu.
+2. Kế toán truy cập được trang tra cứu.
+3. Nhân viên ca không truy cập được.
+4. Người chưa đăng nhập không truy cập được.
+5. Lọc theo một ngày và một khoảng ngày hoạt động chính xác.
+6. Các bộ lọc kết hợp với nhau đúng.
+7. Giao dịch đã duyệt được tính vào số liệu thực tế.
+8. Giao dịch chờ duyệt và bị từ chối không bị cộng vào số liệu thực tế.
+9. Chọn tất cả trạng thái vẫn hiển thị đúng trạng thái của từng giao dịch.
+10. Không bị nhân đôi tổng tiền hoặc số lượng khi kết hợp bảng.
+11. Không có dữ liệu vẫn hiển thị bình thường.
+12. Ngày lọc không hợp lệ được xử lý rõ ràng.
+13. Các trang xem chi tiết hoạt động đúng.
+14. Chức năng tra cứu không làm thay đổi dữ liệu database.
+15. Các chức năng bán hàng, nhập hàng, quản lý bồn chứa và đăng nhập hiện có vẫn hoạt động.
+
+IX. CÁCH THỰC HIỆN
+
+Hãy chủ động kiểm tra code và triển khai trực tiếp, không chỉ đưa ra hướng dẫn hoặc ví dụ.
+
+Thực hiện theo thứ tự:
+1. Khảo sát cấu trúc dự án và schema thực tế.
+2. Xác định các route, service và template có thể tái sử dụng.
+3. Lập kế hoạch thay đổi ngắn gọn.
+4. Triển khai backend, truy vấn SQL, phân quyền và giao diện.
+5. Chạy các kiểm tra phù hợp với môi trường hiện tại.
+6. Sửa các lỗi phát sinh do phần vừa triển khai.
+7. Tổng kết các file đã tạo hoặc sửa, chức năng đã hoàn thành, cách truy cập và kết quả kiểm thử.
+
+Nếu gặp thiếu sót trong schema khiến một chức năng không thể thực hiện chính xác, hãy nêu rõ vấn đề và chọn phương án an toàn nhất. Không tự ý sửa database hoặc bịa dữ liệu để làm cho giao diện có vẻ hoạt động.
+
+Ưu tiên hoàn thành một chức năng tra cứu số liệu nhất quán, chính xác, dễ sử dụng và tích hợp tốt với hệ thống hiện tại.

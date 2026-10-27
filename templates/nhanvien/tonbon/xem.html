@@ -1,0 +1,69 @@
+{% extends layout_template %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssnhanvien/tonbon/ton_bon.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+<div class="ton-bon-trang">
+    <div class="ton-bon-tieu-de ton-bon-tieu-de-chi-tiet">
+        <div>
+            <h1>Chi tiết tồn bồn</h1>
+            <p>Thông tin sức chứa và lượng nhiên liệu hiện có trong bồn</p>
+        </div>
+        <a class="ton-bon-nut-quay-lai" href="{{ url_for(endpoint_danh_sach) }}">← Quay lại danh sách</a>
+    </div>
+
+    <section class="ton-bon-chi-tiet">
+        <header class="ton-bon-chi-tiet-dau">
+            <div class="ton-bon-chi-tiet-bieu-tuong">▣</div>
+            <div>
+                <span>Mã bồn</span>
+                <h2>{{ bon.ma_bon }} · {{ bon.ten_bon }}</h2>
+            </div>
+            <span class="ton-bon-trang-thai {% if bon.trang_thai == 'Đang hoạt động' %}dang-hoat-dong{% else %}ngung-hoat-dong{% endif %}">
+                {{ bon.trang_thai }}
+            </span>
+        </header>
+
+        <div class="ton-bon-chi-tiet-luoi">
+            <div><span>Loại nhiên liệu</span><strong>{{ bon.ma_nhien_lieu }} · {{ bon.ten_nhien_lieu }}</strong></div>
+            <div><span>Sức chứa tối đa</span><strong>{% if bon.suc_chua_tinh is not none %}{{ "{:,}".format(bon.suc_chua_tinh) }}{% else %}Không hợp lệ{% endif %} {{ bon.don_vi }}</strong></div>
+            <div><span>Tồn hiện tại</span><strong>{% if bon.ton_hien_tai_tinh is not none %}{{ "{:,}".format(bon.ton_hien_tai_tinh) }}{% else %}Không hợp lệ{% endif %} {{ bon.don_vi }}</strong></div>
+            <div><span>Dung tích còn trống</span><strong>{% if bon.dung_tich_con is not none %}{{ "{:,}".format(bon.dung_tich_con) }}{% else %}—{% endif %} {{ bon.don_vi }}</strong></div>
+            <div>
+                <span>Tỷ lệ lấp đầy</span>
+                <strong>{% if bon.ty_le_lap_day is not none %}{{ "%.1f"|format(bon.ty_le_lap_day) }}%{% else %}Không xác định{% endif %}</strong>
+            </div>
+        </div>
+
+        {% if bon.du_lieu_bat_thuong %}
+        <div class="ton-bon-canh-bao-chi-tiet" role="alert">
+            Dữ liệu tồn bồn bất thường. Hãy kiểm tra sức chứa và tồn hiện tại trong nghiệp vụ quản lý bồn.
+        </div>
+        {% elif bon.bon_het_hang %}
+        <div class="ton-bon-canh-bao-chi-tiet gan-het" role="status">
+            Bồn đã cạn kiệt hoàn toàn nhiên liệu (0 L).
+        </div>
+        {% elif bon.bon_gan_het %}
+        <div class="ton-bon-canh-bao-chi-tiet gan-het" role="status">
+            Bồn đang ở ngưỡng gần hết (≤ {{ nguong_bon_gan_het }}% sức chứa).
+        </div>
+        {% endif %}
+
+        <div class="ton-bon-thanh-chi-tiet">
+            <div class="ton-bon-thanh-chi-tiet-dau">
+                <strong>Mức lấp đầy</strong>
+                <span>{% if bon.ty_le_lap_day is not none %}{{ "%.1f"|format(bon.ty_le_lap_day) }}%{% else %}Không xác định{% endif %}</span>
+            </div>
+            <progress class="ton-bon-tien-trinh {% if bon.du_lieu_bat_thuong or bon.bon_het_hang %}tien-trinh-loi{% elif bon.bon_gan_het %}tien-trinh-thap{% endif %}"
+                      value="{{ bon.ty_le_thanh_tien_trinh }}" max="100"
+                      aria-label="Mức lấp đầy bồn {{ bon.ma_bon }}"></progress>
+            <div class="ton-bon-chu-thich-thanh">
+                <span>Tồn: {% if bon.ton_hien_tai_tinh is not none %}{{ "{:,}".format(bon.ton_hien_tai_tinh) }}{% else %}Không hợp lệ{% endif %} {{ bon.don_vi }}</span>
+                <span>Sức chứa: {% if bon.suc_chua_tinh is not none %}{{ "{:,}".format(bon.suc_chua_tinh) }}{% else %}Không hợp lệ{% endif %} {{ bon.don_vi }}</span>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

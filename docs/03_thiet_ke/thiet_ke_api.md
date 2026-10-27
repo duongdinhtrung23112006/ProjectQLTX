@@ -47,6 +47,17 @@ GET	/nhanvien/bon-chua	Nhân viên xem bồn
 
 Khi tạo hoặc cập nhật bồn, nhien_lieu_id phải tham chiếu đến nhiên liệu tồn tại.
 
+6. Theo dõi tồn bồn
+
+Phương thức	Route	Vai trò	Chức năng
+GET	/quanly/ton-bon	Quản lý	Tổng quan, tìm kiếm và lọc tồn bồn
+GET	/quanly/ton-bon/xem/<id>	Quản lý	Chi tiết tồn bồn
+GET	/nhanvien/ton-bon	Nhân viên ca	Xem, tìm kiếm và lọc tồn bồn
+GET	/nhanvien/ton-bon/xem/<id>	Nhân viên ca	Xem chi tiết tồn bồn
+GET	/ketoan/ton-bon	Kế toán	Xem tồn bồn để giữ liên kết menu hiện có
+
+Các trang dùng chung dữ liệu và giao diện chỉ đọc từ `bon_chua` và `nhien_lieu`. Thống kê gồm cả bồn ngừng hoạt động. Ngưỡng cảnh báo bồn gần hết mặc định là mức tồn không quá 20% sức chứa. Chức năng không thay đổi số tồn hoặc schema.
+
 6. Nhập hàng
 
 Các route nghiệp vụ hiện tại:

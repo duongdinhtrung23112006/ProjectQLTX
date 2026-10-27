@@ -1,0 +1,186 @@
+{% extends layout_template %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssnhanvien/tonbon/ton_bon.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+<div class="ton-bon-trang">
+    <div class="ton-bon-tieu-de">
+        <div>
+            <h1>{% if vai_tro == "Quản lý" %}Quản lý tồn bồn{% else %}Xem tồn bồn{% endif %}</h1>
+            <p style="color: blue;">Theo dõi sức chứa và lượng nhiên liệu thực tế đang có trong các bồn</p>
+        </div>
+    </div>
+
+    <div class="ton-bon-thong-ke">
+        <article class="ton-bon-the-thong-ke">
+            <span class="ton-bon-icon xanh-duong">▣</span>
+            <div><span>Tổng số bồn</span><strong>{{ thong_ke.tong_so_bon }}</strong></div>
+        </article>
+        <article class="ton-bon-the-thong-ke">
+            <span class="ton-bon-icon xanh-la">◫</span>
+            <div><span>Tổng sức chứa</span><strong>{{ "{:,}".format(thong_ke.tong_suc_chua) }} L</strong></div>
+        </article>
+        <article class="ton-bon-the-thong-ke">
+            <span class="ton-bon-icon xanh-ngoc">◉</span>
+            <div><span>Tổng nhiên liệu tồn</span><strong>{{ "{:,}".format(thong_ke.tong_ton_hien_tai) }} L</strong></div>
+        </article>
+        <article class="ton-bon-the-thong-ke">
+            <span class="ton-bon-icon tim">%</span>
+            <div>
+                <span>Tỷ lệ lấp đầy tổng thể</span>
+                <strong>
+                    {% if thong_ke.ty_le_lap_day is not none %}
+                    {{ "%.1f"|format(thong_ke.ty_le_lap_day) }}%
+                    {% else %}
+                    Không xác định
+                    {% endif %}
+                </strong>
+            </div>
+        </article>
+    </div>
+
+    <p class="ton-bon-pham-vi">
+        Thống kê bao gồm cả bồn đang hoạt động và ngừng hoạt động; số liệu lấy trực tiếp từ tồn hiện tại trong cơ sở dữ liệu.
+    </p>
+
+    {% if thong_ke.so_bon_bat_thuong or thong_ke.so_bon_gan_het or thong_ke.so_bon_het_hang %}
+    <div class="ton-bon-canh-bao-tong" role="status">
+        {% if thong_ke.so_bon_bat_thuong %}
+        <span>{{ thong_ke.so_bon_bat_thuong }} bồn có dữ liệu bất thường cần kiểm tra.</span>
+        {% endif %}
+        {% if thong_ke.so_bon_gan_het %}
+        <span>{{ thong_ke.so_bon_gan_het }} bồn đang ở ngưỡng gần hết (≤ {{ nguong_bon_gan_het }}%).</span>
+        {% endif %}
+        {% if thong_ke.so_bon_het_hang %}
+        <span>{{ thong_ke.so_bon_het_hang }} bồn đã cạn kiệt nhiên liệu (0 L).</span>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <form class="ton-bon-bo-loc" method="GET" action="{{ url_for(endpoint_danh_sach) }}">
+        <label>
+            Tìm bồn
+            <input type="search" name="q" value="{{ filters.q }}" placeholder="Mã bồn hoặc tên bồn">
+        </label>
+        <label>
+            Nhiên liệu
+            <select name="nhien_lieu_id">
+                <option value="">Tất cả nhiên liệu</option>
+                {% for id, ma_nhien_lieu, ten_nhien_lieu in danh_sach_nhien_lieu %}
+                <option value="{{ id }}" {% if filters.nhien_lieu_id == id|string %}selected{% endif %}>
+                    {{ ma_nhien_lieu }} - {{ ten_nhien_lieu }}
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            Trạng thái bồn
+            <select name="trang_thai">
+                <option value="">Tất cả trạng thái</option>
+                {% for trang_thai_bon in danh_sach_trang_thai %}
+                <option value="{{ trang_thai_bon }}" {% if filters.trang_thai == trang_thai_bon %}selected{% endif %}>
+                    {{ trang_thai_bon }}
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+        <div class="ton-bon-nut-loc">
+            <button type="submit">Lọc danh sách</button>
+            <a href="{{ url_for(endpoint_danh_sach) }}">Xóa lọc</a>
+        </div>
+    </form>
+
+    <div class="ton-bon-chu-thich" aria-label="Chú thích mức tồn">
+        <span><i class="muc-xanh"></i>Tồn bình thường</span>
+        <span><i class="muc-vang"></i>Gần hết (≤ {{ nguong_bon_gan_het }}%)</span>
+        <span><i class="muc-do"></i>Đã hết hàng (0 L) / Bất thường</span>
+    </div>
+
+    <section class="ton-bon-khung-bang">
+        <header class="ton-bon-dau-bang">
+            <div>
+                <h2>Danh sách tồn bồn</h2>
+                <p>Dung tích còn trống = sức chứa − tồn hiện tại</p>
+            </div>
+            <span>{{ danh_sach_bon|length }} BỒN</span>
+        </header>
+        <div class="ton-bon-cuon-bang">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã bồn</th>
+                        <th>Tên bồn</th>
+                        <th>Nhiên liệu</th>
+                        <th>Sức chứa</th>
+                        <th>Tồn hiện tại</th>
+                        <th>Còn trống</th>
+                        <th>Tỷ lệ lấp đầy</th>
+                        <th>Trạng thái</th>
+                        <th>Chi tiết</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bon in danh_sach_bon %}
+                    <tr class="{% if bon.du_lieu_bat_thuong or bon.bon_het_hang %}bon-bat-thuong{% elif bon.bon_gan_het %}bon-gan-het{% endif %}">
+                        <td><strong>{{ bon.ma_bon }}</strong></td>
+                        <td>{{ bon.ten_bon }}</td>
+                        <td>{{ bon.ten_nhien_lieu }}</td>
+                        <td>
+                            {% if bon.suc_chua_tinh is not none %}{{ "{:,}".format(bon.suc_chua_tinh) }}{% else %}Không hợp lệ{% endif %}
+                            {{ bon.don_vi }}
+                        </td>
+                        <td>
+                            {% if bon.ton_hien_tai_tinh is not none %}{{ "{:,}".format(bon.ton_hien_tai_tinh) }}{% else %}Không hợp lệ{% endif %}
+                            {{ bon.don_vi }}
+                        </td>
+                        <td>
+                            {% if bon.dung_tich_con is not none %}{{ "{:,}".format(bon.dung_tich_con) }}{% else %}—{% endif %}
+                            {{ bon.don_vi }}
+                        </td>
+                        <td class="ton-bon-tien-trinh-o">
+                            <div class="ton-bon-phan-tram">
+                                {% if bon.ty_le_lap_day is not none %}
+                                {{ "%.1f"|format(bon.ty_le_lap_day) }}%
+                                {% else %}
+                                Không xác định
+                                {% endif %}
+                            </div>
+                            <progress class="ton-bon-tien-trinh {% if bon.du_lieu_bat_thuong or bon.bon_het_hang %}tien-trinh-loi{% elif bon.bon_gan_het %}tien-trinh-thap{% endif %}"
+                                      value="{{ bon.ty_le_thanh_tien_trinh }}" max="100"
+                                      aria-label="Mức lấp đầy bồn {{ bon.ma_bon }}"></progress>
+                            {% if bon.du_lieu_bat_thuong %}
+                            <small class="ton-bon-nhan-canh-bao">Dữ liệu bất thường</small>
+                            {% elif bon.bon_het_hang %}
+                            <small class="ton-bon-nhan-canh-bao">Đã hết hàng</small>
+                            {% elif bon.bon_gan_het %}
+                            <small class="ton-bon-nhan-canh-bao">Gần hết</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="ton-bon-trang-thai {% if bon.trang_thai == 'Đang hoạt động' %}dang-hoat-dong{% else %}ngung-hoat-dong{% endif %}">
+                                {{ bon.trang_thai }}
+                            </span>
+                        </td>
+                        <td>
+                            <a class="ton-bon-nut-xem" href="{{ url_for(endpoint_chi_tiet, id=bon.id) }}">Xem chi tiết</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="9" class="ton-bon-rong">
+                            {% if filters.q or filters.nhien_lieu_id or filters.trang_thai %}
+                            Không tìm thấy bồn chứa phù hợp với điều kiện lọc.
+                            {% else %}
+                            Chưa có dữ liệu bồn chứa.
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}
