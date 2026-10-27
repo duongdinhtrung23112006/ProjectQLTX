@@ -1,0 +1,251 @@
+{% extends "ketoan/khungketoan.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssketoan/tra_cuu/index.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+<main class="tra-cuu">
+    <header class="tra-cuu-tieu-de">
+        <div>
+            <h1>Tra cứu số liệu</h1>
+            <p style="color: blue;">Tìm kiếm và đối chiếu giao dịch bán hàng, nhập hàng đã ghi nhận.</p>
+        </div>
+    </header>
+
+    {% if loi_loc %}
+    <div class="tra-cuu-loi" role="alert">{{ loi_loc }}</div>
+    {% endif %}
+
+    <form class="tra-cuu-bo-loc" method="get" action="{{ url_for(endpoint_danh_sach) }}">
+        <label>Từ khóa mã giao dịch
+            <input type="search" name="q" value="{{ filters.q }}" placeholder="Mã bán hoặc mã phiếu nhập">
+        </label>
+        <label>Loại dữ liệu
+            <select name="loai">
+                <option value="tat_ca" {% if filters.loai == 'tat_ca' %}selected{% endif %}>Tất cả</option>
+                <option value="ban_hang" {% if filters.loai == 'ban_hang' %}selected{% endif %}>Bán hàng</option>
+                <option value="nhap_hang" {% if filters.loai == 'nhap_hang' %}selected{% endif %}>Nhập hàng</option>
+            </select>
+        </label>
+        <label>Từ ngày
+            <input type="date" name="tu_ngay" value="{{ filters.tu_ngay }}">
+        </label>
+        <label>Đến ngày
+            <input type="date" name="den_ngay" value="{{ filters.den_ngay }}">
+        </label>
+        <label>Trạng thái
+            <select name="trang_thai">
+                <option value="">Tất cả trạng thái</option>
+                {% for trang_thai in ('Chờ duyệt', 'Đã duyệt', 'Đã từ chối', 'Từ chối') %}
+                <option value="{{ trang_thai }}" {% if filters.trang_thai == trang_thai %}selected{% endif %}>{{ trang_thai }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        {% if filters.loai != 'nhap_hang' %}
+        <label>Ca làm việc
+            <select name="ca_id">
+                <option value="">Tất cả ca</option>
+                {% for ca in tuy_chon.ca_lam_viec %}
+                <option value="{{ ca.id }}" {% if filters.ca_id == ca.id|string %}selected{% endif %}>{{ ca.ma_ca }} - {{ ca.ten_ca }} · {{ ca.ngay_lam_viec.strftime('%d/%m/%Y') }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        {% endif %}
+        <label>Nhân viên
+            <select name="nhan_vien_id">
+                <option value="">Tất cả nhân viên</option>
+                {% for nv in tuy_chon.nhan_vien %}
+                <option value="{{ nv.id }}" {% if filters.nhan_vien_id == nv.id|string %}selected{% endif %}>{{ nv.ma_nv }} - {{ nv.ho_ten }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Nhiên liệu
+            <select name="nhien_lieu_id">
+                <option value="">Tất cả nhiên liệu</option>
+                {% for nl in tuy_chon.nhien_lieu %}
+                <option value="{{ nl.id }}" {% if filters.nhien_lieu_id == nl.id|string %}selected{% endif %}>{{ nl.ten_nhien_lieu }} ({{ nl.don_vi }})</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Bồn chứa
+            <select name="bon_id">
+                <option value="">Tất cả bồn</option>
+                {% for bon in tuy_chon.bon_chua %}
+                <option value="{{ bon.id }}" {% if filters.bon_id == bon.id|string %}selected{% endif %}>{{ bon.ma_bon }} - {{ bon.ten_bon }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <div class="tra-cuu-hanh-dong">
+            <button type="submit">Tra cứu</button>
+            <a href="{{ url_for(endpoint_danh_sach) }}">Đặt lại bộ lọc</a>
+        </div>
+    </form>
+
+    <section class="tra-cuu-thong-ke" aria-label="Số liệu thực tế từ giao dịch đã duyệt">
+        <article class="tra-cuu-the">
+            <span class="tra-cuu-icon xanh-duong">▣</span>
+            <div>
+                <span>Tổng lượng đã bán</span>
+                <strong>{% for muc in thong_ke.ban_hang.so_luong_theo_don_vi %}{{ "{:,.0f}".format(muc.so_luong) }} {{ muc.don_vi }}{% if not loop.last %}<br>{% endif %}{% else %}0 {{ don_vi_mac_dinh }}{% endfor %}</strong>
+                <small>Chỉ tính giao dịch đã duyệt</small>
+            </div>
+        </article>
+        <article class="tra-cuu-the">
+            <span class="tra-cuu-icon xanh-la">◉</span>
+            <div>
+                <span>Tổng tiền bán hàng</span>
+                <strong>{{ "{:,.0f}".format(thong_ke.ban_hang.tong_tien or 0) }} ₫</strong>
+                <small>Chỉ tính giao dịch đã duyệt</small>
+            </div>
+        </article>
+        <article class="tra-cuu-the">
+            <span class="tra-cuu-icon xanh-ngoc">◫</span>
+            <div>
+                <span>Tổng lượng đã nhập</span>
+                <strong>{% for muc in thong_ke.nhap_hang.so_luong_theo_don_vi %}{{ "{:,.0f}".format(muc.so_luong) }} {{ muc.don_vi }}{% if not loop.last %}<br>{% endif %}{% else %}0 {{ don_vi_mac_dinh }}{% endfor %}</strong>
+                <small>Chỉ tính giao dịch đã duyệt</small>
+            </div>
+        </article>
+        <article class="tra-cuu-the">
+            <span class="tra-cuu-icon tim">#</span>
+            <div>
+                <span>Số giao dịch bán</span>
+                <strong>{{ "{:,}".format(thong_ke.ban_hang.so_giao_dich) }}</strong>
+                <small>Đã duyệt</small>
+            </div>
+        </article>
+        <article class="tra-cuu-the">
+            <span class="tra-cuu-icon cam">#</span>
+            <div>
+                <span>Số giao dịch nhập</span>
+                <strong>{{ "{:,}".format(thong_ke.nhap_hang.so_giao_dich) }}</strong>
+                <small>Đã duyệt</small>
+            </div>
+        </article>
+    </section>
+    <p class="tra-cuu-chu-thich">Lượng được tách theo đơn vị đo; đơn giá và thành tiền nhập hàng không được lưu trong cơ sở dữ liệu nên không hiển thị.</p>
+
+    {% if filters.loai != 'nhap_hang' %}
+    <section class="tra-cuu-khu-vuc">
+        <header class="tra-cuu-dau-bang">
+            <div>
+                <h2>Giao dịch bán hàng</h2>
+                <p>{{ ban_hang.tong_so }} giao dịch theo bộ lọc</p>
+            </div>
+        </header>
+        <div class="tra-cuu-cuon-bang">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã bán</th>
+                        <th>Ngày, giờ</th>
+                        <th>Ca</th>
+                        <th>Nhân viên</th>
+                        <th>Nhiên liệu</th>
+                        <th>Bồn</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Thành tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Chi tiết</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for gd in ban_hang.danh_sach %}
+                    <tr>
+                        <td><strong>{{ gd.ma_giao_dich }}</strong></td>
+                        <td>{{ gd.ngay.strftime('%d/%m/%Y') }}<br><small>{{ gd.gio }}</small></td>
+                        <td>{{ gd.ma_ca }} - {{ gd.ten_ca }}</td>
+                        <td>{{ gd.ho_ten }}<br><small>{{ gd.ma_nv }}</small></td>
+                        <td>{{ gd.ten_nhien_lieu }}</td>
+                        <td>{{ gd.ma_bon }} - {{ gd.ten_bon }}</td>
+                        <td>{{ "{:,.0f}".format(gd.so_luong) }} {{ gd.don_vi }}</td>
+                        <td>{{ "{:,.2f}".format(gd.don_gia) }} ₫</td>
+                        <td>{{ "{:,.2f}".format(gd.thanh_tien) }} ₫</td>
+                        <td>
+                            <span class="tra-cuu-trang-thai {% if gd.trang_thai == 'Đã duyệt' %}da-duyet{% elif gd.trang_thai == 'Chờ duyệt' %}cho-duyet{% else %}bi-tu-choi{% endif %}">
+                                {{ gd.trang_thai }}
+                            </span>
+                        </td>
+                        <td>
+                            <a class="tra-cuu-nut-xem" href="{{ url_for(endpoint_chi_tiet, loai_giao_dich='ban_hang', id=gd.id, q=filters.q, tu_ngay=filters.tu_ngay, den_ngay=filters.den_ngay, loai=filters.loai, trang_thai=filters.trang_thai, ca_id=filters.ca_id, nhan_vien_id=filters.nhan_vien_id, nhien_lieu_id=filters.nhien_lieu_id, bon_id=filters.bon_id, page_ban=ban_hang.trang, page_nhap=nhap_hang.trang) }}">Xem chi tiết</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="11" class="tra-cuu-rong">Không tìm thấy giao dịch bán hàng phù hợp.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if ban_hang.tong_trang > 1 %}
+        <nav class="tra-cuu-phan-trang" aria-label="Phân trang bán hàng">
+            <span>Trang {{ ban_hang.trang }} / {{ ban_hang.tong_trang }}</span>
+            {% if ban_hang.trang > 1 %}<a href="{{ url_for(endpoint_danh_sach, q=filters.q, tu_ngay=filters.tu_ngay, den_ngay=filters.den_ngay, loai=filters.loai, trang_thai=filters.trang_thai, ca_id=filters.ca_id, nhan_vien_id=filters.nhan_vien_id, nhien_lieu_id=filters.nhien_lieu_id, bon_id=filters.bon_id, page_ban=ban_hang.trang - 1, page_nhap=nhap_hang.trang) }}">Trước</a>{% endif %}
+            {% if ban_hang.trang < ban_hang.tong_trang %}<a href="{{ url_for(endpoint_danh_sach, q=filters.q, tu_ngay=filters.tu_ngay, den_ngay=filters.den_ngay, loai=filters.loai, trang_thai=filters.trang_thai, ca_id=filters.ca_id, nhan_vien_id=filters.nhan_vien_id, nhien_lieu_id=filters.nhien_lieu_id, bon_id=filters.bon_id, page_ban=ban_hang.trang + 1, page_nhap=nhap_hang.trang) }}">Sau</a>{% endif %}
+        </nav>
+        {% endif %}
+    </section>
+    {% endif %}
+
+    {% if filters.loai != 'ban_hang' %}
+    <section class="tra-cuu-khu-vuc">
+        <header class="tra-cuu-dau-bang">
+            <div>
+                <h2>Giao dịch nhập hàng</h2>
+                <p>{{ nhap_hang.tong_so }} giao dịch theo bộ lọc</p>
+            </div>
+        </header>
+        <div class="tra-cuu-cuon-bang">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã phiếu nhập</th>
+                        <th>Ngày nhập</th>
+                        <th>Nhân viên</th>
+                        <th>Nhiên liệu</th>
+                        <th>Bồn</th>
+                        <th>Số lượng</th>
+                        <th>Trạng thái</th>
+                        <th>Chi tiết</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for gd in nhap_hang.danh_sach %}
+                    <tr>
+                        <td><strong>{{ gd.ma_giao_dich }}</strong></td>
+                        <td>{{ gd.ngay.strftime('%d/%m/%Y') }}</td>
+                        <td>{{ gd.ho_ten }}<br><small>{{ gd.ma_nv }}</small></td>
+                        <td>{{ gd.ten_nhien_lieu }}</td>
+                        <td>{{ gd.ma_bon }} - {{ gd.ten_bon }}</td>
+                        <td>{{ "{:,.0f}".format(gd.so_luong) }} {{ gd.don_vi }}</td>
+                        <td>
+                            <span class="tra-cuu-trang-thai {% if gd.trang_thai == 'Đã duyệt' %}da-duyet{% elif gd.trang_thai == 'Chờ duyệt' %}cho-duyet{% else %}bi-tu-choi{% endif %}">
+                                {{ gd.trang_thai }}
+                            </span>
+                        </td>
+                        <td>
+                            <a class="tra-cuu-nut-xem" href="{{ url_for(endpoint_chi_tiet, loai_giao_dich='nhap_hang', id=gd.id, q=filters.q, tu_ngay=filters.tu_ngay, den_ngay=filters.den_ngay, loai=filters.loai, trang_thai=filters.trang_thai, ca_id=filters.ca_id, nhan_vien_id=filters.nhan_vien_id, nhien_lieu_id=filters.nhien_lieu_id, bon_id=filters.bon_id, page_ban=ban_hang.trang, page_nhap=nhap_hang.trang) }}">Xem chi tiết</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="tra-cuu-rong">Không tìm thấy giao dịch nhập hàng phù hợp.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if nhap_hang.tong_trang > 1 %}
+        <nav class="tra-cuu-phan-trang" aria-label="Phân trang nhập hàng">
+            <span>Trang {{ nhap_hang.trang }} / {{ nhap_hang.tong_trang }}</span>
+            {% if nhap_hang.trang > 1 %}<a href="{{ url_for(endpoint_danh_sach, q=filters.q, tu_ngay=filters.tu_ngay, den_ngay=filters.den_ngay, loai=filters.loai, trang_thai=filters.trang_thai, ca_id=filters.ca_id, nhan_vien_id=filters.nhan_vien_id, nhien_lieu_id=filters.nhien_lieu_id, bon_id=filters.bon_id, page_ban=ban_hang.trang, page_nhap=nhap_hang.trang - 1) }}">Trước</a>{% endif %}
+            {% if nhap_hang.trang < nhap_hang.tong_trang %}<a href="{{ url_for(endpoint_danh_sach, q=filters.q, tu_ngay=filters.tu_ngay, den_ngay=filters.den_ngay, loai=filters.loai, trang_thai=filters.trang_thai, ca_id=filters.ca_id, nhan_vien_id=filters.nhan_vien_id, nhien_lieu_id=filters.nhien_lieu_id, bon_id=filters.bon_id, page_ban=ban_hang.trang, page_nhap=nhap_hang.trang + 1) }}">Sau</a>{% endif %}
+        </nav>
+        {% endif %}
+    </section>
+    {% endif %}
+</main>
+{% endblock %}

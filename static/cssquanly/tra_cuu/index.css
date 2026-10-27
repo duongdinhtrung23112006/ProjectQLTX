@@ -1,0 +1,384 @@
+.tra-cuu { 
+    color: #1e293b; 
+}
+
+.tra-cuu-tieu-de { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 16px; 
+    margin-bottom: 20px; 
+}
+
+.tra-cuu-tieu-de h1 { 
+    margin: 0 0 6px; 
+    color: #243b5a; 
+    font-size: 27px; 
+    font-weight: 600;
+}
+
+.tra-cuu-tieu-de p { 
+    margin: 0; 
+    color: #64748b; 
+}
+
+.tra-cuu-bo-loc { 
+    display: grid; 
+    grid-template-columns: repeat(4, minmax(150px, 1fr)); 
+    align-items: end; 
+    gap: 12px; 
+    margin-bottom: 14px; 
+    padding: 16px; 
+    border: 1px solid #cbd5e1; 
+    border-radius: 12px; 
+    background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%); 
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.05);
+}
+
+.tra-cuu-bo-loc label { 
+    display: grid; 
+    gap: 6px; 
+    color: #1e293b; 
+    font-size: 12px; 
+    font-weight: 700; 
+}
+
+.tra-cuu-bo-loc input, 
+.tra-cuu-bo-loc select { 
+    box-sizing: border-box; 
+    width: 100%; 
+    min-width: 0; 
+    height: 40px; 
+    padding: 0 12px; 
+    border: 1px solid #94a3b8; 
+    border-radius: 8px; 
+    background: #fff; 
+    color: #0f172a; 
+    font: inherit; 
+    transition: all 0.2s ease;
+}
+
+.tra-cuu-bo-loc input:focus, 
+.tra-cuu-bo-loc select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    outline: none;
+}
+
+.tra-cuu-hanh-dong { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
+
+.tra-cuu-hanh-dong button { 
+    min-height: 40px; 
+    padding: 0 16px; 
+    border: 0; 
+    border-radius: 8px; 
+    background: linear-gradient(135deg, #1d4ed8, #2563eb); 
+    color: #fff; 
+    font: inherit; 
+    font-weight: 700; 
+    cursor: pointer; 
+    white-space: nowrap; 
+    box-shadow: 0 2px 6px rgba(29, 78, 216, 0.25);
+    transition: transform 0.1s ease;
+}
+
+.tra-cuu-hanh-dong button:hover {
+    filter: brightness(1.05);
+}
+
+.tra-cuu-hanh-dong a { 
+    color: #1d4ed8; 
+    font-size: 13px; 
+    font-weight: 600;
+    white-space: nowrap; 
+    text-decoration: none; 
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: #dbeafe;
+}
+
+.tra-cuu-hanh-dong a:hover {
+    background: #bfdbfe;
+}
+
+.tra-cuu-thong-ke { 
+    display: grid; 
+    grid-template-columns: repeat(5, minmax(0, 1fr)); 
+    gap: 14px; 
+    margin-bottom: 12px; 
+}
+
+.tra-cuu-the { 
+    display: flex; 
+    min-width: 0; 
+    align-items: center; 
+    gap: 12px; 
+    padding: 18px; 
+    border-radius: 12px; 
+    background: #fff; 
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05); 
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tra-cuu-the:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+.tra-cuu-the > div { 
+    min-width: 0; 
+}
+
+.tra-cuu-the > div > span { 
+    display: block; 
+    margin-bottom: 5px; 
+    color: #64748b; 
+    font-size: 12px; 
+    font-weight: 600;
+}
+
+.tra-cuu-the strong { 
+    display: block; 
+    color: #0f172a; 
+    font-size: 18px; 
+    overflow-wrap: anywhere; 
+}
+
+.tra-cuu-the small { 
+    display: block; 
+    margin-top: 4px; 
+    color: #2563eb; 
+    font-size: 11px; 
+    font-weight: 600;
+}
+
+.tra-cuu-icon { 
+    display: flex; 
+    width: 44px; 
+    height: 44px; 
+    flex: 0 0 44px; 
+    align-items: center; 
+    justify-content: center; 
+    border-radius: 12px; 
+    font-size: 18px; 
+    font-weight: 700; 
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+.tra-cuu-icon.xanh-duong { color: #1d4ed8; background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+.tra-cuu-icon.xanh-la { color: #15803d; background: linear-gradient(135deg, #dcfce7, #bbf7d0); }
+.tra-cuu-icon.xanh-ngoc { color: #0e7490; background: linear-gradient(135deg, #cffafe, #a5f3fc); }
+.tra-cuu-icon.tim { color: #7e22ce; background: linear-gradient(135deg, #f3e8ff, #e9d5ff); }
+.tra-cuu-icon.cam { color: #c2410c; background: linear-gradient(135deg, #ffedd5, #fed7aa); }
+
+.tra-cuu-chu-thich { 
+    margin: 0 0 16px; 
+    color: #475569; 
+    font-size: 12px; 
+    font-style: italic;
+}
+
+.tra-cuu-khu-vuc { 
+    overflow: hidden; 
+    margin-bottom: 24px;
+    border-radius: 12px; 
+    background: #fff; 
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06); 
+}
+
+.tra-cuu-dau-bang { 
+    display: flex; 
+    min-height: 76px; 
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 14px; 
+    padding: 14px 24px; 
+    color: #fff; 
+    background: linear-gradient(135deg, #0756a3, #081ee0 60%, #16b5ed); 
+}
+
+.tra-cuu-dau-bang h2 { 
+    margin: 0 0 4px; 
+    font-size: 18px; 
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.tra-cuu-dau-bang p { 
+    margin: 0; 
+    color: #dbeafe; 
+    font-size: 12px; 
+}
+
+.tra-cuu-cuon-bang { 
+    overflow-x: auto; 
+}
+
+.tra-cuu-cuon-bang table { 
+    width: 100%; 
+    min-width: 1060px; 
+    border-collapse: collapse; 
+}
+
+.tra-cuu-cuon-bang th { 
+    padding: 13px 14px; 
+    border-bottom: 2px solid #e2e8f0; 
+    color: #334155; 
+    background: #f1f5f9; 
+    font-size: 12px; 
+    font-weight: 700;
+    text-align: left; 
+    white-space: nowrap; 
+}
+
+.tra-cuu-cuon-bang td { 
+    padding: 14px; 
+    border-bottom: 1px solid #f1f5f9; 
+    color: #1e293b; 
+    font-size: 12px; 
+    vertical-align: middle; 
+    white-space: nowrap; 
+}
+
+.tra-cuu-cuon-bang tbody tr:hover { 
+    background: #f8fafc; 
+}
+
+.tra-cuu-cuon-bang td strong { 
+    color: #2563eb; 
+    font-weight: 700;
+}
+
+.tra-cuu-trang-thai { 
+    display: inline-block; 
+    padding: 5px 10px; 
+    border-radius: 20px; 
+    font-size: 10px; 
+    font-weight: 700; 
+    white-space: nowrap; 
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+.tra-cuu-trang-thai.da-duyet { 
+    color: #15803d; 
+    background: #dcfce7; 
+    border: 1px solid #bbf7d0;
+}
+
+.tra-cuu-trang-thai.cho-duyet { 
+    color: #b45309; 
+    background: #fffbeb; 
+    border: 1px solid #fde68a;
+}
+
+.tra-cuu-trang-thai.bi-tu-choi { 
+    color: #b91c1c; 
+    background: #fee2e2; 
+    border: 1px solid #fecaca;
+}
+
+.tra-cuu-nut-xem { 
+    display: inline-flex; 
+    min-height: 34px; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 0 12px; 
+    border: 1px solid #bfdbfe; 
+    border-radius: 8px; 
+    color: #1d4ed8; 
+    background: #eff6ff; 
+    font-size: 11px; 
+    font-weight: 700; 
+    text-decoration: none; 
+    white-space: nowrap; 
+    transition: background 0.15s ease;
+}
+
+.tra-cuu-nut-xem:hover {
+    background: #dbeafe;
+}
+
+.tra-cuu-rong { 
+    padding: 36px 16px !important; 
+    color: #64748b !important; 
+    text-align: center !important; 
+    font-style: italic;
+}
+
+.tra-cuu-phan-trang { 
+    display: flex; 
+    justify-content: flex-end; 
+    align-items: center; 
+    gap: 10px; 
+    padding: 16px 24px; 
+    color: #475569; 
+    font-size: 12px; 
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+.tra-cuu-phan-trang a { 
+    display: inline-flex; 
+    min-height: 34px; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 0 14px; 
+    border: 1px solid #cbd5e1; 
+    border-radius: 8px; 
+    background: #fff; 
+    color: #1e293b; 
+    font-weight: 700; 
+    text-decoration: none; 
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.tra-cuu-phan-trang a:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.tra-cuu-loi { 
+    margin-bottom: 16px; 
+    padding: 14px 16px; 
+    border-radius: 10px; 
+    background: #fef2f2; 
+    border: 1px solid #fecaca;
+    color: #b91c1c; 
+    font-size: 13px;
+    font-weight: 600;
+}
+
+@media (max-width: 1100px) { 
+    .tra-cuu-thong-ke { 
+        grid-template-columns: repeat(3, minmax(0, 1fr)); 
+    } 
+    .tra-cuu-bo-loc { 
+        grid-template-columns: repeat(2, minmax(0, 1fr)); 
+    }
+}
+
+@media (max-width: 760px) { 
+    .tra-cuu-bo-loc { 
+        grid-template-columns: 1fr; 
+    } 
+    .tra-cuu-thong-ke { 
+        grid-template-columns: repeat(2, minmax(0, 1fr)); 
+    } 
+}
+
+@media (max-width: 480px) { 
+    .tra-cuu-thong-ke { 
+        grid-template-columns: 1fr; 
+    } 
+    .tra-cuu-tieu-de { 
+        align-items: flex-start; 
+        flex-direction: column; 
+    } 
+}

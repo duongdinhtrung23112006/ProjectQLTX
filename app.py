@@ -9,6 +9,7 @@ from routes.quanly.nhien_lieu import nhien_lieu_bp
 from routes.quanly.nhap_hang import nhap_hang_bp
 from routes.quanly.ban_hang import quanly_ban_hang_bp
 from routes.quanly.ton_bon import quanly_ton_bon_bp
+from routes.quanly.tra_cuu import quanly_tra_cuu_bp
 
 # Import các blueprint từ các module khác nhau của nhân viên
 from routes.nhanvien.trang_chu import nhanvien_trang_chu_bp
@@ -21,6 +22,7 @@ from routes.nhanvien.ton_bon import nhanvien_ton_bon_bp
 # Import các blueprint từ các module khác nhau của kế toán
 from routes.ketoan.trang_chu import ketoan_trang_chu_bp
 from routes.ketoan.ton_bon import ketoan_ton_bon_bp
+from routes.ketoan.tra_cuu import ketoan_tra_cuu_bp
 
 # Import các dịch vụ cần thiết
 from services.auth_service import yeu_cau_dang_nhap
@@ -46,6 +48,7 @@ app.register_blueprint(nhien_lieu_bp)
 app.register_blueprint(nhap_hang_bp)
 app.register_blueprint(quanly_ban_hang_bp)
 app.register_blueprint(quanly_ton_bon_bp)
+app.register_blueprint(quanly_tra_cuu_bp)
 
 # Đăng ký blueprint cho trang chủ của nhân viên
 app.register_blueprint(nhanvien_trang_chu_bp)
@@ -58,6 +61,7 @@ app.register_blueprint(nhanvien_ton_bon_bp)
 # Đăng ký blueprint cho trang chủ của kế toán
 app.register_blueprint(ketoan_trang_chu_bp)
 app.register_blueprint(ketoan_ton_bon_bp)
+app.register_blueprint(ketoan_tra_cuu_bp)
 
 
 
@@ -76,14 +80,6 @@ def thong_ke():
         trang_hien_tai="Thống kê"
     )
 
-
-@app.route("/tra-cuu")
-@yeu_cau_dang_nhap
-def tra_cuu():
-    return render_template(
-        "quanly/tra_cuu.html",
-        trang_hien_tai="Tra cứu"
-    )
 
 @app.route("/ai")
 @yeu_cau_dang_nhap

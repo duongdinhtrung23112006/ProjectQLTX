@@ -58,6 +58,16 @@ GET	/ketoan/ton-bon	Kế toán	Xem tồn bồn để giữ liên kết menu hi�
 
 Các trang dùng chung dữ liệu và giao diện chỉ đọc từ `bon_chua` và `nhien_lieu`. Thống kê gồm cả bồn ngừng hoạt động. Ngưỡng cảnh báo bồn gần hết mặc định là mức tồn không quá 20% sức chứa. Chức năng không thay đổi số tồn hoặc schema.
 
+Tra cứu số liệu
+
+Phương thức	Route	Vai trò	Chức năng
+GET	/quanly/tra-cuu	Quản lý	Tìm kiếm, lọc và tổng hợp bán hàng/nhập hàng
+GET	/quanly/tra-cuu/xem/<loai_giao_dich>/<id>	Quản lý	Xem chi tiết giao dịch
+GET	/ketoan/tra-cuu	Kế toán	Tìm kiếm, lọc và tổng hợp bán hàng/nhập hàng
+GET	/ketoan/tra-cuu/xem/<loai_giao_dich>/<id>	Kế toán	Xem chi tiết giao dịch
+
+Các endpoint chỉ đọc, dùng phân trang và truy vấn tham số. Số liệu thực tế chỉ tính giao dịch đã duyệt; lượng bán/nhập được nhóm theo đơn vị nhiên liệu. Bảng `nhap_hang` hiện không có ca làm việc, đơn giá hoặc thành tiền nên không hỗ trợ lọc nhập theo ca và không hiển thị chi phí nhập.
+
 6. Nhập hàng
 
 Các route nghiệp vụ hiện tại:

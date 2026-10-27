@@ -1,0 +1,88 @@
+{% extends "ketoan/khungketoan.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssketoan/tra_cuu/xem.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+<main class="tra-cuu">
+    <div class="chi-tiet-bon">
+        <header class="tieu-de-noi-dung" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <div class="the-chi-tiet" style="border-bottom: none; padding-bottom: 0;">
+                <div class="bieu-tuong-bon">
+                    {% if giao_dich.loai == 'ban_hang' %}🛒{% else %}🚛{% endif %}
+                </div>
+                <div>
+                    <span>Mã giao dịch</span>
+                    <strong>{{ giao_dich.ma_giao_dich }}</strong>
+                </div>
+            </div>
+            <a class="nut-quay-lai" href="{{ back_url }}">
+                <span>‹</span> Quay lại kết quả
+            </a>
+        </header>
+
+        <div class="thong-tin-chi-tiet">
+            <div class="dong-thong-tin">
+                <span>Loại giao dịch</span>
+                <strong>{{ 'Bán hàng' if giao_dich.loai == 'ban_hang' else 'Nhập hàng' }}</strong>
+            </div>
+            <div class="dong-thong-tin">
+                <span>Ngày giao dịch</span>
+                <strong>{{ giao_dich.ngay.strftime('%d/%m/%Y') }}{% if giao_dich.gio %} · {{ giao_dich.gio }}{% endif %}</strong>
+            </div>
+            {% if giao_dich.ma_ca %}
+            <div class="dong-thong-tin">
+                <span>Ca làm việc</span>
+                <strong>{{ giao_dich.ma_ca }} - {{ giao_dich.ten_ca }}</strong>
+            </div>
+            {% endif %}
+            <div class="dong-thong-tin">
+                <span>Nhân viên thực hiện</span>
+                <strong>{{ giao_dich.ho_ten }} ({{ giao_dich.ma_nv }})</strong>
+            </div>
+            <div class="dong-thong-tin">
+                <span>Nhiên liệu</span>
+                <strong>{{ giao_dich.ma_nhien_lieu }} - {{ giao_dich.ten_nhien_lieu }}</strong>
+            </div>
+            <div class="dong-thong-tin">
+                <span>Bồn chứa</span>
+                <strong>{{ giao_dich.ma_bon }} - {{ giao_dich.ten_bon }}</strong>
+            </div>
+            <div class="dong-thong-tin">
+                <span>Số lượng</span>
+                <strong>{{ "{:,.0f}".format(giao_dich.so_luong) }} {{ giao_dich.don_vi }}</strong>
+            </div>
+            {% if giao_dich.loai == 'ban_hang' %}
+            <div class="dong-thong-tin">
+                <span>Đơn giá</span>
+                <strong>{{ "{:,.2f}".format(giao_dich.don_gia) }} ₫</strong>
+            </div>
+            <div class="dong-thong-tin">
+                <span>Thành tiền</span>
+                <strong>{{ "{:,.2f}".format(giao_dich.thanh_tien) }} ₫</strong>
+            </div>
+            {% else %}
+            <div class="dong-thong-tin">
+                <span>Đơn giá / Thành tiền</span>
+                <strong style="color: #64748b; font-size: 14px; font-weight: 400;">Không áp dụng</strong>
+            </div>
+            {% endif %}
+            <div class="dong-thong-tin">
+                <span>Trạng thái</span>
+                <strong>
+                    <span class="trang-thai {% if giao_dich.trang_thai == 'Đã duyệt' %}dang-hoat-dong{% elif giao_dich.trang_thai == 'Chờ duyệt' %}cho-duyet{% else %}ngung-hoat-dong{% endif %}">
+                        {{ giao_dich.trang_thai }}
+                    </span>
+                </strong>
+            </div>
+            {% if giao_dich.ghi_chu %}
+            <div class="dong-thong-tin ghi-chu-full">
+                <span>Ghi chú</span>
+                <strong>{{ giao_dich.ghi_chu }}</strong>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</main>
+{% endblock %}
