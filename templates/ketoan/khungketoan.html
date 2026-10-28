@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='cssketoan/style.css') }}">
 
     {% block css %}{% endblock %}
-    <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
-</head>
 
 <body>
 
@@ -42,17 +40,19 @@
         <!-- DANH SÁCH MENU -->
         <nav class="danh-sach-menu">
 
-            <a href="{{ url_for('ketoan_trang_chu.home') }}" class="muc-menu {%if trang_hien_tai == 'Trang chủ'%} dang-chon{% endif %}">
+            <a href="{{ url_for('ketoan_trang_chu.home') }}"
+                class="muc-menu {%if trang_hien_tai == 'Trang chủ'%} dang-chon{% endif %}">
                 <span class="bieu-tuong-menu">⌂</span>
                 <span>Trang chủ</span>
             </a>
-            
-            <a href="{{ url_for('ketoan_tra_cuu.danh_sach') }}" class="muc-menu {%if trang_hien_tai == 'Tra cứu'%} dang-chon{% endif %}">
+
+            <a href="{{ url_for('ketoan_tra_cuu.danh_sach') }}"
+                class="muc-menu {%if trang_hien_tai == 'Tra cứu'%} dang-chon{% endif %}">
                 <span class="bieu-tuong-menu">⌕</span>
                 <span>Tra cứu</span>
             </a>
 
-            <a href="{{ url_for('thong_ke') }}"
+            <a href="{{ url_for('ketoan_thong_ke.danh_sach') }}"
                 class="muc-menu {%if trang_hien_tai == 'Thống kê'%} dang-chon{% endif %}">
                 <span class="bieu-tuong-menu">▥</span>
                 <span>Thống kê</span>

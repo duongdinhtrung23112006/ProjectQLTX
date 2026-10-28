@@ -1,0 +1,33 @@
+{% extends "ketoan/khungketoan.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssketoan/thongke/index.css') }}">
+{% endblock %}
+
+{% block noi_dung %}
+<main class="dashboard-thongke tk-trang-xem">
+    <header class="tk-tieu-de">
+        <div>
+            <span class="tk-nhan-trang">CHI TIẾT GIAO DỊCH</span>
+            <h1>{{ 'Bán hàng' if giao_dich.loai == 'ban_hang' else 'Nhập hàng' }}</h1>
+            <p>Mã giao dịch <strong>{{ giao_dich.ma_giao_dich }}</strong> · {{ giao_dich.trang_thai }}</p>
+        </div>
+        <a class="tk-nut-phu" href="{{ back_url }}">Quay lại tổng quan</a>
+    </header>
+    <section class="tk-chi-tiet">
+        <div><span>Ngày giao dịch</span><strong>{{ giao_dich.ngay.strftime('%d/%m/%Y') }}{% if giao_dich.gio %} · {{ giao_dich.gio }}{% endif %}</strong></div>
+        {% if giao_dich.ma_ca %}<div><span>Ca làm việc</span><strong>{{ giao_dich.ma_ca }} - {{ giao_dich.ten_ca }}</strong></div>{% endif %}
+        <div><span>Nhân viên</span><strong>{{ giao_dich.ho_ten }} ({{ giao_dich.ma_nv }})</strong></div>
+        <div><span>Nhiên liệu</span><strong>{{ giao_dich.ma_nhien_lieu }} - {{ giao_dich.ten_nhien_lieu }}</strong></div>
+        <div><span>Bồn chứa</span><strong>{{ giao_dich.ma_bon }} - {{ giao_dich.ten_bon }}</strong></div>
+        <div><span>Số lượng</span><strong>{{ "{:,.0f}".format(giao_dich.so_luong) }} {{ giao_dich.don_vi }}</strong></div>
+        {% if giao_dich.loai == 'ban_hang' %}
+        <div><span>Đơn giá</span><strong>{{ "{:,.2f}".format(giao_dich.don_gia) }} ₫</strong></div>
+        <div><span>Thành tiền</span><strong>{{ "{:,.2f}".format(giao_dich.thanh_tien) }} ₫</strong></div>
+        {% else %}
+        <div><span>Thông tin tiền nhập</span><strong>Không có trong dữ liệu nghiệp vụ</strong></div>
+        {% endif %}
+        {% if giao_dich.ghi_chu %}<div class="tk-ghi-chu"><span>Ghi chú</span><strong>{{ giao_dich.ghi_chu }}</strong></div>{% endif %}
+    </section>
+</main>
+{% endblock %}

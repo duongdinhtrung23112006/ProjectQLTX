@@ -1,0 +1,181 @@
+{% extends "ketoan/khungketoan.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='cssketoan/thongke/index.css') }}">
+<script src="{{ url_for('static', filename='js/ketoan/thongke/index.js') }}" defer></script>
+{% endblock %}
+
+{% block noi_dung %}
+<main class="dashboard-thongke">
+    <header class="tk-tieu-de">
+        <div>
+            <span class="tk-nhan-trang">BÁO CÁO VẬN HÀNH</span>
+            <h1>Tổng quan hệ thống</h1>
+            <p>Tình hình bán hàng, nhập hàng và tồn chứa được tổng hợp từ dữ liệu thực tế.</p>
+        </div>
+        <div class="tk-ngay-he-thong">
+            <span>Ngày hệ thống</span>
+            <strong>{{ khoang.ngay_hien_tai.strftime('%d/%m/%Y') }}</strong>
+            <a href="{{ url_for(endpoint_danh_sach, khoang=khoang.khoang, tu_ngay=khoang.tu_ngay, den_ngay=khoang.den_ngay) }}">Làm mới số liệu</a>
+        </div>
+    </header>
+
+    <form class="tk-bo-loc" method="get" action="{{ url_for(endpoint_danh_sach) }}">
+        <label for="tk-khoang">Khoảng thời gian</label>
+        <select id="tk-khoang" name="khoang">
+            {% for ma, ten in [('hom_nay', 'Hôm nay'), ('7_ngay', '7 ngày gần nhất'), ('30_ngay', '30 ngày gần nhất'), ('thang_nay', 'Tháng này'), ('tuy_chinh', 'Tùy chọn')] %}
+            <option value="{{ ma }}" {% if khoang.khoang == ma %}selected{% endif %}>{{ ten }}</option>
+            {% endfor %}
+        </select>
+        <label class="tk-ngay-tuy-chinh" for="tk-tu-ngay">Từ ngày</label>
+        <input class="tk-ngay-tuy-chinh" id="tk-tu-ngay" type="date" name="tu_ngay" value="{{ khoang.tu_ngay }}" {% if khoang.khoang != 'tuy_chinh' %}disabled{% endif %}>
+        <label class="tk-ngay-tuy-chinh" for="tk-den-ngay">Đến ngày</label>
+        <input class="tk-ngay-tuy-chinh" id="tk-den-ngay" type="date" name="den_ngay" value="{{ khoang.den_ngay }}" {% if khoang.khoang != 'tuy_chinh' %}disabled{% endif %}>
+        <button type="submit">Cập nhật thống kê</button>
+        <span class="tk-khoang-hien-tai">
+            {% if khoang.tu_ngay %}{{ khoang.tu_ngay }} — {{ khoang.den_ngay }}{% else %}Chọn khoảng ngày để xem dữ liệu{% endif %}
+        </span>
+    </form>
+
+    {% if khoang.loi_loc %}
+    <div class="tk-thong-bao tk-thong-bao-loi" role="alert">{{ khoang.loi_loc }}</div>
+    {% elif not kpi %}
+    <div class="tk-thong-bao" role="status">Chưa thể tổng hợp dữ liệu cho khoảng thời gian này.</div>
+    {% else %}
+    <section class="tk-kpi tk-kpi-chinh" aria-label="Chỉ số giao dịch trong khoảng thời gian">
+        <article class="tk-the-kpi tk-kpi-doanh-thu">
+            <div class="tk-kpi-icon">₫</div>
+            <div><span>Doanh thu bán hàng</span><strong>{{ "{:,.0f}".format(kpi.doanh_thu or 0) }} ₫</strong><small>Phiếu bán đã duyệt trong kỳ</small></div>
+        </article>
+        <article class="tk-the-kpi">
+            <div class="tk-kpi-icon tk-icon-xanh">⇧</div>
+            <div><span>Lượng đã bán</span><strong>{% for muc in kpi.luong_ban %}{{ "{:,.0f}".format(muc.so_luong) }} {{ muc.don_vi }}{% if not loop.last %}<br>{% endif %}{% else %}0{% endfor %}</strong><small>Nhóm riêng theo đơn vị nhiên liệu</small></div>
+        </article>
+        <article class="tk-the-kpi">
+            <div class="tk-kpi-icon tk-icon-ngoc">⇩</div>
+            <div><span>Lượng đã nhập</span><strong>{% for muc in kpi.luong_nhap %}{{ "{:,.0f}".format(muc.so_luong) }} {{ muc.don_vi }}{% if not loop.last %}<br>{% endif %}{% else %}0{% endfor %}</strong><small>Phiếu nhập đã duyệt trong kỳ</small></div>
+        </article>
+        <article class="tk-the-kpi">
+            <div class="tk-kpi-icon tk-icon-tim">BH</div>
+            <div><span>Giao dịch bán đã duyệt</span><strong>{{ "{:,}".format(kpi.so_giao_dich_ban) }}</strong><small>Trong khoảng thời gian</small></div>
+        </article>
+        <article class="tk-the-kpi">
+            <div class="tk-kpi-icon tk-icon-cam">NH</div>
+            <div><span>Giao dịch nhập đã duyệt</span><strong>{{ "{:,}".format(kpi.so_giao_dich_nhap) }}</strong><small>Trong khoảng thời gian</small></div>
+        </article>
+        <article class="tk-the-kpi tk-kpi-cho-duyet">
+            <div class="tk-kpi-icon tk-icon-vang">!</div>
+            <div><span>Đang chờ duyệt</span><strong>{{ "{:,}".format(kpi.tong_cho_duyet) }}</strong><small>{{ kpi.cho_duyet_ban }} bán · {{ kpi.cho_duyet_nhap }} nhập, trạng thái hiện tại</small></div>
+        </article>
+    </section>
+
+    <section class="tk-kpi tk-kpi-hien-trang" aria-label="Trạng thái bồn tại thời điểm truy vấn">
+        <article class="tk-the-kpi tk-kpi-nho"><div class="tk-kpi-icon tk-icon-xanh">▣</div><div><span>Bồn đang hoạt động</span><strong>{{ thong_ke_bon.dang_hoat_dong }}</strong><small>{{ thong_ke_bon.tong_so }} bồn trong hệ thống</small></div></article>
+        <article class="tk-the-kpi tk-kpi-nho"><div class="tk-kpi-icon tk-icon-ngoc">%</div><div><span>Sử dụng dung tích</span><strong>{% if thong_ke_bon.ty_le_su_dung is not none %}{{ "%.1f"|format(thong_ke_bon.ty_le_su_dung) }}%{% else %}Không xác định{% endif %}</strong><small>Số liệu hiện tại{% if thong_ke_bon.don_vi %} · {{ thong_ke_bon.don_vi }}{% endif %}</small></div></article>
+    </section>
+
+    <section class="tk-luoi-bieu-do">
+        <article class="tk-khung-bieu-do tk-bieu-do-doanh-thu">
+            <header><div><span class="tk-nhan-trang">BÁN HÀNG</span><h2>Doanh thu theo thời gian</h2></div><span class="tk-chu-thich"><i class="tk-cham tk-cham-xanh"></i>Đã duyệt</span></header>
+            {% set max_dt = bieu_do.doanh_thu|map(attribute='gia_tri')|max if bieu_do.doanh_thu else 0 %}
+            <div class="tk-bieu-do-cot tk-bieu-do-tien">
+                {% for diem in bieu_do.doanh_thu %}
+                <div class="tk-cot-thoi-gian" title="{{ diem.nhan }}: {{ '{:,.0f}'.format(diem.gia_tri) }} ₫">
+                    <div class="tk-cot-nen"><div class="tk-cot tk-cot-doanh-thu" style="height: {{ diem.ty_le if diem.ty_le > 0 else 1 }}%"></div></div>
+                    <span>{{ diem.nhan }}</span>
+                </div>
+                {% else %}
+                <div class="tk-bieu-do-rong">Không có doanh thu đã duyệt trong kỳ.</div>
+                {% endfor %}
+            </div>
+            <footer class="tk-bieu-do-chan"><span>0 ₫</span><span>Doanh thu (VND)</span><span>{{ "{:,.0f}".format(max_dt) }} ₫</span></footer>
+        </article>
+
+        <article class="tk-khung-bieu-do tk-co-cau">
+            <header><div><span class="tk-nhan-trang">CƠ CẤU BÁN</span><h2>Lượng bán theo nhiên liệu</h2></div></header>
+            {% for don_vi in bieu_do.co_cau_nhien_lieu|map(attribute='don_vi')|unique %}
+            <div class="tk-co-cau-nhom">
+                <div class="tk-don-vi">{{ don_vi }}</div>
+                {% for hang in bieu_do.co_cau_nhien_lieu if hang.don_vi == don_vi %}
+                <div class="tk-co-cau-hang">
+                    <div><span>{{ hang.ten_nhien_lieu }}</span><strong>{{ "{:,.0f}".format(hang.so_luong) }} {{ hang.don_vi }}</strong></div>
+                    <div class="tk-thanh-ngang"><i style="width: {{ hang.ty_le }}%"></i></div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="tk-bieu-do-rong">Chưa có lượng bán đã duyệt trong kỳ.</div>
+            {% endfor %}
+        </article>
+    </section>
+
+    <section class="tk-khung-bieu-do tk-so-sanh">
+        <header><div><span class="tk-nhan-trang">LUỒNG HÀNG HÓA</span><h2>Nhập hàng và bán hàng theo thời gian</h2><p>Chỉ so sánh trong cùng đơn vị đo; không cộng gộp đơn vị khác nhau.</p></div></header>
+        {% for nhom in bieu_do.so_sanh_san_luong %}
+        <div class="tk-luong-don-vi">
+            <h3>{{ nhom.don_vi }}</h3>
+            <div class="tk-chu-thich tk-chu-thich-luong"><span><i class="tk-cham tk-cham-xanh"></i>Lượng bán</span><span><i class="tk-cham tk-cham-ngoc"></i>Lượng nhập</span></div>
+            <div class="tk-bieu-do-cot tk-bieu-do-luong">
+                {% for diem in nhom.cac_ky %}
+                <div class="tk-cot-thoi-gian" title="{{ diem.nhan }} · Bán: {{ diem.so_luong_ban }} · Nhập: {{ diem.so_luong_nhap }} {{ nhom.don_vi }}">
+                    <div class="tk-cap-cot"><div class="tk-cot-nen"><div class="tk-cot tk-cot-ban" style="height: {{ diem.ty_le_ban if diem.ty_le_ban > 0 else 1 }}%"></div></div><div class="tk-cot-nen"><div class="tk-cot tk-cot-nhap" style="height: {{ diem.ty_le_nhap if diem.ty_le_nhap > 0 else 1 }}%"></div></div></div>
+                    <span>{{ diem.nhan }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="tk-bieu-do-rong">Chưa có dữ liệu nhập hoặc bán đã duyệt trong kỳ.</div>
+        {% endfor %}
+    </section>
+
+    <section class="tk-khung-bieu-do tk-khu-vuc-bon">
+        <header><div><span class="tk-nhan-trang">TỒN CHỨA</span><h2>Tình trạng bồn chứa</h2><p>Số liệu hiện tại tại thời điểm truy vấn, không phụ thuộc khoảng thời gian đã chọn.</p></div><a href="{{ url_for(endpoint_ton_bon) }}">Xem tất cả bồn</a></header>
+        <div class="tk-bon-luoi">
+            {% for bon in bon_chua %}
+            <article class="tk-the-bon {% if bon.du_lieu_bat_thuong %}tk-bon-loi{% elif bon.bon_gan_het %}tk-bon-thap{% endif %}">
+                <div class="tk-bon-dau"><div><strong>{{ bon.ma_bon }}</strong><span>{{ bon.ten_bon }}</span></div><span class="tk-bon-trang-thai">{{ bon.trang_thai }}</span></div>
+                <p>{{ bon.ten_nhien_lieu }}</p>
+                <div class="tk-bon-so-lieu"><span>Tồn <strong>{% if bon.ton_hien_tai_tinh is not none %}{{ "{:,.0f}".format(bon.ton_hien_tai_tinh) }}{% else %}Không hợp lệ{% endif %} {{ bon.don_vi }}</strong></span><span>Sức chứa <strong>{% if bon.suc_chua_tinh is not none %}{{ "{:,.0f}".format(bon.suc_chua_tinh) }}{% else %}Không hợp lệ{% endif %} {{ bon.don_vi }}</strong></span></div>
+                <div class="tk-thanh-ngang tk-thanh-bon"><i style="width: {{ bon.ty_le_thanh_tien_trinh }}%"></i></div>
+                <div class="tk-bon-cuoi">{% if bon.ty_le_lap_day is not none %}{{ "%.1f"|format(bon.ty_le_lap_day) }}% lấp đầy{% else %}Không xác định{% endif %}<a href="{{ url_for('ketoan_ton_bon.xem', id=bon.id) }}">Chi tiết</a></div>
+            </article>
+            {% else %}
+            <div class="tk-bieu-do-rong">Chưa có bồn chứa trong hệ thống.</div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="tk-luoi-cuoi">
+        <article class="tk-khung-bieu-do tk-giao-dich">
+            <header><div><span class="tk-nhan-trang">GIAO DỊCH</span><h2>Giao dịch gần đây</h2><p>Danh sách mới nhất, mọi trạng thái.</p></div><a href="{{ url_for(endpoint_tra_cuu) }}">Tra cứu tất cả</a></header>
+            <div class="tk-bang-cuon">
+                <table>
+                    <thead><tr><th>Mã</th><th>Loại</th><th>Ngày giờ</th><th>Nhân viên</th><th>Nhiên liệu</th><th>Số lượng</th><th>Thành tiền</th><th>Trạng thái</th><th></th></tr></thead>
+                    <tbody>
+                        {% for gd in giao_dich_gan_day %}
+                        <tr>
+                            <td><strong>{{ gd.ma_giao_dich }}</strong></td><td>{{ 'Bán hàng' if gd.loai == 'ban_hang' else 'Nhập hàng' }}</td>
+                            <td>{{ gd.ngay.strftime('%d/%m/%Y') }}{% if gd.gio %}<br><small>{{ gd.gio }}</small>{% endif %}</td>
+                            <td>{{ gd.ho_ten }}</td><td>{{ gd.ten_nhien_lieu }}</td><td>{{ "{:,.0f}".format(gd.so_luong) }} {{ gd.don_vi }}</td>
+                            <td>{% if gd.thanh_tien is not none %}{{ "{:,.2f}".format(gd.thanh_tien) }} ₫{% else %}—{% endif %}</td>
+                            <td><span class="tk-trang-thai {% if gd.trang_thai == 'Đã duyệt' %}tk-da-duyet{% elif gd.trang_thai == 'Chờ duyệt' %}tk-cho-duyet{% else %}tk-tu-choi{% endif %}">{{ gd.trang_thai }}</span></td>
+                            <td><a href="{{ url_for(endpoint_chi_tiet, loai_giao_dich=gd.loai, id=gd.id, khoang=khoang.khoang, tu_ngay=khoang.tu_ngay, den_ngay=khoang.den_ngay) }}">Xem</a></td>
+                        </tr>
+                        {% else %}<tr><td colspan="9" class="tk-rong">Chưa có giao dịch.</td></tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+        <aside class="tk-khung-bieu-do tk-canh-bao">
+            <header><div><span class="tk-nhan-trang">THEO DÕI</span><h2>Cần chú ý</h2></div></header>
+            {% for muc in canh_bao %}
+            <article class="tk-canh-bao-muc {{ muc.muc_do }}"><span class="tk-canh-bao-dau"></span><div><strong>{{ muc.tieu_de }}</strong><p>{{ muc.mo_ta }}</p>{% if muc.url %}<a href="{{ muc.url }}">Mở chi tiết</a>{% endif %}</div></article>
+            {% else %}
+            <div class="tk-binh-thuong"><span>✓</span><div><strong>Không có cảnh báo</strong><p>Không phát hiện giao dịch chờ duyệt hoặc bất thường tồn bồn.</p></div></div>
+            {% endfor %}
+        </aside>
+    </section>
+    {% endif %}
+</main>
+{% endblock %}

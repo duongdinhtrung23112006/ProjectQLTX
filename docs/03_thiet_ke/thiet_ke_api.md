@@ -68,6 +68,16 @@ GET	/ketoan/tra-cuu/xem/<loai_giao_dich>/<id>	Kế toán	Xem chi tiết giao d�
 
 Các endpoint chỉ đọc, dùng phân trang và truy vấn tham số. Số liệu thực tế chỉ tính giao dịch đã duyệt; lượng bán/nhập được nhóm theo đơn vị nhiên liệu. Bảng `nhap_hang` hiện không có ca làm việc, đơn giá hoặc thành tiền nên không hỗ trợ lọc nhập theo ca và không hiển thị chi phí nhập.
 
+Thống kê và tổng quan
+
+Phương thức	Route	Vai trò	Chức năng
+GET	/quanly/thong-ke	Quản lý	Tổng quan KPI, biểu đồ, tình trạng bồn, giao dịch gần đây và cảnh báo
+GET	/quanly/thong-ke/xem/<loai_giao_dich>/<id>	Quản lý	Xem chi tiết giao dịch chỉ đọc
+GET	/ketoan/thong-ke	Kế toán	Tổng quan KPI, biểu đồ, tình trạng bồn, giao dịch gần đây và cảnh báo
+GET	/ketoan/thong-ke/xem/<loai_giao_dich>/<id>	Kế toán	Xem chi tiết giao dịch chỉ đọc
+
+Khoảng thống kê hỗ trợ hôm nay, 7 ngày, 30 ngày, tháng này và ngày tùy chọn. KPI/báo cáo giao dịch tính các phiếu đã duyệt; số chờ duyệt và tồn bồn là trạng thái hiện tại. Lượng nhập/bán được tách theo đơn vị đo, không tính lợi nhuận.
+
 6. Nhập hàng
 
 Các route nghiệp vụ hiện tại:
